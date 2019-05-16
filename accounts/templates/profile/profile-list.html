@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load cool_paginate %}
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+User Profiles
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="row">
+            {% for object in object_list %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
+                {% if object.user.is_active %}
+
+                {% include 'profile/snippets/profile-card.html' with instance=object %}
+
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="alert alert-warning">
+                Currently there are no users available !
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center">
+            {% cool_paginate page_obj=object %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

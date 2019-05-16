@@ -1,0 +1,76 @@
+{% load widget_tweaks %}
+<!-- {% if form.visible_fields %}
+<div class="bg-light text-white text-center m-b-sm">
+    <small class="form-text text-muted">
+        Please fill the <span class="text-primary">required</span> fields properly
+    </small>
+</div>
+{% endif %} -->
+
+{% for hidden_field in form.hidden_fields %}
+{% if hidden_field.errors %}
+<div class="alert alert-danger" role="alert">
+    {% for error in hidden_field.errors %}
+    <p class="text-danger font-italic">
+        <strong>(Hidden field {{ hidden_field.name }}) {{ error }}</strong>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+{{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+    <p class="text-danger">
+        <strong>{{ error }}</strong>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% for field in form.visible_fields %}
+<div class="form-group">
+
+    <label for="{{ field.id_for_label }}" class="control-label">
+        <strong>{{ field.label |title }}</strong>
+        <!-- {% if field.field.required %}
+        <small class="text-primary">(required)</small>
+        {% else %}
+        <small class="text-muted">(optional)</small>
+        {% endif %} -->
+    </label>
+
+    <div class="form">
+        <!-- Main Input Item -->
+        {% if not field.label == "Remember Me" %}
+        {{ field|attr:"autocomplete:off"|add_class:'form-control input-lg' }}
+        {% else %}
+        {{ field|attr:"autocomplete:off"|add_class:'' }}
+        {% endif %}
+
+        {% if field.help_text %}
+        <div class="help">
+            <p id="help_block" class="form-text help-text">
+                {{ field.help_text|safe }}
+            </p>
+        </div>
+        {% endif %}
+
+        {% if field.errors %}
+        {% for error in field.errors %}
+        <div class="error mt-1">
+            <b class="text-danger">
+                <p>{{ error|safe }}</p>
+            </b>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+    </div>
+</div>
+{% endfor %}

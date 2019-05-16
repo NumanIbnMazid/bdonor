@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Site Preferences
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'utils:site_preference_change' %}" method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <h3 class="text-center fw-bold">Color Preferences</h3>
+            <div class="switcher">
+                <!-- logo header -->
+                <div class="switch-block">
+                    <h4>Logo Header Color</h4>
+                    <div class="btnSwitch">
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'dark' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="dark"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'blue' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="blue"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'purple' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="purple"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'light-blue' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="light-blue"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'green' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="green"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'orange' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="orange"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'red' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="red"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'white' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="white"></button>
+
+                        <br />
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'dark2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="dark2"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'blue2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="blue2"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'purple2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="purple2"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'light-blue2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="light-blue2"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'green2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="green2"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'orange2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="orange2"></button>
+
+                        <button type="button"
+                            class="changeLogoHeaderColor btn {% if not site_preference == None and site_preference.logo_header_color == 'red2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="red2"></button>
+
+                        {% if not site_preference == None %}
+                        <input type="hidden" class="logo-header" name="logo-header" id="logo-header"
+                            value="{{site_preference.logo_header_color}}">
+                        {% else %}
+                        <input type="hidden" class="logo-header" name="logo-header" id="logo-header" value="blue">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- navbar header -->
+                <div class="switch-block mt-3">
+                    <h4>Navbar Header Color</h4>
+                    <div class="btnSwitch">
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'dark' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="dark"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'blue' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="blue"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'purple' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="purple"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'light-blue' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="light-blue"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'green' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="green"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'orange' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="orange"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'red' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="red"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'white' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="white"></button>
+
+                        <br />
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'dark2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="dark2"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'blue2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="blue2"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'purple2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="purple2"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'light-blue2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="light-blue2"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'green2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="green2"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'orange2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="orange2"></button>
+
+                        <button type="button"
+                            class="changeTopBarColor btn {% if not site_preference == None and site_preference.navbar_header_color == 'red2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="red2"></button>
+
+                        {% if not site_preference == None %}
+                        <input type="hidden" class="navbar-header" name="navbar-header" id="navbar-header"
+                            value="{{site_preference.navbar_header_color}}">
+                        {% else %}
+                        <input type="hidden" class="navbar-header" name="navbar-header" id="navbar-header"
+                            value="blue2">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- sidebar color -->
+                <div class="switch-block mt-3">
+                    <h4>Sidebar Color</h4>
+                    <div class="btnSwitch">
+                        <button type="button"
+                            class="changeSideBarColor btn {% if not site_preference == None and site_preference.sidebar_color == 'white' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="white"></button>
+
+                        <button type="button"
+                            class="changeSideBarColor btn {% if not site_preference == None and site_preference.sidebar_color == 'dark' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="dark"></button>
+
+                        <button type="button"
+                            class="changeSideBarColor btn {% if not site_preference == None and site_preference.sidebar_color == 'dark2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="dark2"></button>
+
+                        {% if not site_preference == None %}
+                        <input type="hidden" class="sidebar-header" name="sidebar-header" id="sidebar-header"
+                            value="{{site_preference.sidebar_color}}">
+                        {% else %}
+                        <input type="hidden" class="sidebar-header" name="sidebar-header" id="sidebar-header"
+                            value="white">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- background color -->
+                <div class="switch-block mt-3">
+                    <h4>Background Color</h4>
+                    <div class="btnSwitch">
+                        <button type="button"
+                            class="changeBackgroundColor btn {% if not site_preference == None and site_preference.background_color == 'bg2' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="bg2"></button>
+
+                        <button type="button"
+                            class="changeBackgroundColor btn {% if not site_preference == None and site_preference.background_color == 'bg1' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="bg1"></button>
+
+                        <button type="button"
+                            class="changeBackgroundColor btn {% if not site_preference == None and site_preference.background_color == 'bg3' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="bg3"></button>
+
+                        <button type="button"
+                            class="changeBackgroundColor btn {% if not site_preference == None and site_preference.background_color == 'dark' %}btn-md border-success-2{% else %}btn-sm{% endif %}"
+                            data-color="dark"></button>
+
+                        {% if not site_preference == None %}
+                        <input type="hidden" class="background-color" name="background-color" id="background-color"
+                            value="{{site_preference.background_color}}">
+                        {% else %}
+                        <input type="hidden" class="background-color" name="background-color" id="background-color"
+                            value="bg1">
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <h3 class="text-center fw-bold">Other Preferences</h3>
+            <div class="form-group">
+                <label for="defaultSelect">Sidebar Style</label>
+                <select class="form-control form-control" name="sidebar-type" id="sidebarSelect">
+                    <option value="default"
+                        {% if not site_preference == None and site_preference.sidebar_type == "default" %}selected{% endif %}>
+                        Default</option>
+                    <option value="compact-wrapper"
+                        {% if not site_preference == None and site_preference.sidebar_type == "compact-wrapper" %}selected{% endif %}>
+                        Compact</option>
+                    <option value="overlay-sidebar"
+                        {% if not site_preference == None and site_preference.sidebar_type == "overlay-sidebar" %}selected{% endif %}>
+                        Overlay</option>
+                    <option value="sidebar_minimize"
+                        {% if not site_preference == None and site_preference.sidebar_type == "sidebar_minimize" %}selected{% endif %}>
+                        Iconic</option>
+                    <option value="static-sidebar"
+                        {% if not site_preference == None and site_preference.sidebar_type == "static-sidebar" %}selected{% endif %}>
+                        Static</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ScrollToTop">Scroll to Top Icon</label>
+                <select class="form-control form-control" name="scroll-to-top" id="scrollToTopSelect">
+                    <option value="True"
+                        {% if not site_preference == None and site_preference.scroll_to_top == True %}selected{% endif %}>
+                        Keep Shown</option>
+                    <option value="False"
+                        {% if not site_preference == None and site_preference.scroll_to_top == False %}selected{% endif %}>
+                        Keep Hidden</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="m-4">
+        <div>
+            <button type="submit" class="btn btn-primary btn-block mt-3">
+                Save Changes
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm mt-3 mb-3 pull-right" data-toggle="modal"
+                data-target="#preferenceDefaultModal">
+                Change to Default
+            </button>
+        </div>
+    </div>
+
+</form>
+
+{% include 'site-preference/snippets/modals.html' %}
+
+{% endblock %}

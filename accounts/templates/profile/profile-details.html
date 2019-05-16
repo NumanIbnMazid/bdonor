@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+My Profile
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+{% block extra_css %}
+<!-- Image-Magnify CSS -->
+<link rel="stylesheet" href="{% static 'vendor/image-magnify/jquery.magnify.css' %}" type="text/css" />
+{% endblock %}
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Profile</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                {% include 'profile/snippets/profile-tabs.html' %}
+            </div>
+
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+
+                <ul class="nav nav-pills nav-secondary  nav-pills-no-bd nav-pills-icons justify-content-center"
+                    id="pills-tab-with-icon" role="tablist">
+                    <li class="nav-item submenu">
+                        <a class="nav-link active show" id="pills-home-tab-icon" data-toggle="pill"
+                            href="#pills-home-icon" role="tab" aria-controls="pills-home-icon" aria-selected="false">
+                            <i class="flaticon-user-4"></i>
+                            Personal Information
+                        </a>
+                    </li>
+                    {% if object.contact or object.address or object.facebook or object.linkedin or object.website %}
+                    <li class="nav-item submenu">
+                        <a class="nav-link" id="pills-profile-tab-icon" data-toggle="pill" href="#pills-profile-icon"
+                            role="tab" aria-controls="pills-profile-icon" aria-selected="false">
+                            <i class="icon-phone"></i>
+                            Contact Information
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item submenu">
+                        <a class="nav-link" id="pills-contact-tab-icon" data-toggle="pill" href="#pills-contact-icon"
+                            role="tab" aria-controls="pills-contact-icon" aria-selected="true">
+                            <i class="flaticon-clock-1"></i>
+                            Activity
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content mt-2 mb-3" id="pills-with-icon-tabContent">
+                    <div class="tab-pane fade active show" id="pills-home-icon" role="tabpanel"
+                        aria-labelledby="pills-home-tab-icon">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Username</td>
+                                        <td class="text-muted">{{ object.user.username }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted" width='23%'>email</td>
+                                        <td class="text-muted">{{ object.user.email }}</td>
+                                    </tr>
+                                    {% if object.user.first_name %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>First Name</td>
+                                        <td class="text-muted">{{ object.user.first_name }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.user.last_name %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Last Name</td>
+                                        <td class="text-muted">{{ object.user.last_name }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.gender %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Gender</td>
+                                        <td class="text-muted">{{ object.gender }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.dob %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Date of Birth</td>
+                                        <td class="text-muted">{{ object.dob }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.blood_group %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Blood Group</td>
+                                        <td class="text-muted">{{ object.blood_group }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.image %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Image</td>
+                                        <td class="text-muted">
+                                            <a data-magnify="gallery" data-caption="{{object.user.username}}"
+                                                data-group="" href="{{ object.image.url }}">
+                                                {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img avatar-xxl rounded border-white-3" %}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.about %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>About</td>
+                                        <td class="text-muted">{{ object.about|safe|escape|linebreaks }}</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile-icon" role="tabpanel"
+                        aria-labelledby="pills-profile-tab-icon">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <tbody>
+                                    {% if object.contact %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Contact No.</td>
+                                        <td class="text-muted">{{ object.contact }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.address %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Address</td>
+                                        <td class="text-muted">{{ object.address }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.facebook %}
+                                    <tr>
+                                        <td>
+                                            <a class="font-15 font-700" target="_blank" href="{{ object.facebook }}">
+                                                <i class="fab fa-facebook"></i><span class="ml-3"> Facebook </span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.linkedin %}
+                                    <tr>
+                                        <td>
+                                            <a class="font-15 font-700" target="_blank" href="{{ object.linkedin }}">
+                                                <i class="fab fa-linkedin"></i><span class="ml-3"> Linkedin </span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.website %}
+                                    <tr>
+                                        <td>
+                                            <a class="font-15 font-700" target="_blank" href="{{ object.website }}">
+                                                <i class="fas fa-globe"></i><span class="ml-3"> Website </span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-contact-icon" role="tabpanel"
+                        aria-labelledby="pills-contact-tab-icon">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Date Joined</td>
+                                        <td class="text-muted">{{ object.user.date_joined }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Last Logged In</td>
+                                        <td class="text-muted">{{ object.user.last_login|timesince }} <span
+                                                class="text-muted">ago</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Profile Updated At</td>
+                                        <td class="text-muted">{{ object.updated_at|timesince }} <span
+                                                class="text-muted">ago</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+
+<!-- Image-Magnify JS -->
+<script src="{% static 'vendor/image-magnify/magnify-conf.js' %}"></script>
+<script src="{% static 'vendor/image-magnify/jquery.magnify.js' %}"></script>
+
+{% endblock %}

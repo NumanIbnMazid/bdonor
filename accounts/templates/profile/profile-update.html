@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Update Profile
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Profile</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                {% include 'profile/snippets/profile-tabs.html' %}
+            </div>
+
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                <form class="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% include 'snippets/form.html' %}
+
+                    <button class="btn btn-primary" type="submit" id="profile_update_btn">
+                        Update My Profile <i class="fa fa-edit"></i>
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

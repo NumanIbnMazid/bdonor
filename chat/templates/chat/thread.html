@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Chat with
+{% if user != object.first %}{{ object.first.profile.get_dynamic_name }}{% else %}{{ object.second.profile.get_dynamic_name }}{% endif %}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+{% include 'chat/snippets/chat-box.html' %}
+
+{% endblock %}

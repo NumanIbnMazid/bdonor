@@ -1,0 +1,221 @@
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'vendor/chat/chat.css' %}" type="text/css" />
+{% endblock %}
+
+<div class="row bootstrap snippets">
+    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12">
+        <div class="box box-primary direct-chat direct-chat-primary">
+            <div class="box-header with-border">
+                <span class="box-title">
+                    {% if user != object.first %}
+                    {% include 'snippets/chunks/user-image.html' with instance=object.first class="direct-chat-img" %}
+                    {% else %}
+                    {% include 'snippets/chunks/user-image.html' with instance=object.second class="direct-chat-img" %}
+                    {% endif %}
+                    <span class="ml-2  mt-2">
+                        {% if user != object.first %}{{ object.first.profile.get_dynamic_name }}{% else %}{{ object.second.profile.get_dynamic_name }}{% endif %}
+                    </span>
+                </span>
+                <div class="box-tools pull-right">
+                    <span data-toggle="tooltip" title="" class="badge bg-light-blue"
+                        data-original-title="3 New Messages">3</span>
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Contacts"
+                        data-widget="chat-pane-toggle">
+                        <i class="fa fa-comments"></i></button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                            class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body" id="box_body">
+                <div class="direct-chat-messages ml-3 mr-3" id='chat-items'>
+                    {% for chat in object.chatmessage_set.all %}
+                    {% if chat.user == request.user %}
+                    <div class="direct-chat-msg right">
+                        <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-name pull-right">
+                                <!-- {{ chat.user.profile.get_dynamic_name }} -->
+                                You
+                            </span>
+                            <span class="direct-chat-timestamp pull-left">
+                                {% if not chat.timestamp|date:"d M Y" == datetime|date:"d M Y" %}
+                                {{ chat.timestamp }}
+                                {% else %}
+                                {{ chat.timestamp|timesince }} ago
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div id="my_image">
+                            {% include 'snippets/chunks/user-image.html' with instance=chat.user class="direct-chat-img" %}
+                        </div>
+                        <div class="direct-chat-text">
+                            {{ chat.message|safe|linebreaks }}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="direct-chat-msg">
+                        <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-name pull-left">
+                                {{ chat.user.profile.get_dynamic_name }}
+                            </span>
+                            <span class="direct-chat-timestamp pull-right">
+                                {% if not chat.timestamp|date:"d M Y" == datetime|date:"d M Y" %}
+                                {{ chat.timestamp }}
+                                {% else %}
+                                {{ chat.timestamp|timesince }} ago
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div id="client_image">
+                            {% include 'snippets/chunks/user-image.html' with instance=chat.user class="direct-chat-img" %}
+                        </div>
+                        <div class="direct-chat-text">
+                            {{ chat.message|safe|linebreaks }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% empty %}
+
+                    <div id="my_image" class="hidden">
+                        {% include 'snippets/chunks/user-image.html' with instance=request.user class="direct-chat-img" %}
+                    </div>
+
+                    {% if user != object.first %}
+                    <div id="client_image" class="hidden">
+                        {% include 'snippets/chunks/user-image.html' with instance=object.first class="direct-chat-img" %}
+                    </div>
+                    {% else %}
+                    <div id="client_image" class="hidden">
+                        {% include 'snippets/chunks/user-image.html' with instance=object.second class="direct-chat-img" %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="box-footer" id="box_footer">
+                <form id='form' method='POST'>
+                    {% csrf_token %}
+                    <div class="">
+                        <input type="hidden" name="" id="myUsername" value="{{ user.username }}">
+                        <input type="hidden" name="" id="myDynamicName" value="{{ user.profile.get_dynamic_name }}">
+                        {% if user != object.first %}
+                        <input type="hidden" name="" id="clientUsername" value="{{ object.first.username }}">
+                        <input type="hidden" name="" id="clientDynamicName"
+                            value="{{ object.first.profile.get_dynamic_name }}">
+                        {% else %}
+                        <input type="hidden" name="" id="clientUsername" value="{{ object.second.username }}">
+                        <input type="hidden" name="" id="clientDynamicName"
+                            value="{{ object.second.profile.get_dynamic_name }}">
+                        {% endif %}
+
+                        {% include 'pages/account-form.html' %}
+                        <!-- <input type='submit' class='btn btn-primary' /> -->
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Send <i class="flaticon-message"></i>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script> -->
+<script type="text/javascript" src="{% static 'vendor/websocket-reconnect/reconnecting-websocket.js' %}"></script>
+<script>
+    // websocket scripts
+    // console.log(window.location)
+
+    $(document).ready(function () {
+        var div = $("#chat-items");
+        div.scrollTop(div.prop('scrollHeight'));
+    });
+
+    var loc = window.location;
+    var formData = $("#form");
+    var msgInput = $("#id_message");
+    var chatHolder = $("#chat-items");
+    var me = $("#myUsername").val();
+    var myDynamicName = $("#myDynamicName").val();
+    var client = $("#clientUsername").val();
+    var clientDynamicName = $("#clientDynamicName").val();
+    var div = $("#chat-items");
+
+    var wsStart = "ws://";
+
+    if (loc.protocol == "https:") {
+        wsStart = "wss://";
+    }
+    var endpoint = wsStart + loc.host + loc.pathname;
+    var socket = new ReconnectingWebSocket(endpoint);
+
+    socket.onmessage = function (e) {
+        // console.log("message", e)
+        // console.log(e.data)
+        var chatDataMsg = JSON.parse(e.data);
+        if (chatDataMsg.username == me) {
+            var img = $("#my_image").html();
+            var html = ("<div class='direct-chat-msg right'>\
+                    <div class='direct-chat-info clearfix'>\
+                        <span class='direct-chat-name pull-right'>\
+                            You\
+                        </span>\
+                    </div>\
+                    " + img + "\
+                    <div class='direct-chat-text'>\
+                        " + chatDataMsg.message + "\
+                    </div>\
+                </div>\
+                ")
+        } else {
+            var img = $("#client_image").html();
+            var html = ("<div class='direct-chat-msg'>\
+                    <div class='direct-chat-info clearfix'>\
+                        <span class='direct-chat-name pull-left'>\
+                            " + clientDynamicName + "\
+                        </span>\
+                    </div>\
+                    " + img + "\
+                    <div class='direct-chat-text'>\
+                        " + chatDataMsg.message + "\
+                    </div>\
+                </div>\
+            ")
+        }
+        chatHolder.append(
+            // "<li>" + chatDataMsg.message + " via " + chatDataMsg.username + "</li>"
+            html
+        );
+        div.scrollTop(div.prop('scrollHeight'));
+    };
+    socket.onopen = function (e) {
+        // console.log("open", e)
+        formData.submit(function (event) {
+            event.preventDefault();
+            var msgText = msgInput.val();
+            // chatHolder.append("<li>" + msgText + " via " + me + "</li>")
+            // var formDataSerialized = formData.serialize()
+            var finalData = {
+                message: msgText
+            };
+
+            socket.send(JSON.stringify(finalData));
+            // msgInput.val('')
+            formData[0].reset();
+        });
+    };
+    socket.onerror = function (e) {
+        // console.log("error", e)
+    };
+    socket.onclose = function (e) {
+        // console.log("close", e)
+    };
+</script>
+{% endblock %}

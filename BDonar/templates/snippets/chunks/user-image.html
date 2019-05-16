@@ -1,0 +1,5 @@
+{% load static %}
+<img {% if instance.profile.image %} src="{{ instance.profile.image.url }}" {% endif %}
+    {% if user.socialaccount_set != '' %} {% for account in instance.socialaccount_set.all %}
+    src="{{ account.get_avatar_url }}" {% empty %} src="{% static 'images/raw/avatar.png' %}" {% endfor %} {% else %}
+    src="{% static 'images/raw/avatar.png' %}" {% endif %} alt="{{ instance.profile.user }}" class="{{ class }}">

@@ -1,0 +1,35 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% block page_title %}
+Log in
+{% endblock %}{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'account_login' %}" class="">
+  {% csrf_token %}
+  {% include 'pages/account-form.html' %}
+  <a href="{% url 'account_reset_password' %}" class="pull-right m-t-xs"><small>Forgot password?</small></a>
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+{% get_providers as socialaccount_providers %}
+{% if socialaccount_providers %}
+<div class="socialaccount_ballot text-center">
+  <div class="socialaccount_providers">
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+  </div>
+</div>
+{% include "socialaccount/snippets/login_extra.html" %}
+{% else %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+{% endif %}
+
+<div class="line line-dashed"></div>
+<p class="text-muted text-center mt-2"><small>Don't have an account?</small></p>
+<a href="{{ signup_url }}" class="btn btn-info btn-block">Create an account</a>
+
+{% endblock %}

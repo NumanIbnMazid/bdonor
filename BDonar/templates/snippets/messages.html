@@ -1,0 +1,152 @@
+<!-- {% if messages %}
+<div class="messages text-center font-bold font-15">
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible"
+        role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %} -->
+
+
+{% if messages %}
+{% for message in messages %}
+
+<script>
+    //== Class definition
+    var SweetAlertMessages = function () {
+        var initDemos = function () {
+            //== Sweetalert Demo 4
+            $(document).ready(function (e) {
+                swal({
+                    title: "{{ message.tags }}!".toUpperCase(),
+                    // html: '<br><input class="form-control" placeholder="Input Something" id="input-field">',
+                    // content: {
+                    //     element: "input",
+                    //     attributes: {
+                    //         placeholder: "Input Something",
+                    //         type: "text",
+                    //         id: "input-field",
+                    //         className: "form-control"
+                    //     },
+                    // },
+                    // buttons: false,
+                    // timer: 3000,
+                    // showCancelButton: true,
+                    // closeOnConfirm: false,
+                    // confirmButtonColor: "#ec6c62",
+                    // focusConfirm: false,
+                    // confirmButtonAriaLabel: 'Thumbs up, great!',
+                    // animation: false,
+                    // customClass: {
+                    //     popup: 'animated tada'
+                    // },
+                    // reverseButtons: true,
+                    // width: 600,
+                    // padding: '3em',
+                    // background: '#fff url(/images/trees.png)',
+                    // backdrop: `
+                    //     rgba(0,0,123,0.4)
+                    //     url("/images/nyan-cat.gif")
+                    //     center left
+                    //     no-repeat
+                    // `,
+                    text: "{{ message }}",
+                    icon: "{{ message.tags }}",
+                    buttons: {
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-success",
+                            closeModal: true
+                        },
+                        // cancel: {
+                        //     visible: true,
+                        //     className: 'btn btn-danger'
+                        // }, 
+                    }
+                });
+                // .then(
+                //     function () {
+                //         swal("", "You entered : " + $('#input-field').val(), "success");
+                //     }
+                // );
+                // .then((Delete) => {
+                //     if (Delete) {
+                //         swal({
+                //             title: 'Deleted!',
+                //             text: 'Your file has been deleted.',
+                //             type: 'success',
+                //             buttons: {
+                //                 confirm: {
+                //                     className: 'btn btn-success'
+                //                 }
+                //             }
+                //         });
+                //     } else {
+                //         swal.close();
+                //     }
+                // });
+                // .then((willDelete) => {
+                //     if (willDelete) {
+                //         swal("Poof! Your imaginary file has been deleted!", {
+                //             icon: "success",
+                //             buttons: {
+                //                 confirm: {
+                //                     className: 'btn btn-success'
+                //                 }
+                //             }
+                //         });
+                //     } else {
+                //         swal("Your imaginary file is safe!", {
+                //             buttons: {
+                //                 confirm: {
+                //                     className: 'btn btn-success'
+                //                 }
+                //             }
+                //         });
+                //     }
+                // });
+            });
+        };
+        return {
+            //== Init
+            init: function () {
+                initDemos();
+            },
+        };
+    }();
+
+    //== Class Initialization
+    jQuery(document).ready(function () {
+        SweetAlertMessages.init();
+    });
+</script>
+
+{% endfor %}
+{% endif %}
+
+
+<!-- Terms and Conditions Example -->
+<!-- <script>
+    const {
+        value: accept
+    } = await Swal.fire({
+        title: 'Terms and conditions',
+        input: 'checkbox',
+        inputValue: 1,
+        inputPlaceholder: 'I agree with the terms and conditions',
+        confirmButtonText: 'Continue <i class="fa fa-arrow-right></i>',
+        inputValidator: (result) => {
+            return !result && 'You need to agree with T&C'
+        }
+    })
+
+    if (accept) {
+        Swal.fire('You agreed with T&C :)')
+    }
+</script> -->

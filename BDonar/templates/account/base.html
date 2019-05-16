@@ -1,0 +1,64 @@
+{% load tags %}
+{% if request.user.is_authenticated %}
+{% get_site_preference as site_preference %}
+{% endif %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Head Snippets Files (Meta, Tags) -->
+  {% include 'snippets/head-snippets.html' %}
+  <!-- CSS Files -->
+  {% include 'snippets/css.html' %}
+  {% block extra_css %}{% endblock %}
+  <!-- Head Javascripts -->
+  {% include 'snippets/head-js.html' %}
+</head>
+
+<body
+  data-background-color="{% if not site_preference == None %}{{site_preference.background_color}}{% else %}bg1{% endif %}">
+  <div class="wrapper {% if not site_preference == None %}{{site_preference.sidebar_type}}{% endif %}">
+    <div class="main-header">
+      <!-- Logo Header -->
+      {% include 'snippets/logo-header.html' %}
+      <!-- End Logo Header -->
+
+      <!-- Navbar Header -->
+      {% include 'snippets/navbar.html' %}
+      <!-- End Navbar -->
+    </div>
+
+    <!-- Sidebar -->
+    <!-- {% include 'snippets/sidebar.html' %} -->
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+      <div class="content">
+        <div class="page-inner">
+          <div class="page-header">
+            <h5 class="page-title">
+              {% block page_title %}{% endblock %}
+            </h5>
+          </div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+              {% include 'snippets/messages.html' %}
+              {% block content %}{% endblock %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% include 'snippets/footer.html' %}
+    </div>
+
+  </div>
+  {% include 'snippets/js.html' %}
+
+
+</body>
+
+{% block extra_js %}{% endblock %}
+
+</html>
