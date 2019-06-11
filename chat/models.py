@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django.db.models import Q
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import datetime
 
 
 class ThreadManager(models.Manager):
@@ -43,8 +46,13 @@ class Thread(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='chat_thread_second')
     updated = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = ThreadManager()
+
+    def __str__(self):
+        thread_name = f"{self.first}_-_{self.second}"
+        return thread_name
 
     @property
     def room_group_name(self):
@@ -66,3 +74,17 @@ class ChatMessage(models.Model):
     message = models.TextField(max_length=500)
     is_seen = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = ("Chat Message")
+        verbose_name_plural = ("Chat Messages")
+        ordering = ["timestamp"]
+
+
+@receiver(post_save, sender=ChatMessage)
+def update_thread(sender, instance, created, **kwargs):
+    now = datetime.datetime.now()
+    if created:
+        qs = Thread.objects.filter(id = instance.thread_id)
+        if qs.exists():
+            qs.update(updated_at = now)

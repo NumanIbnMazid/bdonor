@@ -39,6 +39,7 @@ def change_site_preference(request):
         background_color = request.POST.get('background-color')
         sidebar_type = request.POST.get('sidebar-type')
         scroll_to_top = request.POST.get('scroll-to-top')
+        chat_with_others = request.POST.get('chat-with-others')
         user_profile = UserProfile.objects.filter(user=request.user).first()
         site_preference_filter = SitePreference.objects.filter(
             user=user_profile)
@@ -50,6 +51,7 @@ def change_site_preference(request):
                 background_color=background_color,
                 sidebar_type=sidebar_type,
                 scroll_to_top=scroll_to_top,
+                chat_with_others=chat_with_others,
                 updated_at=now
             )
         else:
@@ -60,7 +62,8 @@ def change_site_preference(request):
                 sidebar_color=sidebar_header,
                 background_color=background_color,
                 sidebar_type=sidebar_type,
-                scroll_to_top=scroll_to_top
+                scroll_to_top=scroll_to_top,
+                chat_with_others=chat_with_others
             )
         url = reverse('utils:site_preference')
         messages.add_message(request, messages.SUCCESS,
@@ -76,6 +79,7 @@ def change_site_preference_default(request):
         user=user_profile)
     if site_preference_filter.exists():
         site_preference_filter.delete()
+        SitePreference.objects.create(user=user_profile)
     url = reverse('utils:site_preference')
     messages.add_message(request, messages.SUCCESS,
                          "Site preference changed to default!")

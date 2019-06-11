@@ -1,7 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseForbidden
-from django.shortcuts import render
-from django.urls import reverse
+from django.db.models import Q
 from django.views.generic.edit import FormMixin
 
 from django.views.generic import DetailView, ListView
@@ -12,6 +11,7 @@ from .models import Thread, ChatMessage
 
 class InboxView(LoginRequiredMixin, ListView):
     template_name = 'chat/inbox.html'
+
     def get_queryset(self):
         return Thread.objects.by_user(self.request.user)
 
@@ -25,8 +25,13 @@ class ThreadView(LoginRequiredMixin, FormMixin, DetailView):
         return Thread.objects.by_user(self.request.user)
 
     def get_object(self):
-        other_username  = self.kwargs.get("username")
-        obj, created    = Thread.objects.get_or_new(self.request.user, other_username)
+        other_username = self.kwargs.get("username")
+        obj, created = Thread.objects.get_or_new(
+            self.request.user, other_username)
+        qs = ChatMessage.objects.filter(
+            ~Q(user=self.request.user) & Q(thread=obj))
+        if qs.exists():
+            qs.update(is_seen=True)
         if obj == None:
             raise Http404
         return obj
@@ -52,5 +57,3 @@ class ThreadView(LoginRequiredMixin, FormMixin, DetailView):
         message = form.cleaned_data.get("message")
         ChatMessage.objects.create(user=user, thread=thread, message=message)
         return super().form_valid(form)
-
-

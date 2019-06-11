@@ -1,0 +1,209 @@
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h5>
+                    <b>
+                        <span class="text-secondary">
+                            Title:
+                        </span>
+                        <span class="text-primary ml-2">
+                            {{ object.title }}
+                        </span>
+                    </b>
+                </h5>
+                <div class="text-small op-8">
+                    <span class="text-secondary">
+                        Published:
+                    </span>
+                    <span class="ml-2">
+                        {{ object.created_at|timesince }} ago
+                    </span>
+                </div>
+                <p class="text-muted text-small">
+                    <span class="text-secondary">
+                        Priority:
+                    </span>
+                    <span class="ml-2 {% if object.priority == 1 %}text-danger font-700{% endif %}">
+                        {{ object.get_priority }}
+                    </span>
+                    <br>
+                    <span class="text-secondary">
+                        Progress Status:
+                    </span>
+                    <span
+                        class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success font-700{% endif %}">
+                        {{ object.donation_progress.get_progress_status }}
+                    </span>
+                </p>
+            </div>
+            <h3 class="text-secondary">
+                <a class="text-deco-none" href="{{ object.user.get_absolute_url }}">
+                    <div class="avatar avatar-lg">
+                        {% include 'snippets/chunks/user-image.html' with instance=object.user.user class="avatar-img rounded-circle" %}
+                    </div>
+                    <h6>{{ object.user.get_dynamic_name }}</h6>
+                </a>
+                {% if not object.user.user == request.user and not object.user.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+                <a href="/chat/{{object.user.user.username}}/" class="btn btn-sm text-deco-none border-info-1">
+                    <span class="btn-label">
+                        <i class="flaticon-chat-4"></i>
+                        chat
+                    </span>
+                </a>
+                {% endif %}
+            </h3>
+        </div>
+        <div>
+            <h5>
+                <span class="text-secondary">
+                    Donation Type:
+                </span>
+                <span class="text-primary ml-2">
+                    {{ object.get_donation_type }}
+                </span>
+            </h5>
+
+            {% if object.custom_type %}
+            <h5>
+                <span class="text-secondary">
+                    Custom type name:
+                </span>
+                <span class="text-primary ml-2">
+                    {{ object.custom_type }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.blood_group %}
+            <h5>
+                <span class="text-secondary">
+                    Blood Group:
+                </span>
+                <span class="text-primary ml-2">
+                    {{ object.blood_group }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.blood_bag %}
+            <h5>
+                <span class="text-secondary">
+                    Blood bag quantity:
+                </span>
+                <span class="text-primary ml-2">
+                    {{ object.blood_bag }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.organ_name %}
+            <h5>
+                <span class="text-secondary">
+                    Organ name:
+                </span>
+                <span class="text-primary ml-2">
+                    {{ object.organ_name }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.contact %}
+            <h5>
+                <span class="text-secondary">
+                    Contact no. :
+                </span>
+                <span class="ml-2">
+                    {{ object.contact }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.contact2 %}
+            <h5>
+                <span class="text-secondary">
+                    Contact no. 2 :
+                </span>
+                <span class="ml-2">
+                    {{ object.contact2 }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.contact3 %}
+            <h5>
+                <span class="text-secondary">
+                    Contact no. 3 :
+                </span>
+                <span class="ml-2">
+                    {{ object.contact3 }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.preferred_date %}
+            <h5>
+                <span class="text-secondary">
+                    Preferred date:
+                </span>
+                <span class="ml-2">
+                    {% if object.preferred_date|date:'H:i:s' == "00:00:00" %}
+                    {{ object.preferred_date|date:'d-M-Y' }}
+                    {% else %}
+                    {{ object.preferred_date|date:'d-M-Y h:i a' }}
+                    {% endif %}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.preferred_date_from and object.preferred_date_to %}
+            <h5>
+                <span class="text-secondary">
+                    Preferred date between:
+                </span>
+                <span class="ml-2">
+                    {% if object.preferred_date|date:'H:i:s' == "00:00:00" %}
+                    {{ object.preferred_date_from|date:'d-M-Y' }}
+                    <span class="text-secondary ml-2 mr-2">to</span>
+                    {{ object.preferred_date_to|date:'d-M-Y' }}
+                    {% else %}
+                    {{ object.preferred_date_from|date:'d-M-Y h:i a' }}
+                    <span class="text-secondary ml-2 mr-2">to</span>
+                    {{ object.preferred_date_to|date:'d-M-Y h:i a' }}
+                    {% endif %}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.location %}
+            <h5>
+                <span class="text-secondary">
+                    Preferred location:
+                </span>
+                <span class="ml-2">
+                    {{ object.location }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.details %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title text-center text-secondary">
+                        Details
+                    </h5>
+                </div>
+                <div class="card-body ml-4 mr-4">
+                    {{ object.details|safe|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <div class="d-flex justify-content-between mt-2">
+            <p class="text-muted mb-0">Comment</p>
+            <p class="text-muted mb-0">Like</p>
+        </div>
+    </div>
+</div>

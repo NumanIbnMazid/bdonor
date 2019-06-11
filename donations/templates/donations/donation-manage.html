@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+{% block extra_css %}
+<script>
+    window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';
+</script>
+<!-- <script>window.CKEDITOR_BASEPATH = "{% static 'ckeditor/ckeditor/' %}";</script> -->
+<!-- intlInputPhone CSS -->
+<link rel="stylesheet" href="{% static 'vendor/intlTelInput/intlTelInput.css' %}" type="text/css" />
+<!-- date-time picker CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}" />
+
+<!-- jquery-geo-locate JS -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQGXPTnUyBYyQQt3v0NTkihsR1WU-1Tr8"></script>
+
+{% endblock %}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <form method="POST" id="offer_create_form" data-toggle="validator">
+                {% csrf_token %}
+                <div class="card-header">
+                    <div class="card-title text-center">{{ page_title }}</div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            
+                            {% include 'donations/snippets/donation-form.html' %}
+
+                            <h5 class="font-15 text-primary pointer mt-1" id="advanced">
+                                <i class="flaticon-interface-4"></i>
+                                <span class="ml-2">Advanced options</span>
+                            </h5>
+                            <h5 class="font-15 text-primary pointer mt-1 hidden" id="hide_advanced">
+                                <i class="flaticon-line-1"></i>
+                                <span class="ml-2">Hide Advanced options</span>
+                            </h5>
+                            <p class="hidden" id="message_holder"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action text-center form-group">
+                    <button type="submit" class="btn btn-success m-2" id="submitBtn">
+                        {{ page_title }}
+                    </button>
+                    <button class="btn btn-danger" id="go_back">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% block extra_js %}
+
+<!-- <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script> -->
+
+<!-- jquery-geo-locate -->
+<script type="text/javascript" src="{% static 'vendor/geo-location/jquery-geolocate.min.js' %}"></script>
+
+<!-- intlInputPhone JS -->
+<!-- <script type="text/javascript" src="{% static 'vendor/intlTelInput/intlTelInput.min.js' %}"></script> -->
+<script type="text/javascript" src="{% static 'vendor/intlTelInput/intlTelInput-jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/intlTelInput/intlTelInput-conf.js' %}"></script>
+
+<script>
+    window.intlTelInputGlobals.loadUtils("{% static 'vendor/intlTelInput/utils.js' %}");
+</script>
+
+<!-- date-time picker JS -->
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}"/> -->
+<script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
+
+<!-- ajax-setup JS -->
+<!-- <script type="text/javascript" src="{% static 'assets/js/form-validator/ajax-setup.js' %}"></script> -->
+
+<script type="text/javascript" src="{% static 'assets/js/form-validator/donation-form.js' %}"></script>
+
+{% endblock %}
+
+{% endblock %}

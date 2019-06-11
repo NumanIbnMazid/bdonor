@@ -45,13 +45,15 @@
     <div class="form">
         <!-- Main Input Item -->
         {% if not field.label == "Remember Me" %}
-        {{ field|attr:"autocomplete:off"|add_class:'form-control input-lg' }}
+        {{ field|attr:"autocomplete:off"|add_class:'form-control form-control' }}
         {% else %}
         {{ field|attr:"autocomplete:off"|add_class:'' }}
         {% endif %}
 
+        <div class="help-block with-errors text-center"></div>
+
         {% if field.help_text %}
-        <div class="help">
+        <div class="label ml-2">
             <p id="help_block" class="form-text help-text">
                 {{ field.help_text|safe }}
             </p>
@@ -62,7 +64,7 @@
         {% for error in field.errors %}
         <div class="error mt-1">
             <b class="text-danger">
-                <p>{{ error|safe }}</p>
+                <p id="form_error">{{ error|safe }}</p>
             </b>
         </div>
         {% endfor %}

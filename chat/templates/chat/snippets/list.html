@@ -1,0 +1,64 @@
+{% load el_pagination_tags %}
+
+{% if chat_list.count >= 1 %}
+{% paginate 12 chat_list %}
+{% endif %}
+
+{% for thread in chat_list %}
+{% for message in thread.chatmessage_set.all %}
+{% if forloop.last %}
+
+<div id="chat-message-holder"></div>
+
+<a class="hover text-deco-none {% if message.is_seen == False and not message.user == user %}bg-c-ash-raw{% endif %}"
+    id="chat_link"
+    href="/chat/{% if user != thread.first %}{{ thread.first }}{% else %}{{ thread.second }}{% endif %}/">
+
+    {% if message.is_seen == False and not message.user == user %}
+    <input type="hidden" name="unseen_input" value="1" id="unseen_counter">
+    {% endif %}
+
+    <div class="card-body">
+        <div class="d-flex row">
+            <div class="avatar col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4">
+                <!-- <span class="avatar-title rounded-circle border border-white bg-info"></span> -->
+                {% if user != thread.first %}
+                {% include 'snippets/chunks/user-image.html' with instance=thread.first class="avatar-img avatar-md rounded-circle border border-white bg-info" %}
+                {% else %}
+                {% include 'snippets/chunks/user-image.html' with instance=thread.second class="avatar-img avatar-md rounded-circle border border-white bg-info" %}
+                {% endif %}
+            </div>
+            <div class="flex-1 ml-3 pt-1 col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12">
+                <h6 class="text-uppercase fw-bold mb-1">
+                    <span id="name_holder">
+                        {% if user != thread.first %}
+                        {{ thread.first.profile.get_dynamic_name }}
+                        {% else %}
+                        {{ thread.second.profile.get_dynamic_name }}
+                        {% endif %}
+                    </span>
+                </h6>
+                <span class="text-muted">
+                    {{ message.message|safe|truncatechars_html:20 }}
+                </span>
+            </div>
+            <div class="float-right pt-1 col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                <small class="text-muted">{{ message.timestamp }}</small>
+            </div>
+        </div>
+        <div class="separator-dashed"></div>
+    </div>
+
+</a>
+
+{% endif %}
+{% endfor %}
+{% empty %}
+<div class="alert alert-warning">
+    <strong>No messages to show!</strong>
+</div>
+{% endfor %}
+
+{% if chat_list.count >= 1 %}
+{% show_more "Show More" %}
+{% endif %}

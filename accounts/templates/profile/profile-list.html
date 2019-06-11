@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load cool_paginate %}
 {% load static %}
 
 {% block head_title %}{% block page_title %}{% block breadcrumb %}
@@ -8,29 +7,39 @@ User Profiles
 
 {% block content %}
 
+{% block extra_css %}
+<!-- el-pagination css -->
+<link rel="stylesheet" href="{% static 'vendor/el-pagination/el-pagination.css' %}" type="text/css" />
+{% endblock %}
+
 <div class="row">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="row">
-            {% for object in object_list %}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
-                {% if object.user.is_active %}
 
-                {% include 'profile/snippets/profile-card.html' with instance=object %}
+            {% include page_template %}
 
-                {% endif %}
-            </div>
-            {% empty %}
-            <div class="alert alert-warning">
-                Currently there are no users available !
-            </div>
-            {% endfor %}
         </div>
-
-        <div class="text-center">
-            {% cool_paginate page_obj=object %}
-        </div>
-
     </div>
 </div>
+
+{% block extra_js %}
+<!-- el-pagination JS -->
+<script type="text/javascript" src="{% static 'vendor/el-pagination/el-pagination.js' %}"></script>
+<script>
+    // $.endlessPaginate();
+    // $.endlessPaginate({paginateOnScroll: true});
+    // $.endlessPaginate({
+    //     paginateOnScroll: true,
+    //     paginateOnScrollMargin: 20
+    // });
+    $.endlessPaginate({
+        paginateOnScroll: true,
+        paginateOnScrollChunkSize: 5
+    });
+    // $.endlessPaginate({
+    //     contentSelector: '.endless_content_wrapper'
+    // });
+</script>
+{% endblock %}
 
 {% endblock %}

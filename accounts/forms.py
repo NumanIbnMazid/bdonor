@@ -9,8 +9,8 @@ import re
 import os
 
 
-class DateInput(forms.DateInput):
-    input_type = 'date'
+# class DateInput(forms.DateInput):
+#     input_type = 'date'
 
 
 class CustomSignupForm(SignupForm):
@@ -23,7 +23,7 @@ class CustomSignupForm(SignupForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name']
+        fields = ['last_name', 'first_name']
 
 
 class UserProfileUpdateForm(forms.ModelForm):
@@ -40,17 +40,48 @@ class UserProfileUpdateForm(forms.ModelForm):
         self.fields.update(self.uf.fields)
         self.initial.update(self.uf.initial)
 
+        # self.fields.keyOrder = [
+        #     'first_name',
+        #     'last_name',
+        #     'gender',
+        #     'dob',
+        #     'blood_group',
+        #     'contact',
+        #     'address',
+        #     'about',
+        #     'facebook',
+        #     'linkedin',
+        #     'website',
+        #     'image',
+        # ]
+
         self.fields['first_name'] = forms.CharField(required=False,
                                                     widget=forms.TextInput(attrs={'placeholder': 'Enter your first name...'}))
+        self.fields['first_name'].widget.attrs.update({
+            'id': 'profile_first_name',
+            'maxlength': 15,
+            'pattern': "^[A-Za-z.,\- ]{1,}$",
+        })
         self.fields['last_name'] = forms.CharField(required=False,
                                                    widget=forms.TextInput(attrs={'placeholder': 'Enter your last name...'}))
-        self.fields['dob'].widget.attrs.update({
-            # 'placeholder': 'Enter your Date of Birth...',
-            'id': 'datetimepicker',
+        self.fields['last_name'].widget.attrs.update({
+            'id': 'profile_last_name',
+            'maxlength': 20,
+            'pattern': "^[A-Za-z.,\- ]{1,}$"
         })
-        self.fields['contact'] = forms.CharField(required=False, min_length=14, max_length=14,
-                                                 widget=forms.TextInput(attrs={'placeholder': 'Ex: +8801000000000'}))
+        self.fields['dob'].widget.attrs.update({
+            'placeholder': 'Ex: 1996-02-27',
+            'id': 'profile_dob',
+        })
+        self.fields['contact'] = forms.CharField(required=False,
+                                                 widget=forms.TextInput())
+        self.fields['contact'].widget.attrs.update({
+            'id': 'profile_contact',
+            'onkeyup': "resetMessage()",
+            'maxlength': 20,
+        })
         self.fields['address'].widget.attrs.update({
+            'id': 'profile_address',
             'rows': 2,
             'cols': 2,
             'placeholder': 'Enter your address',
@@ -71,6 +102,8 @@ class UserProfileUpdateForm(forms.ModelForm):
         self.fields['about'] = forms.CharField(required=False, max_length=250,
                                                widget=forms.Textarea(attrs={'rows': 2, 'cols': 2, 'placeholder': 'Enter more about you...'}))
         # Help Texts
+        self.fields['first_name'].help_text = "Maximum length 15 and only these 'A-Za-z.,-' characters and spaces are allowed."
+        self.fields['last_name'].help_text = "Maximum length 20 and only these 'A-Za-z.,-' characters and spaces are allowed."
         self.fields['gender'].help_text = 'Enter your Gender.'
         self.fields['dob'].help_text = 'Enter your Date of Birth.'
         self.fields['dob'].label = "Date of Birth"
@@ -86,49 +119,60 @@ class UserProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
+        fields = ['about', 'website', 'linkedin',
+                  'facebook', 'address', 'image', 'dob', 'contact', 'gender', 'blood_group']
         # fields = ['gender', 'dob', 'blood_group',
         #           'contact', 'image', 'address', 'about', 'facebook', 'linkedin', 'website']
-        exclude = ['user', 'slug', 'account_type', 'is_volunteer']
-        widgets = {
-            'dob': DateInput(),
-        }
+        # exclude = ['user', 'slug', 'account_type', 'is_volunteer']
+        # widgets = {
+        #     'dob': DateInput(),
+        # }
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get("first_name")
-        if first_name != '':
-            allowed_char = re.match(r'^[A-Za-z.,\- ]+$', first_name)
+        if first_name != "":
+            allowed_char = re.match(r'^[A-Za-z-., ]+$', first_name)
             length = len(first_name)
             if length > 15:
                 raise forms.ValidationError("Maximum 15 characters allowed !")
             if not allowed_char:
                 raise forms.ValidationError(
-                    "Please Enter Valid Name (Only Alpha values allowed, Ex:Abc) !")
+                    "Only 'A-Za-z.,-' these characters and spaces are allowed.")
         return first_name
 
     def clean_last_name(self):
         last_name = self.cleaned_data.get("last_name")
-        if last_name != '':
-            allowed_char = re.match(r'^[A-Za-z.,\- ]+$', last_name)
+        if last_name != "":
+            allowed_char = re.match(r'^[A-Za-z-., ]+$', last_name)
             length = len(last_name)
             if length > 20:
                 raise forms.ValidationError("Maximum 20 characters allowed !")
             if not allowed_char:
                 raise forms.ValidationError(
-                    "Please Enter Valid Name (Only Alpha values allowed, Ex:Abc) !")
+                    "Only 'A-Za-z.,-' these characters and spaces are allowed.")
         return last_name
+
+    # def clean_contact(self):
+    #     contact = self.cleaned_data.get("contact")
+    #     if contact != '':
+    #         appears_special = contact.count('+')
+    #         country_code = '+880'
+    #         starts_with_code = contact.startswith(country_code)
+    #         allowed_char = re.match(r'^[0-9+]+$', contact)
+    #         length = len(contact)
+
+    #         if not allowed_char or not starts_with_code or appears_special > 1 or length < 11:
+    #             raise forms.ValidationError(
+    #                 "Must be valid phone number and start with (+880).</br> Ex: +8801000000000")
+    #     return contact
 
     def clean_contact(self):
         contact = self.cleaned_data.get("contact")
         if contact != '':
-            appears_special = contact.count('+')
-            country_code = '+880'
-            starts_with_code = contact.startswith(country_code)
-            allowed_char = re.match(r'^[0-9+]+$', contact)
-            length = len(contact)
-
-            if not allowed_char or not starts_with_code or appears_special > 1 or length < 11:
+            allowed_char = re.match(r'^[0-9]+$', contact)
+            if not allowed_char:
                 raise forms.ValidationError(
-                    "Must be valid phone number and start with (+880).</br> Ex: +8801000000000")
+                    "Please enter a valid contact number!")
         return contact
 
     def clean_image(self):

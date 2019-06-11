@@ -7,6 +7,30 @@ Chat with
 
 {% block content %}
 
+{% if not site_preference.chat_with_others == False %}
+
+{% if not object.first.profile.user_site_preference.chat_with_others == False and not object.second.profile.user_site_preference.chat_with_others == False %}
+
+<div id="socket_messages"></div>
+
 {% include 'chat/snippets/chat-box.html' %}
+
+{% else %}
+
+<div class="alert alert-warning">
+    <strong>Not Allowed!</strong>
+    <p>{% if user != object.first %}{{ object.first.profile.get_dynamic_name }}{% else %}{{ object.second.profile.get_dynamic_name }}{% endif %} has disabled chat option!</p>
+</div>
+
+{% endif %}
+
+{% else %}
+
+<div class="alert alert-warning">
+    <strong>Not Allowed!</strong>
+    <p>You have disabled chat option! Please enable it if you want to chat with other users.</p>
+</div>
+
+{% endif %}
 
 {% endblock %}

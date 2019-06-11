@@ -1,22 +1,24 @@
-<div class="card p-3 {% if object.user == request.user %}card-info{% endif %}">
+<div class="card p-3 {% if object.user == request.user %}card-info{% endif %} hover-effect text-deco-none">
     <div class="d-flex align-items-center">
         <span class="stamp stamp-md bg-secondary mr-3">
-            {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img avatar-sm rounded" %}
-            {% if object.blood_group %}
-            <span class=" text-warning">{{ object.blood_group }}</span>
-            {% endif %}
+            <a href="{{ profile_details_url }}" class="text-deco-none">
+                {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img avatar-sm rounded" %}
+                {% if object.blood_group %}
+                <span class=" text-warning">{{ object.blood_group }}</span>
+                {% endif %}
+            </a>
         </span>
         <div>
             <h5 class="mb-1">
                 <b>
-                    <a href="#">
-                        <small>{{ object.get_dynamic_name|truncatechars_html:19 }}</small>
+                    <a href="{{ profile_details_url }}" class="text-deco-none">
+                        <small>{{ object.get_dynamic_name|truncatechars_html:13 }}</small>
                     </a>
                 </b>
             </h5>
-            {% if not object.user == request.user %}
+            {% if not object.user == request.user and not object.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
             <small class="text-muted">
-                <a href="/chat/{{object.user.username}}/">
+                <a href="/chat/{{object.user.username}}/" class="text-deco-none">
                     <i class="flaticon-chat-4 font-20"></i>
                 </a>
             </small>

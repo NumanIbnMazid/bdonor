@@ -2,6 +2,10 @@
 # Mixed
     - .c-active
     - .hidden
+    - .text-deco-none
+    - .hover, .hover-effect
+    - .truncate, .truncate-50, .truncate-100 - .truncate-300
+    - .pointer
 
 # font
     - .font-10, .font-13, .font-15, .font-17 - .font-40
@@ -10,9 +14,10 @@
     - .font-700
 
 # text
-    - .c-text-primary, secondary, dark, info, success, warning, danger
+    - .c-text-primary, secondary, dark, info, success, warning, danger, c-text-highlight-green
 
 # Border
+    - .b-b, b-t, b-l, b-r
     - .border-success-1 - .border-success-5
     - .border-primary-1 - .border-primary-5
     - .border-info-1 - .border-info-5
@@ -41,3 +46,11 @@
     - .bg-c-mixed-green
     - .bg-c-green
     - .bg-c-soft-green
+
+# background-color
+    - .bg-c-ash-raw
+    - .bg-c-azure-raw
+    - .bg-c-smoke-raw
+    - .bg-c-water-raw
+    - .bg-c-sky-raw
+

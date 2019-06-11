@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Q
 from .utils import time_str_mix_slug, upload_image_path
+from django.urls import reverse
 
 
 class UserProfile(models.Model):
@@ -53,11 +54,11 @@ class UserProfile(models.Model):
                                null=True, verbose_name='address')
     about = models.TextField(max_length=300, blank=True,
                              null=True, verbose_name='about')
-    facebook = models.CharField(
+    facebook = models.URLField(
         max_length=300, blank=True, null=True, verbose_name='facebook')
-    linkedin = models.CharField(
+    linkedin = models.URLField(
         max_length=300, blank=True, null=True, verbose_name='linkedin')
-    website = models.CharField(
+    website = models.URLField(
         max_length=300, blank=True, null=True, verbose_name='website')
     image = models.ImageField(
         upload_to=upload_image_path, null=True, blank=True, verbose_name='image')
@@ -73,6 +74,9 @@ class UserProfile(models.Model):
         verbose_name = ("User Profile")
         verbose_name_plural = ("User Profiles")
         ordering = ["-user__date_joined"]
+
+    def get_absolute_url(self):
+        return reverse("profile_details", kwargs={"slug": self.slug})
 
     def username(self):
         return self.user.username
@@ -92,7 +96,7 @@ class UserProfile(models.Model):
         return name
 
     def get_dynamic_name(self):
-        if len(self.get_username()) < 19:
+        if len(self.get_username()) < 13:
             name = self.get_username()
         else:
             name = self.get_smallname()

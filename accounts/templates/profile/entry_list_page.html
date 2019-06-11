@@ -1,0 +1,26 @@
+{% load el_pagination_tags %}
+
+{% if object_list.count >= 1 %}
+{% paginate 12 object_list %}
+{% endif %}
+
+{% for object in object_list %}
+
+{% url 'profile_details' slug=object.slug as profile_details_url %}
+
+<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
+    {% if object.user.is_active %}
+
+    {% include 'profile/snippets/profile-card.html' with instance=object %}
+
+    {% endif %}
+</div>
+{% empty %}
+<div class="alert alert-warning">
+    Currently there are no users available !
+</div>
+{% endfor %}
+
+{% if object_list.count >= 1 %}
+{% show_more "Show More" %}
+{% endif %}

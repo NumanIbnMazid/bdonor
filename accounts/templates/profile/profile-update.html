@@ -8,9 +8,21 @@ Update Profile
 
 {% block content %}
 
+{% block extra_css %}
+
+<!-- intlInputPhone CSS -->
+<link rel="stylesheet" href="{% static 'vendor/intlTelInput/intlTelInput.css' %}" type="text/css" />
+<!-- date-time picker CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}" />
+
+<!-- jquery-geo-locate JS -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQGXPTnUyBYyQQt3v0NTkihsR1WU-1Tr8"></script>
+
+{% endblock %}
+
 <div class="card">
-    <div class="card-header">
-        <h4 class="card-title">Profile</h4>
+    <div class="card-header text-center">
+        <h4 class="card-title">Update Profile</h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -20,19 +32,39 @@ Update Profile
             </div>
 
             <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-                <form class="" method="POST" enctype="multipart/form-data">
+                <form class="" method="POST" enctype="multipart/form-data" data-toggle="validator" id="profile_form">
                     {% csrf_token %}
 
-                    {% include 'snippets/form.html' %}
+                    {% include 'profile/snippets/form.html' %}
 
-                    <button class="btn btn-primary" type="submit" id="profile_update_btn">
-                        Update My Profile <i class="fa fa-edit"></i>
-                    </button>
+                    <div class="card-action text-center form-group">
+                        <button type="submit" class="btn btn-success m-2" id="profile_update_btn">
+                            Update Profile
+                        </button>
+                        <button class="btn btn-danger" id="go_back">Cancel</button>
+                    </div>
 
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+{% block extra_js %}
+
+<!-- jquery-geo-locate -->
+<script type="text/javascript" src="{% static 'vendor/geo-location/jquery-geolocate.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'vendor/intlTelInput/intlTelInput-jquery.min.js' %}"></script>
+
+<script>
+    window.intlTelInputGlobals.loadUtils("{% static 'vendor/intlTelInput/utils.js' %}");
+</script>
+
+<script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'assets/js/form-validator/profile-form.js' %}"></script>
+
+{% endblock %}
 
 {% endblock %}

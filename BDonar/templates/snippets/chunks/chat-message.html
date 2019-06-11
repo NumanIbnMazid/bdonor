@@ -1,0 +1,80 @@
+{% load static %}
+
+{% url 'chat_list' as chat_list_url %}
+
+<a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-envelope"></i>
+    <span class="notification" id="unseen-count-holder"></span>
+</a>
+<ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
+    <li>
+        <div class="dropdown-title d-flex justify-content-between align-items-center">
+            Messages
+            <!-- <a href="#" class="small">Mark all as read</a> -->
+        </div>
+    </li>
+    <li>
+        <div class="message-notif-scroll scrollbar-outer" id="chat_holder_parent_div">
+            <div class="notif-center">
+                {% for thread in threads %}
+                {% for message in thread.chatmessage_set.all %}
+                {% if forloop.last %}
+
+                <div id="chat-message-holder"></div>
+
+                <a class="hover text-deco-none {% if message.is_seen == False and not message.user == user %}bg-c-ash-raw{% endif %}"
+                    id="chat_link"
+                    href="/chat/{% if user != thread.first %}{{ thread.first }}{% else %}{{ thread.second }}{% endif %}/">
+
+                    {% if message.is_seen == False and not message.user == user %}
+                    <input type="hidden" name="unseen_input" value="1" id="unseen_counter">
+                    {% endif %}
+
+                    <div class="notif-img">
+                        {% if user != thread.first %}
+                        {% include 'snippets/chunks/user-image.html' with instance=thread.first %}
+                        {% else %}
+                        {% include 'snippets/chunks/user-image.html' with instance=thread.second %}
+                        {% endif %}
+                    </div>
+                    <div class="notif-content">
+                        <span class="subject" id="name_holder">
+                            {% if user != thread.first %}
+                            {{ thread.first.profile.get_dynamic_name }}
+                            {% else %}
+                            {{ thread.second.profile.get_dynamic_name }}
+                            {% endif %}
+                        </span>
+                        <span class="block truncate">
+                            {{ message.message|safe|truncatechars_html:20 }}
+                        </span>
+                        <span class="time">{{ message.timestamp|timesince }} ago</span>
+                    </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+                {% empty %}
+                <div class="alert alert-warning">
+                    <strong>No messages to show!</strong>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </li>
+    <li>
+        <a class="see-all" href="{{ chat_list_url }}">See all messages<i class="fa fa-angle-right"></i>
+        </a>
+    </li>
+</ul>
+
+{% block extra_js %}
+<script>
+    var unseen_array = new Array();
+    $("input[name=unseen_input]").each(function () {
+        unseen_array.push($(this).val());
+    });
+    // console.log(unseen_array.length);
+    $('#unseen-count-holder').html(unseen_array.length).css('color', '#070135').css('font-weight', '700');
+</script>
+{% endblock %}

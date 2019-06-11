@@ -4,7 +4,7 @@ from decouple import config, Csv
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-ALLOWED_HOSTS = ['BDonar.pythonanywhere.com']
+ALLOWED_HOSTS = ['bdonar.pythonanywhere.com']
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='')
 EMAIL_HOST = config('EMAIL_HOST', default='localhost')
 EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
@@ -37,8 +37,8 @@ STATICFILES_DIRS = [
 # MEDIA_ROOT = os.path.join('static_cdn', 'media_root')
 
 # ======== Place It in PythonAnyWhere Static Files Section =======
-STATIC_ROOT = '/home/BDonar/static_cdn/static_root'
-MEDIA_ROOT = '/home/BDonar/static_cdn/media_root'
+STATIC_ROOT = '/home/bdonar/static_cdn/static_root'
+MEDIA_ROOT = '/home/bdonar/static_cdn/media_root'
 
 # ==================== Security Modules ===================
 CSRF_COOKIE_SECURE = True
@@ -87,7 +87,7 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             # "hosts": [("localhost", 6379)],
             # Production Mode
-            "hosts": [os.environment.get('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
     },
 }

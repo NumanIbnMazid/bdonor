@@ -6,7 +6,7 @@ Sign up
 
 {% block content %}
 
-<form method="POST" action="{% url 'account_signup' %}" class="">
+<form method="POST" action="{% url 'account_signup' %}" class="" data-toggle="validator">
   {% csrf_token %}
   {% include 'pages/account-form.html' %}
   <a href="{% url 'account_reset_password' %}" class="pull-right mt-xs"><small>Forgot password?</small></a>

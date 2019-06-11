@@ -1,17 +1,19 @@
-{% url 'profile_details' slug=request.user.profile.slug as profile_details_url %}
+{% url 'profile_details' slug=object.slug as profile_details_url %}
 {% url 'profile_update' slug=request.user.profile.slug as profile_update_url %}
 
 <div class="nav flex-column nav-pills nav-secondary nav-pills-no-bd nav-pills-icons" role="tablist"
     aria-orientation="vertical">
     <a class="nav-link {% if request.path == profile_details_url %}active show{% endif %}"
         href="{{ profile_details_url }}">
-        {% include 'snippets/chunks/user-image.html' with instance=request.user class="avatar-img avatar-lg rounded-circle" %}
+        {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img avatar-lg rounded-circle" %}
         <br>
         Profile
     </a>
+    {% if object.user == request.user %}
     <a class="nav-link {% if request.path == profile_update_url %}active show{% endif %}"
         href="{{ profile_update_url }}">
         <i class="flaticon-user-5"></i>
         Update Profile
     </a>
+    {% endif %}
 </div>

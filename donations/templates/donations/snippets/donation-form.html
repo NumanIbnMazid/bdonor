@@ -1,0 +1,208 @@
+{% load widget_tweaks %}
+
+{{ form.media }}
+
+{% if form.visible_fields %}
+<div class="text-center m-b-sm">
+    <small class="text-muted">
+        Please fill the <span class="text-info"><i>required</i></span> fields properly
+    </small>
+</div>
+{% endif %}
+
+{% for hidden_field in form.hidden_fields %}
+{% if hidden_field.errors %}
+<div class="alert alert-danger" role="alert">
+    {% for error in hidden_field.errors %}
+    <p class="text-danger font-italic">
+        <strong>(Hidden field {{ hidden_field.name }}) {{ error }}</strong>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+{{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+    <p class="text-danger">
+        <strong>{{ error }}</strong>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% for field in form.visible_fields %}
+<div class="form-group {% if field.errors %}border-danger-1 error-group{% endif %} {% if field.name == 'custom_type' or field.name == 'blood_group' or field.name == 'blood_bag' or field.name == 'organ_name' or field.name == 'details_fake' or field.name == 'contact2' or field.name == 'contact3' or field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'location' or field.name == 'priority' or field.name == 'publication_status' %}hidden invisible-input-group{% endif %} {% if field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'location' or field.name == 'priority' or field.name == 'publication_status' %}special-input-group{% endif %}"
+    id="{{ field.id_for_label }}-group">
+
+    <div class="form">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="{{ field.id_for_label }}" class="control-label" id="{{ field.id_for_label }}-label">
+
+                    <span class="font-13">{{ field.label |title }}</span>
+
+                    {% if field.field.required %}
+                    <small class="text-info"><i class="field_priority"
+                            id="{{field.name}}_priority">(required)</i></small>
+                    {% else %}
+                    <small class="text-muted"><i class="field_priority"
+                            id="{{field.name}}_priority">(optional)</i></small>
+                    {% endif %}
+
+                </label>
+            </div>
+            <div class="col-md-8">
+                <!-- Main Input Item -->
+                <!-- {{ field.field.widget.input_type }} -->
+
+                {% if field.name == 'contact' or field.name == 'contact2' or field.name == 'contact3' %}
+                <div class="input-phone">
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
+
+                            {% if field.name == 'blood_bag' %}
+                            <div class="row">
+                                <div class="col-md-8">
+                                    {% endif %}
+
+                                    {% if field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'location' or field.name == 'priority' or field.name == 'publication_status' %}
+                                    {{ field|add_class:"form-control form-control special-input" }}
+                                    {% else %}
+                                    {{ field|add_class:"form-control form-control" }}
+                                    {% endif %}
+
+                                    {% if field.name == 'blood_bag' %}
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Bag</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="help-block with-errors text-center"></div>
+                            <div class="text-center">
+                                <span class="input-message text-danger font-13" id="{{field.name}}_msg"></span>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                            {% if field.help_text %}
+                            <span class="label ml-2" data-toggle="tooltip" data-placement="top" title=""
+                                data-original-title="{{ field.help_text|safe }}">
+                                <i class="fa fa-exclamation-circle"></i>
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if field.name == 'contact' or field.name == 'contact2' or field.name == 'contact3' %}
+                </div>
+                {% endif %}
+
+                {% if field.name == 'details' %}
+                <h6 id="advanced_editing" class="pointer text-info mt-2 text-center">
+                    <i class="flaticon-pen"></i>
+                    <span class="ml-1">Advanced editing</span>
+                </h6>
+                {% endif %}
+
+                {% if field.name == 'details_fake' %}
+                <h6 id="basic_editing" class="pointer text-info mt-2 text-center hidden">
+                    <i class="flaticon-pencil"></i>
+                    <span class="ml-1">Basic editing</span>
+                </h6>
+                {% endif %}
+
+                {% if field.name == 'contact' %}
+                <input type="hidden" id="contactFake" value="+880" name="contact_fake" minlength="10" maxlength="10">
+                <h6 id="add_second_contact" class="pointer text-info mt-2 text-center hidden">
+                    <i class="flaticon-add"></i>
+                    <span class="ml-1">Add second contact</span>
+                </h6>
+                {% endif %}
+
+                {% if field.name == 'contact2' %}
+                <input type="hidden" id="contact2Fake" value="+880" name="contact2_fake" minlength="10" maxlength="10">
+                <span class="font-15 text-primary pointer mt-1 pull-left" id="hide_contact2">
+                    <i class="flaticon-line-1"></i>
+                </span>
+                <h6 id="add_third_contact" class="pointer text-info mt-2 text-center hidden">
+                    <i class="flaticon-add"></i>
+                    <span class="ml-1">Add third contact</span>
+                </h6>
+                {% endif %}
+
+                {% if field.name == 'contact3' %}
+                <input type="hidden" id="contact3Fake" value="+880" name="contact3_fake" minlength="10" maxlength="10">
+                <span class="font-15 text-primary pointer mt-1 pull-left" id="hide_contact3">
+                    <i class="flaticon-line-1"></i>
+                </span>
+                {% endif %}
+
+                {% if field.name == 'preferred_date' %}
+                <input type="hidden" name="datetime" id="datetime" value="false">
+                <div class="row">
+                    <div class="col-md-7">
+                        <h6 id="set_date_between" class="pointer text-info mt-2">
+                            <i class="flaticon-calendar"></i>
+                            <span class="ml-1">Set date between</span>
+                        </h6>
+                        <h6 id="hide_set_date_between" class="pointer text-info mt-2 hidden">
+                            <i class="flaticon-calendar"></i>
+                            <span class="ml-1">Remove date between</span>
+                        </h6>
+                    </div>
+                    <div class="col-md-5">
+                        <h6 id="date_with_time" class="pointer text-info mt-2">
+                            <i class="flaticon-time"></i>
+                            <span class="ml-1">With time</span>
+                        </h6>
+                        <h6 id="date_without_time" class="pointer text-info mt-2 hidden">
+                            <i class="flaticon-time"></i>
+                            <span class="ml-1">Without time</span>
+                        </h6>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if field.name == 'preferred_date_to' %}
+                <span class="font-15 text-primary pointer mt-1 pull-left" id="hide_set_date_between">
+                    <i class="flaticon-line-1"></i>
+                </span>
+                {% endif %}
+
+                {% if field.name == 'location' %}
+                <h6 id="detect_location" class="pointer text-info mt-2">
+                    <i class="flaticon-placeholder-1"></i>
+                    <span class="ml-1">Detect location</span>
+                </h6>
+                {% endif %}
+
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <div class="row form-error-div">
+                    <b class="col-md-12 text-danger">
+                        <span id="{{field.name}}_error" class="form-error">
+                            {{ error|safe }}
+                        </span>
+                    </b>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}

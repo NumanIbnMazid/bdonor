@@ -9,11 +9,13 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from el_pagination.views import AjaxListView
 
 
-class UserListView(ListView):
+class UserListView(AjaxListView):
     template_name = 'profile/profile-list.html'
-    paginate_by = 24
+    page_template = 'profile/entry_list_page.html'
+    # paginate_by = 3
 
     def get_queryset(self):
         qs = UserProfile.objects.all()
@@ -32,8 +34,9 @@ class ProfileDetailView(DetailView):
 
     def user_passes_test(self, request):
         if request.user.is_authenticated:
-            self.object = self.get_object()
-            return self.object.user == request.user
+            # self.object = self.get_object()
+            # return self.object.user == request.user
+            return True
         return False
 
     def dispatch(self, request, *args, **kwargs):
@@ -55,6 +58,12 @@ class ProfileUpdateView(UpdateView):
         return None
 
     def form_valid(self, form):
+        contact = form.instance.contact
+        # print(f"XXX___{contact}")
+        contactFake = self.request.POST.get("contact_fake")
+        # Save the form
+        if contact is not "":
+            form.instance.contact = contactFake + contact
         messages.add_message(self.request, messages.SUCCESS,
                              "Your profile has been updated successfully !")
         return super().form_valid(form)

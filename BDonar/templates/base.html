@@ -1,6 +1,8 @@
 {% load tags %}
 {% if request.user.is_authenticated %}
 {% get_site_preference as site_preference %}
+{% get_chat_messages as chat_messages %}
+{% get_threads as threads %}
 {% endif %}
 {% get_datetime_tag as datetime %}
 
@@ -9,6 +11,9 @@
 <html lang="en">
 
 <head>
+	<title>
+		{% block head_title %}BDonar{% endblock %} | BDonar Donation Management System
+	</title>
 	<!-- Head Snippets Files (Meta, Tags) -->
 	{% include 'snippets/head-snippets.html' %}
 	<!-- CSS Files -->
@@ -19,8 +24,8 @@
 </head>
 
 <body
-	data-background-color="{% if not site_preference == None %}{{site_preference.background_color}}{% else %}bg1{% endif %}">
-	<div class="wrapper {% if not site_preference == None %}{{site_preference.sidebar_type}}{% endif %}">
+	data-background-color="{% if not site_preference.background_color == None %}{{site_preference.background_color}}{% else %}bg1{% endif %}">
+	<div class="wrapper {% if not site_preference.sidebar_type == None %}{{site_preference.sidebar_type}}{% endif %}">
 		<div class="main-header">
 			<!-- Logo Header -->
 			{% include 'snippets/logo-header.html' %}
@@ -32,7 +37,7 @@
 		</div>
 
 		<!-- Sidebar -->
-		{% if not site_preference == None and site_preference.sidebar_type == "static-sidebar" %}
+		{% if site_preference.sidebar_type == "static-sidebar" %}
 		<div class="classic-grid">
 			{% endif %}
 
@@ -70,7 +75,7 @@
 
 			</div>
 
-			{% if not site_preference == None and site_preference.sidebar_type == "static-sidebar" %}
+			{% if site_preference.sidebar_type == "static-sidebar" %}
 		</div>
 		{% endif %}
 
@@ -80,7 +85,7 @@
 
 	</div>
 
-	{% if site_preference == None or site_preference.scroll_to_top == True %}
+	{% if not site_preference.scroll_to_top == False %}
 	<div class="auto-scroll-to-top">
 		<i class="fa fa-angle-up"></i>
 	</div>

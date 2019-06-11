@@ -3,7 +3,11 @@
 {% load static %}
 
 {% block head_title %}{% block page_title %}{% block breadcrumb %}
+{% if object.user == request.user %}
 My Profile
+{% else %}
+{{object.get_dynamic_name}}'s Profile
+{% endif %}
 {% endblock %}{% endblock %}{% endblock %}
 
 {% block content %}
@@ -15,7 +19,16 @@ My Profile
 
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title">Profile</h4>
+        <h4 class="card-title text-center">
+            <span class="">Profile Details</span>
+            <span class="pull-right">
+                {% if not object.user == request.user and not object.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+                <a href="/chat/{{object.user.username}}/" class="text-deco-none">
+                    <i class="flaticon-chat-4 font-20"></i>
+                </a>
+                {% endif %}
+            </span>
+        </h4>
     </div>
     <div class="card-body">
         <div class="row">
@@ -62,10 +75,12 @@ My Profile
                                         <td class="text-muted" width='23%'>Username</td>
                                         <td class="text-muted">{{ object.user.username }}</td>
                                     </tr>
+                                    {% if object.user == request.user %}
                                     <tr>
                                         <td class="text-muted" width='23%'>email</td>
                                         <td class="text-muted">{{ object.user.email }}</td>
                                     </tr>
+                                    {% endif %}
                                     {% if object.user.first_name %}
                                     <tr>
                                         <td class="text-muted" width='23%'>First Name</td>

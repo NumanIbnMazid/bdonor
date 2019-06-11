@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load social_share %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+{% url 'donations:donation_update' slug=object.slug as donation_update_url %}
+
+<div class="row">
+    <div class="col-md-9">
+        {% include 'donations/snippets/donation-details-card.html' %}
+    </div>
+    <div class="col-md-3 text-center">
+
+        <h4>Action</h4>
+        {% if object.user.user == request.user %}
+        <a href="{{ donation_update_url }}" class="btn btn-primary btn-sm text-deco-none m-1">
+            <span class="btn-label">
+                <i class="flaticon-pencil"></i>
+                Edit
+            </span>
+        </a>
+        <button type="button" class="btn btn-danger btn-sm text-deco-none m-1" id="js_delete_donation"
+            value="{{object.slug}}" data-toggle="modal" data-target="#modal-delete-donation">
+            <i class="flaticon-interface-5"></i>
+            Delete
+        </button>
+
+        <h4 class="mt-3">Social Share</h4>
+        {% post_to_facebook object_or_url "Share on Facebook!" %}
+        {% post_to_twitter "{{object.title}}. Check it out!" object_or_url "Share on Twitter" %}
+        {% post_to_gplus object_or_url "Share on Google+!" %}
+        {% post_to_linkedin object.title object_or_url "Share on LinkedIn" %}
+        {% send_email object.title "{{object.title}}. Check it out!" object_or_url "Share via email" %}
+        
+        {% comment %}
+        {% post_to_reddit "{{object.title}}" object_or_url "Share on Reddit" %}
+        {% post_to_telegram "{{object.title}}" object_or_url "Share on Telegram" %}
+        {% endcomment %}
+        
+        {% endif %}
+    </div>
+</div>
+
+{% include 'donations/snippets/modals.html' %}
+
+{% endblock %}

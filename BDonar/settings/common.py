@@ -14,7 +14,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'widget_tweaks',
     'django_cleanup',
-    'django_cool_paginator',
+    # 'django_cool_paginator',
+    'el_pagination',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -23,11 +24,15 @@ INSTALLED_APPS = [
     # 'corsheaders',
     'rest_framework',
     'channels',
+    'ckeditor',
+    'ckeditor_uploader',
+    'django_social_share',
     # --- Local Apps ---
     'accounts',
     'utils',
     'suspicious',
     'chat',
+    'donations',
 ]
 
 SITE_ID = 1
@@ -136,45 +141,4 @@ USE_L10N = True
 USE_TZ = False
 
 
-# Allauth Staffs
-LOGIN_URL = '/account/login/'
-LOGOUT_URL = '/'
-LOGIN_REDIRECT_URL = '/'
-SITE_NAME = 'BDonar'
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
-ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
-ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
-ACCOUNT_USERNAME_MIN_LENGTH = 1
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_SIGNUP_PASSWORD_VERIFICATION = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
-ACCOUNT_EMAIL_SUBJECT_PREFIX = 'BDonar'
-ACCOUNT_USERNAME_BLACKLIST = ['robot', 'hacker', 'virus', 'spam']
-ACCOUNT_ADAPTER = 'BDonar.adapter.UsernameMaxAdapter'
-
-
-# Cool Paginator Staffs
-COOL_PAGINATOR_NEXT_NAME = "next"
-COOL_PAGINATOR_PREVIOUS_NAME = "previous"
-COOL_PAGINATOR_SIZE = "SMALL"
-COOL_PAGINATOR_ELASTIC = "300px"
-
-
-# File Staffs
-ALLOWED_IMAGE_TYPES = ['.jpg', '.jpeg', '.png']
-# 1.5MB - 1621440
-# 2.5MB - 2621440
-# 5MB - 5242880
-# 10MB - 10485760
-# 20MB - 20971520
-# 50MB - 5242880
-# 100MB 104857600
-# 250MB - 214958080
-# 500MB - 429916160
-MAX_IMAGE_UPLOAD_SIZE = 1621440
+from BDonar.settings.third_party_configs import *

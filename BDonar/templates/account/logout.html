@@ -10,7 +10,7 @@
 
 <p>{% trans 'Are you sure you want to logout?' %}</p>
 
-<form method="post" action="{% url 'account_logout' %}">
+<form method="post" action="{% url 'account_logout' %}" data-toggle="validator">
   {% csrf_token %}
   {% include 'pages/account-form.html' %}
   <div class="row">

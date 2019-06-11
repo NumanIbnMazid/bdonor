@@ -3,14 +3,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import HomeView
+from .views import HomeView, get_chat_list_template
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
     path('account/', include('accounts.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('chat/', include('chat.urls')),
+    path('chat-messages/', get_chat_list_template, name='chat_list'),
     path('utils/', include(('utils.urls', 'utils'), namespace='utils')),
+    path('donations/', include(('donations.urls', 'donations'), namespace='donations')),
 ]
 
 

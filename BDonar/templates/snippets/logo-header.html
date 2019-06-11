@@ -1,6 +1,6 @@
 {% load static %}
 <div class="logo-header"
-    data-background-color="{% if not site_preference == None %}{{site_preference.logo_header_color}}{% else %}blue{% endif %}">
+    data-background-color="{% if not site_preference.logo_header_color == None %}{{site_preference.logo_header_color}}{% else %}blue{% endif %}">
 
     <a href="{% url 'home' %}" class="logo">
         <img src="{% static 'images/icon/icon-32.png' %}" alt="navbar brand" class="navbar-brand">
@@ -13,14 +13,14 @@
         </span>
     </button>
     <button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
-    {% if not site_preference == None and not site_preference.sidebar_type == "compact-wrapper" and not site_preference.sidebar_type == "overlay-sidebar" %}
+    {% if not site_preference.sidebar_type == "compact-wrapper" and not site_preference.sidebar_type == "overlay-sidebar" %}
     <div class="nav-toggle">
         <button class="btn btn-toggle toggle-sidebar">
             <i class="icon-menu"></i>
         </button>
     </div>
     {% endif %}
-    {% if not site_preference == None and site_preference.sidebar_type == "overlay-sidebar" %}
+    {% if site_preference.sidebar_type == "overlay-sidebar" %}
     <div class="nav-toggle">
         <button class="btn btn-toggle sidenav-overlay-toggler">
             <i class="icon-menu"></i>

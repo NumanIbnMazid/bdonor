@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Messages
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+{% block extra_css %}
+<!-- el-pagination css -->
+<link rel="stylesheet" href="{% static 'vendor/el-pagination/el-pagination.css' %}" type="text/css" />
+{% endblock %}
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card full-height">
+            <div class="card-header">
+                <div class="card-head-row">
+                    <div class="card-title">All Messages</div>
+                </div>
+            </div>
+
+            
+            {% include page_template %}
+
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<!-- el-pagination JS -->
+<script type="text/javascript" src="{% static 'vendor/el-pagination/el-pagination.js' %}"></script>
+<script>
+    $.endlessPaginate({
+        paginateOnScroll: true,
+        // paginateOnScrollChunkSize: 5
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

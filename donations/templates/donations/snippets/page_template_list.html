@@ -1,0 +1,24 @@
+{% load el_pagination_tags %}
+
+{% if object_list.count >= 1 %}
+{% paginate 12 object_list %}
+{% endif %}
+
+{% for object in object_list %}
+<div class="col-md-4">
+    {% include 'donations/snippets/donation-card.html' %}
+</div>
+{% empty %}
+<div class="col-md-12 text-center">
+    <div class="alert alert-warning">
+        No item found!
+    </div>
+    <a href="{% url 'donations:offer_donation' %}" class="btn btn-primary btn-lg text-deco-none">
+        Create donation offer
+    </a>
+</div>
+{% endfor %}
+
+{% if object_list.count >= 1 %}
+{% show_more "Show More" %}
+{% endif %}

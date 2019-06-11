@@ -1,7 +1,12 @@
 {% load static %}
 
 {% block extra_css %}
+<!-- chat css -->
 <link rel="stylesheet" href="{% static 'vendor/chat/chat.css' %}" type="text/css" />
+<!-- emojionearea css -->
+<link rel="stylesheet" href="{% static 'vendor/emojionearea/emojionearea.css' %}" type="text/css" />
+<!-- emojionearea JS -->
+<script type="text/javascript" src="{% static 'vendor/emojionearea/emojionearea.js' %}"></script>
 {% endblock %}
 
 <div class="row bootstrap snippets">
@@ -18,7 +23,7 @@
                         {% if user != object.first %}{{ object.first.profile.get_dynamic_name }}{% else %}{{ object.second.profile.get_dynamic_name }}{% endif %}
                     </span>
                 </span>
-                <div class="box-tools pull-right">
+                <!-- <div class="box-tools pull-right">
                     <span data-toggle="tooltip" title="" class="badge bg-light-blue"
                         data-original-title="3 New Messages">3</span>
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -28,7 +33,7 @@
                         <i class="fa fa-comments"></i></button>
                     <button type="button" class="btn btn-box-tool" data-widget="remove"><i
                             class="fa fa-times"></i></button>
-                </div>
+                </div> -->
             </div>
             <div class="box-body" id="box_body">
                 <div class="direct-chat-messages ml-3 mr-3" id='chat-items'>
@@ -48,11 +53,17 @@
                                 {% endif %}
                             </span>
                         </div>
-                        <div id="my_image">
-                            {% include 'snippets/chunks/user-image.html' with instance=chat.user class="direct-chat-img" %}
-                        </div>
-                        <div class="direct-chat-text">
+                        {% include 'snippets/chunks/user-image.html' with instance=chat.user class="direct-chat-img" %}
+                        <div class="direct-chat-text" data-toggle="collapse"
+                            data-target="#seen-status{{forloop.counter}}">
                             {{ chat.message|safe|linebreaks }}
+                        </div>
+                        <div id="seen-status{{forloop.counter}}" class="collapse">
+                            {% if chat.is_seen == True %}
+                            <span class="font-13 ml-2 c-text-info">seen</span>
+                            {% else %}
+                            <span></span>
+                            {% endif %}
                         </div>
                     </div>
                     {% else %}
@@ -69,30 +80,46 @@
                                 {% endif %}
                             </span>
                         </div>
-                        <div id="client_image">
-                            {% include 'snippets/chunks/user-image.html' with instance=chat.user class="direct-chat-img" %}
-                        </div>
+                        {% include 'snippets/chunks/user-image.html' with instance=chat.user class="direct-chat-img" %}
                         <div class="direct-chat-text">
                             {{ chat.message|safe|linebreaks }}
                         </div>
                     </div>
                     {% endif %}
+                    <div class="hidden" id="fakeValueHolder">
+                        <div id="my_image" class="hidden">
+                            {% include 'snippets/chunks/user-image.html' with instance=request.user class="direct-chat-img" %}
+                        </div>
+                        {% if user != object.first %}
+                        <div id="client_image" class="hidden">
+                            {% include 'snippets/chunks/user-image.html' with instance=object.first class="direct-chat-img" %}
+                        </div>
+                        {% else %}
+                        <div id="client_image" class="hidden">
+                            {% include 'snippets/chunks/user-image.html' with instance=object.second class="direct-chat-img" %}
+                        </div>
+                        {% endif %}
+                    </div>
 
                     {% empty %}
 
-                    <div id="my_image" class="hidden">
-                        {% include 'snippets/chunks/user-image.html' with instance=request.user class="direct-chat-img" %}
+                    <div class="alert alert-primary" role="alert" id="empty_message">
+                        Be the first to start conversation...
                     </div>
-
-                    {% if user != object.first %}
-                    <div id="client_image" class="hidden">
-                        {% include 'snippets/chunks/user-image.html' with instance=object.first class="direct-chat-img" %}
+                    <div class="hidden" id="fakeValueHolder">
+                        <div id="my_image" class="hidden">
+                            {% include 'snippets/chunks/user-image.html' with instance=request.user class="direct-chat-img" %}
+                        </div>
+                        {% if user != object.first %}
+                        <div id="client_image" class="hidden">
+                            {% include 'snippets/chunks/user-image.html' with instance=object.first class="direct-chat-img" %}
+                        </div>
+                        {% else %}
+                        <div id="client_image" class="hidden">
+                            {% include 'snippets/chunks/user-image.html' with instance=object.second class="direct-chat-img" %}
+                        </div>
+                        {% endif %}
                     </div>
-                    {% else %}
-                    <div id="client_image" class="hidden">
-                        {% include 'snippets/chunks/user-image.html' with instance=object.second class="direct-chat-img" %}
-                    </div>
-                    {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -113,12 +140,17 @@
                         {% endif %}
 
                         {% include 'pages/account-form.html' %}
-                        <!-- <input type='submit' class='btn btn-primary' /> -->
+
+                        <!-- <div id="emojione_container"></div> -->
+
+                        <div id="chat_error" class="text-danger font-13 mb-2 hidden font-bold text-center"></div>
+
                         <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary btn-sm">
+                            <button type="submit" class="btn btn-primary btn-sm" id="chat_btn">
                                 Send <i class="flaticon-message"></i>
                             </button>
                         </span>
+
                     </div>
                 </form>
             </div>
@@ -127,95 +159,10 @@
 </div>
 
 {% block extra_js %}
+<!-- emojionearea JS -->
+<script type="text/javascript" src="{% static 'vendor/emojionearea/emojionearea-conf.js' %}"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script> -->
 <script type="text/javascript" src="{% static 'vendor/websocket-reconnect/reconnecting-websocket.js' %}"></script>
-<script>
-    // websocket scripts
-    // console.log(window.location)
-
-    $(document).ready(function () {
-        var div = $("#chat-items");
-        div.scrollTop(div.prop('scrollHeight'));
-    });
-
-    var loc = window.location;
-    var formData = $("#form");
-    var msgInput = $("#id_message");
-    var chatHolder = $("#chat-items");
-    var me = $("#myUsername").val();
-    var myDynamicName = $("#myDynamicName").val();
-    var client = $("#clientUsername").val();
-    var clientDynamicName = $("#clientDynamicName").val();
-    var div = $("#chat-items");
-
-    var wsStart = "ws://";
-
-    if (loc.protocol == "https:") {
-        wsStart = "wss://";
-    }
-    var endpoint = wsStart + loc.host + loc.pathname;
-    var socket = new ReconnectingWebSocket(endpoint);
-
-    socket.onmessage = function (e) {
-        // console.log("message", e)
-        // console.log(e.data)
-        var chatDataMsg = JSON.parse(e.data);
-        if (chatDataMsg.username == me) {
-            var img = $("#my_image").html();
-            var html = ("<div class='direct-chat-msg right'>\
-                    <div class='direct-chat-info clearfix'>\
-                        <span class='direct-chat-name pull-right'>\
-                            You\
-                        </span>\
-                    </div>\
-                    " + img + "\
-                    <div class='direct-chat-text'>\
-                        " + chatDataMsg.message + "\
-                    </div>\
-                </div>\
-                ")
-        } else {
-            var img = $("#client_image").html();
-            var html = ("<div class='direct-chat-msg'>\
-                    <div class='direct-chat-info clearfix'>\
-                        <span class='direct-chat-name pull-left'>\
-                            " + clientDynamicName + "\
-                        </span>\
-                    </div>\
-                    " + img + "\
-                    <div class='direct-chat-text'>\
-                        " + chatDataMsg.message + "\
-                    </div>\
-                </div>\
-            ")
-        }
-        chatHolder.append(
-            // "<li>" + chatDataMsg.message + " via " + chatDataMsg.username + "</li>"
-            html
-        );
-        div.scrollTop(div.prop('scrollHeight'));
-    };
-    socket.onopen = function (e) {
-        // console.log("open", e)
-        formData.submit(function (event) {
-            event.preventDefault();
-            var msgText = msgInput.val();
-            // chatHolder.append("<li>" + msgText + " via " + me + "</li>")
-            // var formDataSerialized = formData.serialize()
-            var finalData = {
-                message: msgText
-            };
-
-            socket.send(JSON.stringify(finalData));
-            // msgInput.val('')
-            formData[0].reset();
-        });
-    };
-    socket.onerror = function (e) {
-        // console.log("error", e)
-    };
-    socket.onclose = function (e) {
-        // console.log("close", e)
-    };
-</script>
+<!-- chat JS -->
+<script type="text/javascript" src="{% static 'vendor/chat/chat.js' %}"></script>
 {% endblock %}
