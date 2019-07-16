@@ -1,5 +1,5 @@
 from django import forms
-from .models import Donation, DonationProgress
+from .models import Donation, DonationProgress, DonationRespond
 from accounts.models import UserProfile
 import re
 from ckeditor.widgets import CKEditorWidget
@@ -16,26 +16,26 @@ class DonationForm(forms.ModelForm):
         super(DonationForm, self).__init__(*args, **kwargs)
         user_profile_filter = UserProfile.objects.filter(
             user=self.request.user)
-        self.fields['title'].help_text = "Maximum 50 characters allowed. Keep it short. Only '_A-z0-9+-.,' these characters and spaces are allowed."
-        self.fields['title'].widget.attrs.update({
-            'placeholder': 'Give a title to your post...',
-            'id': 'donation_title_input',
-            'maxlength': 50,
-            'pattern': "^[_A-z0-9 +-.,]{1,}$"
-        })
+        # self.fields['title'].help_text = "Maximum 50 characters allowed. Keep it short. Only '_A-z0-9+-.,' these characters and spaces are allowed."
+        # self.fields['title'].widget.attrs.update({
+        #     'placeholder': 'I need . . .',
+        #     'id': 'donation_title_input',
+        #     'maxlength': 50,
+        #     'pattern': "^[_A-z0-9 +-.,]{1,}$"
+        # })
         self.fields['type'].help_text = "Select donation type."
         self.fields['type'].widget.attrs.update({
             'id': 'donation_type_input',
             'onchange': "typeFunction()",
         })
-        self.fields['custom_type'].help_text = "Maximum 30 characters allowed. Only '_A-z-' these characters and spaces are allowed."
-        self.fields['custom_type'].widget.attrs.update({
-            'id': 'donation_custom_type_input',
-            'placeholder': 'Enter donation type name...',
-            'maxlength': 30,
-            'pattern': "^[_A-z -]{1,}$",
-            'onkeyup': "resetMessage()"
-        })
+        # self.fields['custom_type'].help_text = "Maximum 30 characters allowed. Only '_A-z-' these characters and spaces are allowed."
+        # self.fields['custom_type'].widget.attrs.update({
+        #     'id': 'donation_custom_type_input',
+        #     'placeholder': 'Enter donation type name...',
+        #     'maxlength': 30,
+        #     'pattern': "^[_A-z -]{1,}$",
+        #     'onkeyup': "resetMessage()"
+        # })
         # if user_profile_filter.exists() and not user_profile_filter.first().blood_group == "":
         #     self.initial['blood_group'] = user_profile_filter.first().blood_group
         self.fields['blood_group'].help_text = "Select blood group."
@@ -43,20 +43,36 @@ class DonationForm(forms.ModelForm):
             'id': 'donation_blood_group_input',
             'onchange': "resetMessage()"
         })
-        self.fields['blood_bag'].help_text = "Maximum 100 bags can be entered."
+        self.fields['blood_bag'].help_text = "Enter quantity."
         self.fields['blood_bag'].widget.attrs.update({
             'id': 'donation_blood_bag_input',
             'placeholder': 'Enter blood bag quantity...',
             'onchange': "resetMessage()"
         })
-        self.fields['organ_name'].help_text = "Maximum 30 characters allowed."
+        self.fields['organ_name'].help_text = "Select organ."
         self.fields['organ_name'].widget.attrs.update({
             'id': 'donation_organ_name_input',
-            'placeholder': 'Type organ name...',
-            'maxlength': 30,
-            'onkeyup': "resetMessage()",
-            'pattern': "^[_A-z -]{1,}$"
+            'onchange': "resetMessage(), organFunction()"
         })
+        self.fields['tissue_name'].help_text = "Select tissue."
+        self.fields['tissue_name'].widget.attrs.update({
+            'id': 'donation_tissue_name_input',
+            'onchange': "resetMessage()"
+        })
+        self.fields['quantity'].help_text = "Enter quantity."
+        self.fields['quantity'].widget.attrs.update({
+            'id': 'donation_quantity_input',
+            'placeholder': 'Enter quantity...',
+            'onchange': "resetMessage()"
+        })
+        # self.fields['organ_name'].help_text = "Maximum 30 characters, '_A-z -' and spaces allowed."
+        # self.fields['organ_name'].widget.attrs.update({
+        #     'id': 'donation_organ_name_input',
+        #     'placeholder': 'Type organ name...',
+        #     'maxlength': 30,
+        #     'onkeyup': "resetMessage()",
+        #     'pattern': "^[_A-z -]{1,}$"
+        # })
         self.fields['details'].help_text = "Maximum 400 characters allowed."
         self.fields['details'].widget.attrs.update({
             'id': 'donation_details_input',
@@ -137,14 +153,19 @@ class DonationForm(forms.ModelForm):
                 self.initial['preferred_date_to'] = self.object.preferred_date_to.strftime(
                     "%Y-%m-%d %H:%M")
 
-        self.fields['location'].help_text = "Maximum 180 characters allowed."
+        self.fields['location'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
         self.fields['location'].widget.attrs.update({
             'id': 'donation_location_input',
             'placeholder': 'Type preferred location...',
             'maxlength': 180,
-            'rows': 1,
-            'cols': 1,
-            'pattern': "^[_A-z0-9 +-.,/]{1,}$"
+            'pattern': "^[_A-z0-9 +-.,#/]{1,}$",
+        })
+        self.fields['hospital'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
+        self.fields['hospital'].widget.attrs.update({
+            'id': 'donation_hospital_input',
+            'placeholder': 'Type preferred hospital...',
+            'maxlength': 180,
+            'pattern': "^[_A-z0-9 +-.,#/]{1,}$"
         })
         self.fields['priority'].help_text = "Selecting priority as important helps to draw attention of viewers."
         self.fields['priority'].widget.attrs.update({
@@ -157,22 +178,23 @@ class DonationForm(forms.ModelForm):
 
     class Meta:
         model = Donation
-        fields = ['title', 'type', 'custom_type', 'blood_group', 'blood_bag', 'organ_name', 'contact', 'contact2', 'contact3', 'details', 'details_fake',
-                  'preferred_date', 'preferred_date_from', 'preferred_date_to', 'location', 'priority', 'publication_status']
-        exclude = ['user', 'slug', 'category', 'created_at', 'updated_at']
+        fields = ['type', 'blood_group', 'blood_bag', 'organ_name', 'tissue_name', 'quantity', 'contact', 'contact2', 'contact3', 'location', 'hospital', 'details', 'details_fake',
+                  'preferred_date', 'preferred_date_from', 'preferred_date_to', 'priority', 'publication_status']
+        exclude = ['user', 'slug', 'category',
+                   'donate_type', 'created_at', 'updated_at']
 
-    def clean_title(self):
-        title = self.cleaned_data.get('title')
-        if not title == None:
-            allowed_chars = re.match(r'^[_A-z0-9 +-.,]+$', title)
-            length = len(title)
-            if not allowed_chars:
-                raise forms.ValidationError(
-                    "Only '_A-z0-9+-.,' these characters and spaces are allowed.")
-            if length > 50:
-                raise forms.ValidationError(
-                    f"Maximum 50 characters allowed. [currently using: {length}]")
-        return title
+    # def clean_title(self):
+    #     title = self.cleaned_data.get('title')
+    #     if not title == None:
+    #         allowed_chars = re.match(r'^[_A-z0-9 +-.,]+$', title)
+    #         length = len(title)
+    #         if not allowed_chars:
+    #             raise forms.ValidationError(
+    #                 "Only '_A-z0-9+-.,' these characters and spaces are allowed.")
+    #         if length > 50:
+    #             raise forms.ValidationError(
+    #                 f"Maximum 50 characters allowed. [currently using: {length}]")
+    #     return title
 
     # def clean_type(self):
     #     type = self.cleaned_data.get('type')
@@ -181,31 +203,31 @@ class DonationForm(forms.ModelForm):
     #         raise forms.ValidationError(".")
     #     return type
 
-    def clean_custom_type(self):
-        custom_type = self.cleaned_data.get('custom_type')
-        if not custom_type == None:
-            allowed_chars = re.match(r'^[_A-z -]+$', custom_type)
-            length = len(custom_type)
-            if not allowed_chars:
-                raise forms.ValidationError(
-                    "Only '_A-z-' these characters and spaces are allowed.")
-            if length > 30:
-                raise forms.ValidationError(
-                    f"Maximum 30 characters allowed. [currently using: {length}]")
-        return custom_type
+    # def clean_custom_type(self):
+    #     custom_type = self.cleaned_data.get('custom_type')
+    #     if not custom_type == None:
+    #         allowed_chars = re.match(r'^[_A-z -]+$', custom_type)
+    #         length = len(custom_type)
+    #         if not allowed_chars:
+    #             raise forms.ValidationError(
+    #                 "Only '_A-z-' these characters and spaces are allowed.")
+    #         if length > 30:
+    #             raise forms.ValidationError(
+    #                 f"Maximum 30 characters allowed. [currently using: {length}]")
+    #     return custom_type
 
-    def clean_organ_name(self):
-        organ_name = self.cleaned_data.get('organ_name')
-        if not organ_name == None:
-            allowed_chars = re.match(r'^[_A-z -]+$', organ_name)
-            length = len(organ_name)
-            if not allowed_chars:
-                raise forms.ValidationError(
-                    "Only '_A-z-' these characters and spaces are allowed.")
-            if length > 50:
-                raise forms.ValidationError(
-                    f"Maximum 50 characters allowed. [currently using: {length}]")
-        return organ_name
+    # def clean_organ_name(self):
+    #     organ_name = self.cleaned_data.get('organ_name')
+    #     if not organ_name == None:
+    #         allowed_chars = re.match(r'^[_A-z -]+$', organ_name)
+    #         length = len(organ_name)
+    #         if not allowed_chars:
+    #             raise forms.ValidationError(
+    #                 "Only '_A-z-' these characters and spaces are allowed.")
+    #         if length > 50:
+    #             raise forms.ValidationError(
+    #                 f"Maximum 50 characters allowed. [currently using: {length}]")
+    #     return organ_name
 
     def clean_details(self):
         details = self.cleaned_data.get('details')
@@ -306,12 +328,67 @@ class DonationForm(forms.ModelForm):
     def clean_location(self):
         location = self.cleaned_data.get('location')
         if not location == None:
-            allowed_chars = re.match(r'^[_A-z0-9 +-.,/]+$', location)
+            allowed_chars = re.match(r'^[_A-z0-9 +-.#,/]+$', location)
             length = len(location)
             if not allowed_chars:
                 raise forms.ValidationError(
-                    "Only '_A-z0-9+-.,/' these characters and spaces are allowed.")
+                    "Only '_A-z0-9+-.#,/' these characters and spaces are allowed.")
             if length > 180:
                 raise forms.ValidationError(
                     f"Maximum 180 characters allowed. [currently using: {length}]")
         return location
+
+    def clean_hospital(self):
+        hospital = self.cleaned_data.get('hospital')
+        if not hospital == None:
+            allowed_chars = re.match(r'^[_A-z0-9 +-.#,/]+$', hospital)
+            length = len(hospital)
+            if not allowed_chars:
+                raise forms.ValidationError(
+                    "Only '_A-z0-9+-.#,/' these characters and spaces are allowed.")
+            if length > 180:
+                raise forms.ValidationError(
+                    f"Maximum 180 characters allowed. [currently using: {length}]")
+        return hospital
+
+
+class DonationRespondForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.object = kwargs.pop('object', None)
+        super(DonationRespondForm, self).__init__(*args, **kwargs)
+        user_profile_filter = UserProfile.objects.filter(
+            user=self.request.user)
+        self.fields['contact'].help_text = "Type contact number..."
+        self.fields['contact'].widget.attrs.update({
+            'id': 'donation_contact_input',
+            # 'placeholder': 'Type contact number...',
+            'onkeyup': "resetMessage()",
+            'maxlength': 20,
+        })
+        if user_profile_filter.exists() and not user_profile_filter.first().contact == "" and self.object == None:
+            self.initial['contact'] = user_profile_filter.first().contact
+        self.fields['message'].help_text = "Maximum 200 characters allowed."
+        self.fields['message'].widget.attrs.update({
+            'id': 'donation_message_input',
+            'placeholder': 'Provide some additional message...',
+            'maxlength': 200,
+            'rows': 2,
+            'cols': 2
+        })
+        if self.object == None:
+            self.initial['message'] = "Please contact with me ..."
+        
+    class Meta:
+        model = DonationRespond
+        fields = ['contact', 'message']
+        exclude = ['donation', 'respondent', 'created_at', 'updated_at']
+
+    def clean_message(self):
+        message = self.cleaned_data.get('message')
+        if not message == None:
+            length = len(message)
+            if length > 200:
+                raise forms.ValidationError(
+                    f"Maximum 200 characters allowed. [currently using: {length}]")
+        return message

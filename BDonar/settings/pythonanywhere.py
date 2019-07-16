@@ -21,7 +21,11 @@ DATABASES = {
         'HOST': config('DB_HOST_PAW'),
         'PORT': '',
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+            'autocommit': True,
+            'use_unicode': True,
+            'init_command': 'SET storage_engine=INNODB,character_set_connection=utf8mb4,collation_connection=utf8mb4_unicode_ci',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         },
     }
 }

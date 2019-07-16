@@ -7,7 +7,10 @@ var dob = $("#profile_dob");
 var contact = $("#profile_contact");
 var contactFake = $("#contactFake");
 var address = $("#profile_address");
-var detect_location = $("#detect_location");
+var location_fake_input = $("#location_fake_input");
+var js_location_detect = $("#js_location_detect");
+var location_result = $("#location_result");
+// var detect_location = $("#detect_location");
 var input_msg = $(".input-message");
 
 // countryCode
@@ -20,29 +23,19 @@ function resetMessage() {
   input_msg.html("");
 }
 
-// Map Detect User Current Location
-(function($, google) {
-  detect_location.on("click", function(e) {
-    address.geolocate({
-      loading: "detecting....",
-      formatted_address: true,
-      components: [
-        // "street_address",
-        // "street_number",
-        "locality",
-        "administrative_area_level_1",
-        "postal_code",
-        // "political",
-        "country"
-      ],
-      name: "long_name", // "short_name", "long_name"
-      delimeter: ", ",
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    });
-  });
-})(jQuery, google);
+
+// Autocomplete starts---------------------------------------------
+$(function () {
+  // $("#profile_address").autocomplete({
+  //   source: "/utils/autocomplete/address/",
+  //   select: function (event, ui) { //item selected
+  //     AutoCompleteSelectHandler(event, ui)
+  //   },
+  //   minLength: 2,
+  // });
+});
+
+// Autocomplete ends---------------------------------------------
 
 // force to enter only number 0-9
 (function($) {
@@ -177,3 +170,60 @@ $(document).ready(function() {
     $(this).attr("autocomplete", "off");
   });
 });
+
+
+// Map Detect User Current Location
+(function ($, google) {
+  js_location_detect.on("click", function (e) {
+    $.geolocate({
+        loading: "detecting....",
+        formatted_address: true,
+        name: "long_name", // "short_name", "long_name"
+        delimeter: ", ",
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      })
+      .done(function (result) {
+        if ((result != "Could not an address for your location.") && (result != "")) {
+          location_fake_input.removeClass("hidden");
+          location_fake_input.val(result);
+          $("#location_detect_msg").html("Is that right location?").css('color', '#1f4787');
+          $("#location_confirm_btn").removeClass("hidden");
+        } else {
+          location_fake_input.val("");
+          location_fake_input.addClass("hidden");
+          $("#location_detect_msg").html("Could not detect your locaton.").css('color', '#B93232');
+          $("#location_confirm_btn").addClass("hidden");
+        }
+      });
+  });
+
+  // try again
+  $("#try_again").on("click", function (e) {
+    location_fake_input.val("detecting.....");
+    $.geolocate({
+        loading: "detecting....",
+        formatted_address: true,
+        name: "long_name", // "short_name", "long_name"
+        delimeter: ", ",
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      })
+      .done(function (result) {
+        if ((result != "Could not an address for your location.") && (result != "")) {
+          location_fake_input.removeClass("hidden");
+          location_fake_input.val(result);
+          $("#location_detect_msg").html("Is that right location?").css('color', '#1f4787');
+          $("#location_confirm_btn").removeClass("hidden");
+        } else {
+          location_fake_input.val("");
+          location_fake_input.addClass("hidden");
+          $("#location_detect_msg").html("Could not detect your locaton.").css('color', '#B93232');
+          $("#location_confirm_btn").addClass("hidden");
+        }
+      });
+  });
+
+})(jQuery, google);

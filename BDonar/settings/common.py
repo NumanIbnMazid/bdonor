@@ -11,7 +11,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # --- Third Party Apps ---
-    'django_extensions',
     'widget_tweaks',
     'django_cleanup',
     # 'django_cool_paginator',
@@ -81,6 +80,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Custom Middlewares
+    'middlewares.middlewares.RequestMiddleware',
 ]
 
 ROOT_URLCONF = 'BDonar.urls'

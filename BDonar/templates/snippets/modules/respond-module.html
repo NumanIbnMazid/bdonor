@@ -1,0 +1,26 @@
+{% load static %}
+
+{% if instance.get_user_is_responded == False %}
+
+{% if not instance.donation_progress.progress_status == 1 %}
+{% if not instance.user.user == request.user %}
+<a href="{% url 'donations:donation_respond_create' slug=instance.slug %}"
+    class="btn btn-primary btn-xs text-deco-none bg-c-whale">
+    <span class="btn-label">
+        <div class="avatar avatar-xs">
+            <img src="{% static 'images/raw/help.png' %}" alt="my requests" class="avatar-img rounded-circle">
+        </div>
+        <span class="font-13 font-bold">respond</span>
+    </span>
+</a>
+{% endif %}
+{% endif %}
+
+{% else %}
+<span class="btn btn-success btn-xs text-deco-none bg-c-green">
+    <div class="avatar avatar-xs">
+        <img src="{% static 'images/raw/checked.png' %}" alt="my requests" class="avatar-img rounded-circle">
+    </div>
+    <span class="">responded</span>
+</span>
+{% endif %}

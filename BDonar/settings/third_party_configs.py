@@ -1,3 +1,5 @@
+from decouple import config, Csv
+
 # Allauth Staffs
 LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/'
@@ -37,6 +39,10 @@ EL_PAGINATION_DEFAULT_CALLABLE_ARROWS = False
 EL_PAGINATION_TEMPLATE_VARNAME = "template"
 EL_PAGINATION_PAGE_OUT_OF_RANGE_404 = False
 EL_PAGINATION_USE_NEXT_PREVIOUS_LINKS = False
+
+# OnnoRokom SMS Service Staffs
+ONNOROKOM_USERNAME = config('ONNOROKOM_USERNAME', default='')
+ONNOROKOM_PASSWORD = config('ONNOROKOM_PASSWORD', default='')
 
 # File Staffs
 ALLOWED_IMAGE_TYPES = ['.jpg', '.jpeg', '.png']

@@ -2,13 +2,16 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.urls import reverse
 from accounts.models import UserProfile
-from utils.models import SitePreference
+from .models import SitePreference, Location
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 import datetime
 # Method Decorator imports
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+# autocomplete
+import json
+from django.db.models import Count
 
 
 @method_decorator(login_required, name='dispatch')
@@ -84,3 +87,40 @@ def change_site_preference_default(request):
     messages.add_message(request, messages.SUCCESS,
                          "Site preference changed to default!")
     return HttpResponseRedirect(url)
+
+
+@login_required
+def address_autocomplete_view(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        places = Location.objects.filter(location__icontains=q, location_type=0).annotate(
+            hit_count=Count('hit')).order_by('-hit_count')
+        results = []
+        for pl in places:
+            place_json = {}
+            place_json = pl.location
+            results.append(place_json)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+@login_required
+def hospital_autocomplete_view(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        places = Location.objects.filter(
+            location__icontains=q, location_type=1).annotate(
+            hit_count=Count('hit')).order_by('-hit_count')
+        results = []
+        for pl in places:
+            place_json = {}
+            place_json = pl.location
+            results.append(place_json)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)

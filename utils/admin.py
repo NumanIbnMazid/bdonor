@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SitePreference
+from .models import SitePreference, Location, Notification
 
 
 class SitePreferenceAdmin(admin.ModelAdmin):
@@ -10,4 +10,20 @@ class SitePreferenceAdmin(admin.ModelAdmin):
         model = SitePreference
 
 
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ['provider', 'location_type', 'location', 'hit', 'created_at', 'updated_at']
+
+    class Meta:
+        model = Location
+
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ['sender', 'receiver', 'slug', 'category', 'identifier', 'subject']
+
+    class Meta:
+        model = Notification
+
+
 admin.site.register(SitePreference, SitePreferenceAdmin)
+admin.site.register(Location, LocationAdmin)
+admin.site.register(Notification, NotificationAdmin)

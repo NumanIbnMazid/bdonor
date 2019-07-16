@@ -16,13 +16,14 @@
                     </a>
                 </b>
             </h5>
-            {% if not object.user == request.user and not object.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+            <!-- {% if not object.user == request.user and not object.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
             <small class="text-muted">
                 <a href="/chat/{{object.user.username}}/" class="text-deco-none">
                     <i class="flaticon-chat-4 font-20"></i>
                 </a>
             </small>
-            {% endif %}
+            {% endif %} -->
+            {% include 'snippets/modules/chat-module.html' with instance=object class="text-deco-none" %}
         </div>
     </div>
 </div>

@@ -1,8 +1,10 @@
-<div class="modal fade" id="modal-delete-donation">
-    <div class="modal-dialog">
-        <div class="modal-content bg-c-water">
-            <div class="modal-header text-center">
-                <h5 class="modal-title" id="exampleModalLabel">Please confirm</h5>
+<!-- Donation delete Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-delete-donation" tabindex="-1" role="dialog"
+    aria-labelledby="donationDefaultModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="preferenceDefaultModalLabel">Please Confirm</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -11,12 +13,10 @@
                 <form method="POST" action="{% url 'donations:donation_delete' %}" id="donationDeleteForm">
                     {% csrf_token %}
                     <input type="hidden" id="donation_slug_modal" name="slug" value="2">
-                    <div class="form-group text-center">
-                        <label for="donation-title" class="col-form-label">
-                            <p class="c-text-danger font-bold font-15">
-                                You are going to delete this item permanently. Are you sure???
-                            </p>
-                        </label>
+                    <div class="text-center">
+                        <p class="c-text-danger font-bold font-15">
+                            You are going to delete this item permanently. Are you sure???
+                        </p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -28,8 +28,546 @@
     </div>
 </div>
 
+
+<!-- Respond Withdraw Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-withdraw-respond" tabindex="-1" role="dialog"
+    aria-labelledby="withdrawRespondModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="withdrawRespondModalLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'donations:withdraw_respond' %}" id="withdrawRespondForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="donation_respond_slug" name="slug" value="2">
+                    <div class="text-center">
+                        <p class="c-text-danger font-bold font-15">
+                            You are going to withdraw your response. Are you sure???
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="delete-donation">Yes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Location Modal -->
+<div class="modal fade bg-opacity-mid" id="location_modal" tabindex="-1" role="dialog"
+    aria-labelledby="donationDefaultModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="locationModalLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input name="location-fake" class="form-control text-dark text-center" id="location_fake_input"
+                    type="text" value="" disabled>
+                <div class="text-center">
+                    <p class="font-15" id="location_detect_msg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Let me handle
+                        manually</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="try_again">Try again</button>
+                    <button type="button" class="btn btn-success btn-sm" id="location_confirm_btn">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Donation Viewers Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-see-viewers" tabindex="-1" role="dialog"
+    aria-labelledby="donationViewersDefaultModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="donationViewersDefaultModalLabel">
+                    <i class="flaticon-medical"></i>
+                    Viewers
+                    <span class="font-13">({{object.get_viewers.count}})</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body overflow-lg">
+                        {% for viewer in object.get_viewers %}
+                        <div class="card-list">
+                            <div class="item-list">
+                                <div class="avatar avatar-md">
+                                    {% include 'snippets/chunks/user-image.html' with instance=viewer.user class="avatar-img rounded-circle" %}
+                                </div>
+                                <div class="info-user ml-3">
+
+                                    <div class="username">{{ viewer.user.profile.get_dynamic_name }}</div>
+
+                                    {% if not viewer.user.profile.blood_group == None %}
+                                    <div class="status text-danger font-15 font-bold">
+                                        {{ viewer.user.profile.blood_group }}</div>
+                                    {% endif %}
+
+                                    <div class="text-small">
+                                        <span>Last seen: </span>
+                                        <span>{{ viewer.updated_at|timesince }} ago</span>
+                                    </div>
+
+                                </div>
+                                {% if not viewer.user.profile.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+                                <a href="/chat/{{viewer.user.username}}/"
+                                    class="btn btn-icon btn-primary btn-round btn-xs text-deco-none mr-2">
+                                    <i class="flaticon-chat-4"></i>
+                                </a>
+                                {% endif %}
+                                <a class="btn btn-icon btn-primary btn-round btn-xs text-deco-none"
+                                    href="{{ viewer.user.profile.get_absolute_url }}">
+                                    <i class="flaticon-medical"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <hr>
+                        {% empty %}
+                        <div class="alert alert-warning">
+                            No one haven't seen this post yet!
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Donation Respondents Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-see-respondents" tabindex="-1" role="dialog"
+    aria-labelledby="donationRespondentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="donationRespondentsModalLabel">
+                    <i class="flaticon-user-2"></i>
+                    Respondents
+                    <span class="font-13">({{object.get_respondents.count}})</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body overflow-lg">
+                        {% for respondent in object.get_respondents %}
+                        <div class="card-list">
+                            <div class="item-list">
+                                <div class="avatar avatar-md">
+                                    {% include 'snippets/chunks/user-image.html' with instance=respondent.respondent class="avatar-img rounded-circle" %}
+                                </div>
+                                <div class="info-user ml-3">
+
+                                    <div class="username">{{ respondent.respondent.profile.get_dynamic_name }}</div>
+
+                                    {% if not respondent.respondent.profile.blood_group == None %}
+                                    <div class="status text-danger font-15 font-bold">
+                                        {{ respondent.respondent.profile.blood_group }}</div>
+                                    {% endif %}
+
+                                    <div class="text-small">
+                                        <span>Responded at: </span>
+                                        <span>{{ respondent.updated_at|timesince }} ago</span>
+                                    </div>
+
+                                    <div>
+                                        <button class="btn btn-primary btn-xs m-2" type="button" data-toggle="collapse"
+                                            data-target="#collapseDetails{{forloop.counter}}" aria-expanded="false"
+                                            aria-controls="collapseDetails{{forloop.counter}}">
+                                            View Details
+                                        </button>
+                                        <div class="collapse" id="collapseDetails{{forloop.counter}}">
+                                            <div class="card card-body">
+                                                <div class="table-responsive-sm">
+                                                    <table class="table table-hover">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-info">Contact: </td>
+                                                                <td class="text-muted">
+                                                                    <a href="#">{{ respondent.get_contact }}</a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-info">Message: </td>
+                                                                <td class="text-muted">
+                                                                    {{ respondent.get_message|safe }}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                {% if not respondent.respondent.profile.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+                                <a href="/chat/{{respondent.respondent.username}}/"
+                                    class="btn btn-icon btn-primary btn-round btn-xs text-deco-none mr-2">
+                                    <i class="flaticon-chat-4"></i>
+                                </a>
+                                {% endif %}
+                                <a class="btn btn-icon btn-primary btn-round btn-xs text-deco-none"
+                                    href="{{ respondent.respondent.profile.get_absolute_url }}">
+                                    <i class="flaticon-medical"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <hr>
+                        {% empty %}
+                        <div class="alert alert-warning">
+                            No one responded to this post yet!
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Form submit confirmation Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-submit-confirmation" tabindex="-1" role="dialog"
+    aria-labelledby="submitConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="submitConfirmationModalLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <p class="font-bold font-15" id="data_container">
+
+                    </p>
+                </div>
+                <div class="text-center" id="donation_form_errors_div">
+                  <h4 class="text-secondary">Please fix the issues</h4>
+                  <p id="donation_form_errors" class="font-bold font-15"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-success" id="confirmDonationSubmit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Terms & Conditions Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-terms-conditions" tabindex="-1" role="dialog"
+    aria-labelledby="termsConditionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="termsConditionsModalLabel">Terms & Conditions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <h2>Welcome to BDonor</h2>
+                    <p>These terms and conditions outline the rules and regulations for the use of BDonor's Website.</p>
+                    <br />
+                    <span style="text-transform: capitalize;"> BDonor</span> is located at:<br />
+                    <address>1200 - Dhaka , Bangladesh<br />
+                    </address>
+                    <p>By accessing this website we assume you accept these terms and conditions in full. Do not
+                        continue to use BDonor's
+                        website
+                        if you do not accept all of the terms and conditions stated on this page.</p>
+                    <p>The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer
+                        Notice
+                        and any or all Agreements: "Client", "You" and "Your" refers to you, the person accessing this
+                        website
+                        and accepting the Company's terms and conditions. "The Company", "Ourselves", "We", "Our" and
+                        "Us", refers
+                        to our Company. "Party", "Parties", or "Us", refers to both the Client and ourselves, or either
+                        the Client
+                        or ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to
+                        undertake
+                        the process of our assistance to the Client in the most appropriate manner, whether by formal
+                        meetings
+                        of a fixed duration, or any other means, for the express purpose of meeting the Client's needs
+                        in respect
+                        of provision of the Company's stated services/products, in accordance with and subject to,
+                        prevailing law
+                        of Bangladesh. Any use of the above terminology or other words in the singular, plural,
+                        capitalisation and/or he/she or they, are taken as interchangeable and therefore as referring to
+                        same.</p>
+                    <h2>Cookies</h2>
+                    <p>We employ the use of cookies. By using BDonor's website you consent to the use of cookies
+                        in accordance with BDonor's privacy policy.</p>
+                    <p>Most of the modern day interactive web sites
+                        use cookies to enable us to retrieve user details for each visit. Cookies are used in some areas
+                        of our site
+                        to enable the functionality of this area and ease of use for those people visiting. Some of our
+                        affiliate / advertising partners may also use cookies.</p>
+                    <h2>License</h2>
+                    <p>Unless otherwise stated, BDonor and/or it's licensors own the intellectual property rights for
+                        all material on BDonor. All intellectual property rights are reserved. You may view and/or print
+                        pages from https://bdonor.com for your own personal use subject to restrictions set in these
+                        terms and conditions.
+                    </p>
+                    <p>You must not:</p>
+                    <ol>
+                        <li>Republish material from https://bdonor.com</li>
+                        <li>Sell, rent or sub-license material from https://bdonor.com</li>
+                        <li>Reproduce, duplicate or copy material from https://bdonor.com</li>
+                    </ol>
+                    <p>Redistribute content from BDonor (unless content is specifically made for redistribution).</p>
+                    <h2>User Comments</h2>
+                    <ol>
+                        <li>This Agreement shall begin on the date hereof.</li>
+                        <li>Certain parts of this website offer the opportunity for users to post and exchange opinions,
+                            information,
+                            material and data ('Comments') in areas of the website. BDonor does not screen, edit,
+                            publish
+                            or review Comments prior to their appearance on the website and Comments do not reflect the
+                            views or
+                            opinions ofBDonor, its agents or affiliates. Comments reflect the view and opinion of the
+                            person who posts such view or opinion. To the extent permitted by applicable laws
+                            BDonorshall
+                            not be responsible or liable for the Comments or for any loss cost, liability, damages or
+                            expenses caused
+                            and or suffered as a result of any use of and/or posting of and/or appearance of the
+                            Comments on this
+                            website.</li>
+                        <li>BDonorreserves the right to monitor all Comments and to remove any Comments which it
+                            considers
+                            in its absolute discretion to be inappropriate, offensive or otherwise in breach of these
+                            Terms and Conditions.
+                        </li>
+                        <li>You warrant and represent that:
+                            <ol>
+                                <li>You are entitled to post the Comments on our website and have all necessary licenses
+                                    and consents to
+                                    do so;</li>
+                                <li>The Comments do not infringe any intellectual property right, including without
+                                    limitation copyright,
+                                    patent or trademark, or other proprietary right of any third party;</li>
+                                <li>The Comments do not contain any defamatory, libelous, offensive, indecent or
+                                    otherwise unlawful material
+                                    or material which is an invasion of privacy</li>
+                                <li>The Comments will not be used to solicit or promote business or custom or present
+                                    commercial activities
+                                    or unlawful activity.</li>
+                            </ol>
+                        </li>
+                        <li>You hereby grant to <strong>BDonor</strong> a non-exclusive royalty-free license to use,
+                            reproduce,
+                            edit and authorize others to use, reproduce and edit any of your Comments in any and all
+                            forms, formats
+                            or media.</li>
+                    </ol>
+                    <h2>Hyperlinking to our Content</h2>
+                    <ol>
+                        <li>The following organizations may link to our Web site without prior written approval:
+                            <ol>
+                                <li>Government agencies;</li>
+                                <li>Search engines;</li>
+                                <li>News organizations;</li>
+                                <li>Online directory distributors when they list us in the directory may link to our Web
+                                    site in the same
+                                    manner as they hyperlink to the Web sites of other listed businesses; and</li>
+                                <li>Systemwide Accredited Businesses except soliciting non-profit organizations, charity
+                                    shopping malls,
+                                    and charity fundraising groups which may not hyperlink to our Web site.</li>
+                            </ol>
+                        </li>
+                    </ol>
+                    <ol start="2">
+                        <li>These organizations may link to our home page, to publications or to other Web site
+                            information so long
+                            as the link: (a) is not in any way misleading; (b) does not falsely imply sponsorship,
+                            endorsement or
+                            approval of the linking party and its products or services; and (c) fits within the context
+                            of the linking
+                            party's site.
+                        </li>
+                        <li>We may consider and approve in our sole discretion other link requests from the following
+                            types of
+                            organizations:
+                            <ol>
+                                <li>commonly-known consumer and/or business information sources such as Chambers of
+                                    Commerce, American
+                                    Automobile Association, AARP and Consumers Union;</li>
+                                <li>dot.com community sites;</li>
+                                <li>associations or other groups representing charities, including charity giving sites,
+                                </li>
+                                <li>online directory distributors;</li>
+                                <li>internet portals;</li>
+                                <li>accounting, law and consulting firms whose primary clients are businesses; and</li>
+                                <li>educational institutions and trade associations.</li>
+                            </ol>
+                        </li>
+                    </ol>
+                    <p>We will approve link requests from these organizations if we determine that: (a) the link would
+                        not reflect
+                        unfavorably on us or our accredited businesses (for example, trade associations or other
+                        organizations
+                        representing inherently suspect types of business, such as work-at-home opportunities, shall not
+                        be allowed
+                        to link); (b)the organization does not have an unsatisfactory record with us; (c) the benefit to
+                        us from
+                        the visibility associated with the hyperlink outweighs the absence of <?=$companyName?>; and (d)
+                        where the
+                        link is in the context of general resource information or is otherwise consistent with editorial
+                        content
+                        in a newsletter or similar product furthering the mission of the organization.</p>
+
+                    <p>These organizations may link to our home page, to publications or to other Web site information
+                        so long as
+                        the link: (a) is not in any way misleading; (b) does not falsely imply sponsorship, endorsement
+                        or approval
+                        of the linking party and it products or services; and (c) fits within the context of the linking
+                        party's
+                        site.</p>
+
+                    <p>If you are among the organizations listed in paragraph 2 above and are interested in linking to
+                        our website,
+                        you must notify us by sending an e-mail to <a href="mailto:bdonorweb@gmail.com"
+                            title="send an email to bdonorweb@gmail.com">bdonorweb@gmail.com</a>.
+                        Please include your name, your organization name, contact information (such as a phone number
+                        and/or e-mail
+                        address) as well as the URL of your site, a list of any URLs from which you intend to link to
+                        our Web site,
+                        and a list of the URL(s) on our site to which you would like to link. Allow 2-3 weeks for a
+                        response.</p>
+
+                    <p>Approved organizations may hyperlink to our Web site as follows:</p>
+
+                    <ol>
+                        <li>By use of our corporate name; or</li>
+                        <li>By use of the uniform resource locator (Web address) being linked to; or</li>
+                        <li>By use of any other description of our Web site or material being linked to that makes sense
+                            within the
+                            context and format of content on the linking party's site.</li>
+                    </ol>
+                    <p>No use of BDonor's logo or other artwork will be allowed for linking absent a trademark license
+                        agreement.</p>
+                    <h2>Iframes</h2>
+                    <p>Without prior approval and express written permission, you may not create frames around our Web
+                        pages or
+                        use other techniques that alter in any way the visual presentation or appearance of our Web
+                        site.</p>
+                    <h2>Reservation of Rights</h2>
+                    <p>We reserve the right at any time and in its sole discretion to request that you remove all links
+                        or any particular
+                        link to our Web site. You agree to immediately remove all links to our Web site upon such
+                        request. We also
+                        reserve the right to amend these terms and conditions and its linking policy at any time. By
+                        continuing
+                        to link to our Web site, you agree to be bound to and abide by these linking terms and
+                        conditions.</p>
+                    <h2>Removal of links from our website</h2>
+                    <p>If you find any link on our Web site or any linked web site objectionable for any reason, you may
+                        contact
+                        us about this. We will consider requests to remove links but will have no obligation to do so or
+                        to respond
+                        directly to you.</p>
+                    <p>Whilst we endeavour to ensure that the information on this website is correct, we do not warrant
+                        its completeness
+                        or accuracy; nor do we commit to ensuring that the website remains available or that the
+                        material on the
+                        website is kept up to date.</p>
+                    <h2>Content Liability</h2>
+                    <p>We shall have no responsibility or liability for any content appearing on your Web site. You
+                        agree to indemnify
+                        and defend us against all claims arising out of or based upon your Website. No link(s) may
+                        appear on any
+                        page on your Web site or within any context containing content or materials that may be
+                        interpreted as
+                        libelous, obscene or criminal, or which infringes, otherwise violates, or advocates the
+                        infringement or
+                        other violation of, any third party rights.</p>
+                    <h2>Disclaimer</h2>
+                    <p>To the maximum extent permitted by applicable law, we exclude all representations, warranties and
+                        conditions relating
+                        to our website and the use of this website (including, without limitation, any warranties
+                        implied by law in respect
+                        of satisfactory quality, fitness for purpose and/or the use of reasonable care and skill).
+                        Nothing in this
+                        disclaimer will:</p>
+                    <ol>
+                        <li>limit or exclude our or your liability for death or personal injury resulting from
+                            negligence;</li>
+                        <li>limit or exclude our or your liability for fraud or fraudulent misrepresentation;</li>
+                        <li>limit any of our or your liabilities in any way that is not permitted under applicable law;
+                            or</li>
+                        <li>exclude any of our or your liabilities that may not be excluded under applicable law.</li>
+                    </ol>
+                    <p>The limitations and exclusions of liability set out in this Section and elsewhere in this
+                        disclaimer: (a)
+                        are subject to the preceding paragraph; and (b) govern all liabilities arising under the
+                        disclaimer or
+                        in relation to the subject matter of this disclaimer, including liabilities arising in contract,
+                        in tort
+                        (including negligence) and for breach of statutory duty.</p>
+                    <p>To the extent that the website and the information and services on the website are provided free
+                        of charge,
+                        we will not be liable for any loss or damage of any nature.</p>
+                    <p class="text-info font-bold font-15">
+                        By checking terms & conditions means that you agree with our terms and privacy policy and you
+                        don't have an agreement
+                        with others and you prior the agreement first between you and us.
+                    </p>
+                    <p>
+                        If you have any queries regarding any of our terms, please contact us.
+                    </p>
+                </p>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% block extra_js %}
 <script>
+    // insert location
+    $("#location_confirm_btn").click(function () {
+        let location_val = $("#location_fake_input").val();
+        $("#donation_location_input").val(location_val);
+        $('#location_modal').modal('hide');
+    });
+    // delete donation
     $("#js_delete_donation").click(function () {
         let donation_slug = this.value;
         $('#donation_slug_modal').val(donation_slug);
@@ -40,5 +578,16 @@
         e.preventDefault();
         form.submit();
     });
+    // withdraw respond
+    $("#js_withdraw_respond").click(function () {
+        let donation_slug = this.value;
+        $("#donation_respond_slug").val(donation_slug);
+        // console.log(donation_slug);
+    });
+    document.querySelector("#withdrawRespondForm").addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    })
 </script>
 {% endblock %}

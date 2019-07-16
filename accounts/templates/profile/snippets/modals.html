@@ -1,0 +1,39 @@
+<!-- Location Modal -->
+<div class="modal fade bg-opacity-mid" id="location_modal" tabindex="-1" role="dialog"
+    aria-labelledby="donationDefaultModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="locationModalLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input name="location-fake" class="form-control text-dark text-center" id="location_fake_input"
+                    type="text" value="" disabled>
+                <div class="text-center">
+                    <p class="font-15" id="location_detect_msg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Let me handle
+                        manually</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="try_again">Try again</button>
+                    <button type="button" class="btn btn-success btn-sm" id="location_confirm_btn">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% block extra_js %}
+<script>
+    $("#location_confirm_btn").click(function () {
+        let location_val = $("#location_fake_input").val();
+        $("#profile_address").val(location_val);
+        $('#location_modal').modal('hide');
+    });
+</script>
+{% endblock %}

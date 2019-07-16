@@ -34,7 +34,7 @@
 {% endif %}
 
 {% for field in form.visible_fields %}
-<div class="form-group {% if field.errors %}border-danger-1 error-group{% endif %} {% if field.name == 'custom_type' or field.name == 'blood_group' or field.name == 'blood_bag' or field.name == 'organ_name' or field.name == 'details_fake' or field.name == 'contact2' or field.name == 'contact3' or field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'location' or field.name == 'priority' or field.name == 'publication_status' %}hidden invisible-input-group{% endif %} {% if field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'location' or field.name == 'priority' or field.name == 'publication_status' %}special-input-group{% endif %}"
+<div class="form-group {% if field.errors %}border-danger-1 error-group{% endif %} {% if field.name == 'tissue_name' or field.name == 'blood_group' or field.name == 'blood_bag' or field.name == 'organ_name' or field.name == 'quantity' or field.name == 'hospital' or field.name == 'details_fake' or field.name == 'contact2' or field.name == 'contact3' or field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'priority' or field.name == 'publication_status' %}hidden invisible-input-group{% endif %} {% if field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'priority' or field.name == 'publication_status' %}special-input-group{% endif %}"
     id="{{ field.id_for_label }}-group">
 
     <div class="form">
@@ -42,7 +42,7 @@
             <div class="col-md-4">
                 <label for="{{ field.id_for_label }}" class="control-label" id="{{ field.id_for_label }}-label">
 
-                    <span class="font-13">{{ field.label |title }}</span>
+                    <span class="font-13" id="{{field.name}}-label">{{ field.label |title }}</span>
 
                     {% if field.field.required %}
                     <small class="text-info"><i class="field_priority"
@@ -65,7 +65,7 @@
                     <div class="row">
                         <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
 
-                            {% if field.name == 'blood_bag' %}
+                            {% if field.name == 'blood_bag' or field.name == 'contact' %}
                             <div class="row">
                                 <div class="col-md-8">
                                     {% endif %}
@@ -73,23 +73,55 @@
                                     {% if field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'location' or field.name == 'priority' or field.name == 'publication_status' %}
                                     {{ field|add_class:"form-control form-control special-input" }}
                                     {% else %}
+                                    
                                     {{ field|add_class:"form-control form-control" }}
+
                                     {% endif %}
 
-                                    {% if field.name == 'blood_bag' %}
+                                    {% if field.name == 'blood_bag' or field.name == 'contact' %}
                                 </div>
                                 <div class="col-md-4">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">Bag</span>
+                                        {% if field.name == 'blood_bag' %}
+                                        <span class="input-group-text">
+                                            Bag
+                                            <span class="font-10 text-muted ml-1">(Size-350ml)</span>
+                                        </span>
+                                        {% endif %}
+                                        {% if field.name == 'contact' %}
+                                        <span class="hidden" id="contact_privacy-label">Contact Privacy</span>
+                                        <select class="form-control form-control-sm mt-2" name="contact_privacy">
+                                            <option value="0" {% if object.contact_privacy == 0 %}selected="selected"{% endif %}>Public</option>
+                                            <option value="1" {% if object.contact_privacy == 1 %}selected="selected"{% endif %}>Private</option>
+                                        </select>
+                                        <!-- <div class="">
+                                            <label class="form-radio-label">
+                                                <input class="form-radio-input" type="radio" name="contact_privacy"
+                                                    value="0">
+                                                <span class="form-radio-sign">Public</span>
+                                            </label>
+                                            <label class="form-radio-label">
+                                                <input class="form-radio-input" type="radio" name="contact_privacy"
+                                                    value="1">
+                                                <span class="form-radio-sign">Private</span>
+                                            </label>
+                                        </div> -->
+                                        <!-- <input type="radio" name="gender" value="male">Public -->
+                                        <!-- <input type="radio" name="gender" value="male">Private -->
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                             {% endif %}
 
+                            <div class="text-center">
+                                <p class="text-info font-15" id="extra_info"></p>
+                            </div>
                             <div class="help-block with-errors text-center"></div>
                             <div class="text-center">
                                 <span class="input-message text-danger font-13" id="{{field.name}}_msg"></span>
                             </div>
+                            
                         </div>
                         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
                             {% if field.help_text %}
@@ -103,6 +135,58 @@
 
                     {% if field.name == 'contact' or field.name == 'contact2' or field.name == 'contact3' %}
                 </div>
+                {% endif %}
+
+                {% if field.name == 'type' %}
+
+                <input type="hidden" name='can-donate-blood' id="can_donate_blood" value="{{ can_donate_blood }}">
+
+                {% if page_title == "Create donation offer" and  can_donate_blood == False %}
+                <div class="mt-1" id="blood_warning_simple">
+                    <span class="text-center font-13 text-warning font-italic">
+                        <i class="flaticon-exclamation"></i>
+                        Currently you are not able to donate blood as
+                        you have donated blood {{ last_donated_ago }} days ago
+                        <a href="{% url 'donations:donation_details' slug=last_donated_object.donation.slug %}"
+                            target="_blank">
+                            (view)
+                        </a>.
+                        You will be able to donate blood again after {{waiting_days_remaining}} days.
+                        <a href="https://timesofindia.indiatimes.com/How-many-units-of-blood-can-a-healthy-person-donate-at-a-time-How-long-does-it-take-to-replenish-the-lost-blood/articleshow/586312.cms"
+                            class="" target="_blank">
+                            Know more...
+                        </a>
+                    </span>
+                </div>
+                {% endif %}
+
+                {% comment %}
+                {% if page_title == "Create donation offer" and  can_donate_blood == False %}
+                <div class="mt-2 hidden" id="blood_warning">
+                    <div class="alert alert-warning alert-dismissable" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <div class="text-center font-17 text-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Warning!</span>
+                        </div>
+                        <div class="text-center font-15 text-dark">
+                            <strong>You have donated blood {{last_donated_ago}} days ago
+                                <a href="{% url 'donations:donation_details' slug=last_donated_object.donation.slug %}"
+                                    target="_blank">
+                                    (view)
+                                </a>.
+                            </strong>
+                            You should wait at least three months (90 days) before making another blood donation.
+                            <a href="https://timesofindia.indiatimes.com/How-many-units-of-blood-can-a-healthy-person-donate-at-a-time-How-long-does-it-take-to-replenish-the-lost-blood/articleshow/586312.cms"
+                                class="" target="_blank">
+                                Know more...
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endcomment %}
+
                 {% endif %}
 
                 {% if field.name == 'details' %}
@@ -153,10 +237,10 @@
                             <i class="flaticon-calendar"></i>
                             <span class="ml-1">Set date between</span>
                         </h6>
-                        <h6 id="hide_set_date_between" class="pointer text-info mt-2 hidden">
+                        <!-- <h6 id="hide_set_date_between" class="pointer text-info mt-2 hidden">
                             <i class="flaticon-calendar"></i>
                             <span class="ml-1">Remove date between</span>
-                        </h6>
+                        </h6> -->
                     </div>
                     <div class="col-md-5">
                         <h6 id="date_with_time" class="pointer text-info mt-2">
@@ -172,16 +256,23 @@
                 {% endif %}
 
                 {% if field.name == 'preferred_date_to' %}
-                <span class="font-15 text-primary pointer mt-1 pull-left" id="hide_set_date_between">
-                    <i class="flaticon-line-1"></i>
-                </span>
+                <h6 id="hide_set_date_between" class="pointer text-info mt-2 hidden">
+                    <i class="flaticon-calendar"></i>
+                    <span class="ml-1">Remove date between</span>
+                </h6>
                 {% endif %}
 
                 {% if field.name == 'location' %}
-                <h6 id="detect_location" class="pointer text-info mt-2">
+                <a href="#" class="text-deco-none" id="js_location_detect" data-toggle="modal"
+                    data-target="#location_modal">
+                    <i class="flaticon-placeholder-1"></i>
+                    Detect my location
+                </a>
+                <!-- <h6 id="detect_location" class="pointer text-info mt-2">
                     <i class="flaticon-placeholder-1"></i>
                     <span class="ml-1">Detect location</span>
-                </h6>
+                    <span id="output"></span>
+                </h6> -->
                 {% endif %}
 
                 {% if field.errors %}
@@ -204,5 +295,6 @@
     </div>
 
 </div>
+
 
 {% endfor %}

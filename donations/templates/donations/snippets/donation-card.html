@@ -2,92 +2,87 @@
 {% url 'donations:donation_update' slug=object.slug as donation_update_url %}
 
 <div
-    class="card card-dark {% if object.donation_progress.progress_status == 1 %}bg-dark{% endif %}{% if object.priority == 1 and not object.donation_progress.progress_status == 1 %}bg-danger-gradient{% endif %}{% if object.priority == 0 and not object.donation_progress.progress_status == 1 %}bg-primary-gradient{% endif %}">
+    class="card card-dark
+    {% if object.donation_progress.progress_status == 1 %}bg-c-blue-black{% endif %}{% if object.priority == 1 and not object.donation_progress.progress_status == 1 %}bg-c-important{% endif %}{% if object.priority == 0 and not object.donation_progress.progress_status == 1 %}bg-primary-gradient{% endif %}">
     <div class="card-body skew-shadow">
         <span class="py-4 font-15 mb-0">
             {{ object.title|truncatechars_html:25 }}
         </span>
         <div class="row">
             <div class="col-8 pr-0 mt-2">
-                <h5 class="fw-bold mb-1 text-white">
-                    {{ object.get_type_dynamic_short_detail|truncatechars_html:21 }}
+                <h5 class="fw-bold mb-1 c-text-highlight-green font-13">
+                    {{ object.get_type_dynamic_short_detail|truncatechars_html:23 }}
                 </h5>
-                <div class="text-small op-8">
-                    {{ object.created_at|timesince }} ago
-                </div>
                 <div class="text-small op-8 mt-2">
-                    by <i>
-                        <a class="text-deco-none text-white" href="{{ object.user.get_absolute_url }}">
-                            {% if not object.user.user == request.user %}
-                            {{ object.user.get_dynamic_name }}
-                            {% else %}
-                            You
-                            {% endif %}
+                    <span class="mt-2">
+                        by <i>
+                            <a class="text-deco-none text-white truncate-50" href="{{ object.user.get_absolute_url }}">
+                                {% if not object.user.user == request.user %}
+                                {{ object.user.get_dynamic_name }}
+                                {% else %}
+                                You
+                                {% endif %}
+                            </a>
+                        </i>
+                    </span>
+                    <span class="ml-2">
+                        <a class="text-deco-none" href="{{ object.user.get_absolute_url }}">
+                            <div class="avatar avatar-sm">
+                                {% include 'snippets/chunks/user-image.html' with instance=object.user.user class="avatar-img rounded-circle" %}
+                            </div>
                         </a>
-                    </i>
+                    </span>
+                </div>
+                <div class="text-small op-8 mt-1 font-italic">
+                    {{ object.created_at|timesince }} ago
                 </div>
             </div>
             <div class="col-4 pl-0 text-right">
-                <a class="text-deco-none" href="{{ object.user.get_absolute_url }}">
+                <!-- <a class="text-deco-none" href="{{ object.user.get_absolute_url }}">
                     <div class="avatar avatar-sm">
                         {% include 'snippets/chunks/user-image.html' with instance=object.user.user class="avatar-img rounded-circle" %}
                     </div>
-                </a>
+                </a> -->
                 <span class="font-15 font-700 c-text-highlight-green">
                     {{ object.get_donation_type }}
                 </span>
                 <div
-                    class="text-small text-uppercase fw-bold op-8 {% if object.donation_progress.progress_status == 1 %}text-success{% else %}text-warning{%endif%}">
+                    class="text-small text-uppercase fw-bold op-8 mt-1 {% if object.donation_progress.progress_status == 1 %}text-success{% else %}text-warning{%endif%}">
                     {{ object.donation_progress.get_progress_status }}
+                </div>
+                <div class="c-text-highlight-green">
+                    <i class="flaticon-medical"></i>
+                    <span class="font-13">{{object.get_viewers.count}}</span>
                 </div>
             </div>
         </div>
     </div>
+    
     <div class="btn-group">
-        <a href="{{ object.get_absolute_url }}" class="btn btn-primary btn-sm text-deco-none">
+        <a href="{{ object.get_absolute_url }}" class="btn btn-primary btn-sm text-deco-none bg-c-primary">
             <span class="btn-label">
-                <i class="flaticon-interface"></i>
-                view
+                <i class="flaticon-medical"></i>
+                <span class="font-13 font-bold">view</span>
             </span>
         </a>
         {% if not object.user.user == request.user %}
 
-        {% if not object.donation_progress.progress_status == 1 %}
-        <a href="#" class="btn btn-primary btn-sm text-deco-none">
-            <span class="btn-label">
-                <div class="avatar avatar-xs">
-                    <img src="{% static 'images/raw/help.png' %}" alt="my requests" class="avatar-img rounded-circle">
-                </div>
-                respond
-            </span>
-        </a>
-        {% endif %}
+        {% include 'snippets/modules/respond-module.html' with instance=object %}
 
-        {% if not object.user.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+        <!-- {% if not object.user.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
         <a href="/chat/{{object.user.user.username}}/" class="btn btn-primary btn-sm text-deco-none">
             <span class="btn-label">
                 <i class="flaticon-chat-4"></i>
                 chat
             </span>
         </a>
-        {% endif %}
+        {% endif %} -->
+        
+        {% include 'snippets/modules/chat-module.html' with instance=object.user class="btn btn-primary btn-sm text-deco-none" text="chat" %}
 
         {% endif %}
 
-        {% if object.user.user == request.user %}
-        <a href="{{ donation_update_url }}" class="btn btn-primary btn-sm text-deco-none">
-            <span class="btn-label">
-                <i class="flaticon-pencil"></i>
-                edit
-            </span>
-        </a>
-        <button type="button" class="btn btn-primary btn-sm text-deco-none" id="js_delete_donation"
-            value="{{object.slug}}" data-toggle="modal"
-            data-target="#modal-delete-donation">
-            <i class="flaticon-interface-5"></i>
-            Delete
-        </button>
-        {% endif %}
+        {% include 'snippets/modules/donation-modify-module.html' with instance=object %}
 
     </div>
 </div>

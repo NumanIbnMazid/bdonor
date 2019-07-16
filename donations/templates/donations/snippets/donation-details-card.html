@@ -44,14 +44,14 @@
                     </div>
                     <h6>{{ object.user.get_dynamic_name }}</h6>
                 </a>
-                {% if not object.user.user == request.user and not object.user.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+                <!-- {% if not object.user.user == request.user and not object.user.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
                 <a href="/chat/{{object.user.user.username}}/" class="btn btn-sm text-deco-none border-info-1">
                     <span class="btn-label">
                         <i class="flaticon-chat-4"></i>
                         chat
                     </span>
                 </a>
-                {% endif %}
+                {% endif %} -->
             </h3>
         </div>
         <div>
@@ -108,13 +108,39 @@
             </h5>
             {% endif %}
 
+            {% if object.tissue_name %}
+            <h5>
+                <span class="text-secondary">
+                    Tissue name:
+                </span>
+                <span class="text-primary ml-2">
+                    {{ object.tissue_name }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.quantity %}
+            <h5>
+                <span class="text-secondary">
+                    Quantity:
+                </span>
+                <span class="text-primary ml-2">
+                    {{ object.quantity }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.contact_privacy == 0 %}
+
             {% if object.contact %}
             <h5>
                 <span class="text-secondary">
                     Contact no. :
                 </span>
                 <span class="ml-2">
-                    {{ object.contact }}
+                    <a href="#">
+                        {{ object.contact }}
+                    </a>
                 </span>
             </h5>
             {% endif %}
@@ -125,7 +151,9 @@
                     Contact no. 2 :
                 </span>
                 <span class="ml-2">
-                    {{ object.contact2 }}
+                    <a href="#">
+                        {{ object.contact2 }}
+                    </a>
                 </span>
             </h5>
             {% endif %}
@@ -136,7 +164,33 @@
                     Contact no. 3 :
                 </span>
                 <span class="ml-2">
-                    {{ object.contact3 }}
+                    <a href="#">
+                        {{ object.contact3 }}
+                    </a>
+                </span>
+            </h5>
+            {% endif %}
+
+            {% endif %}
+
+            {% if object.location %}
+            <h5>
+                <span class="text-secondary">
+                    Preferred location:
+                </span>
+                <span class="ml-2">
+                    {{ object.location }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.hospital %}
+            <h5>
+                <span class="text-secondary">
+                    Preferred Hospital:
+                </span>
+                <span class="ml-2">
+                    {{ object.hospital }}
                 </span>
             </h5>
             {% endif %}
@@ -171,17 +225,6 @@
                     <span class="text-secondary ml-2 mr-2">to</span>
                     {{ object.preferred_date_to|date:'d-M-Y h:i a' }}
                     {% endif %}
-                </span>
-            </h5>
-            {% endif %}
-
-            {% if object.location %}
-            <h5>
-                <span class="text-secondary">
-                    Preferred location:
-                </span>
-                <span class="ml-2">
-                    {{ object.location }}
                 </span>
             </h5>
             {% endif %}

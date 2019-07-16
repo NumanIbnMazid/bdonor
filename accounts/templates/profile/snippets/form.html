@@ -70,11 +70,19 @@
                             <span class="input-message text-danger font-13" id="{{field.name}}_msg"></span>
                         </div>
 
-                        {% if field.name == 'address' %}
+                        <!-- {% if field.name == 'address' %}
                         <h6 id="detect_location" class="pointer text-info mt-2">
                             <i class="flaticon-placeholder-1"></i>
                             <span class="ml-1">Detect location</span>
                         </h6>
+                        {% endif %} -->
+
+                        {% if field.name == 'address' %}
+                        <a href="#" class="text-deco-none" id="js_location_detect" data-toggle="modal"
+                            data-target="#location_modal">
+                            <i class="flaticon-placeholder-1"></i>
+                            Detect my location
+                        </a>
                         {% endif %}
 
                         {% if field.name == 'contact' %}

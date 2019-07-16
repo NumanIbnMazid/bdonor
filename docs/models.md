@@ -22,6 +22,13 @@
     REGULAR     = 0
     PREMIUM     = 1
 
+
+==================== Notification Utils ====================
+# Respond to donation
+    - category = 'donationRespond_Create'
+    - identifier = slug (donation)
+    - subject = f"{respondent} has responded to your donation post"
+
 ================== Models =================
 
 # User

@@ -19,17 +19,67 @@
     <div class="col-md-3 text-center">
 
         <h4>Action</h4>
-        {% if object.user.user == request.user %}
-        <a href="{{ donation_update_url }}" class="btn btn-primary btn-sm text-deco-none m-1">
-            <span class="btn-label">
+
+        {% if object.get_user_is_responded == True %}
+
+        {% comment %}
+        {% if not object.donation_progress.progress_status == 1 %}
+        <button class="btn btn-danger btn-xs m-2" id="js_withdraw_respond" value="{{ object.slug }}" data-toggle="modal"
+            data-target="#modal-withdraw-respond">
+            <span class="font-13 font-bold">
+                <i class="flaticon-line"></i>
+                Withdraw my response
+            </span>
+        </button>
+        <a href="#" class="btn btn-info btn-xs m-2 text-deco-none">
+            <span class="font-13 font-bold">
                 <i class="flaticon-pencil"></i>
-                Edit
+                Edit my response
             </span>
         </a>
-        <button type="button" class="btn btn-danger btn-sm text-deco-none m-1" id="js_delete_donation"
-            value="{{object.slug}}" data-toggle="modal" data-target="#modal-delete-donation">
-            <i class="flaticon-interface-5"></i>
-            Delete
+        {% endif %}
+        {% endcomment %}
+        
+        <a href="#" class="btn btn-secondary btn-xs m-2 text-deco-none">
+            <span class="font-13 font-bold">
+                <i class="flaticon-medical"></i>
+                View my response
+            </span>
+        </a>
+        {% else %}
+        {% if not object.user.user == request.user %}
+        {% if not object.donation_progress.progress_status == 1 %}
+        <a href="{% url 'donations:donation_respond_create' slug=object.slug %}"
+            class="btn btn-primary btn-xs text-deco-none m-2">
+            <span class="btn-label">
+                <div class="avatar avatar-xs">
+                    <img src="{% static 'images/raw/help.png' %}" alt="my requests" class="avatar-img rounded-circle">
+                </div>
+                <span class="font-13 font-bold">respond</span>
+            </span>
+        </a>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+
+        {% include 'snippets/modules/chat-module.html' with instance=object.user class="btn btn-primary btn-sm text-deco-none" text="chat" %}
+
+        {% if object.user.user == request.user %}
+
+        {% include 'snippets/modules/donation-modify-module.html' with instance=object %}
+
+        <button type="button" class="btn btn-info btn-sm text-deco-none m-1" id="see_viewers" data-toggle="modal"
+            data-target="#modal-see-viewers">
+            <i class="flaticon-medical font-15"></i>
+            See Viewers
+            <span class="c-text-highlight-green">({{object.get_viewers.count}})</span>
+        </button>
+
+        <button type="button" class="btn btn-success btn-sm text-deco-none m-1" id="see_viewers" data-toggle="modal"
+            data-target="#modal-see-respondents">
+            <i class="flaticon-user-2 font-15"></i>
+            See Respondents
+            <span class="c-text-highlight-green">({{object.get_respondents.count}})</span>
         </button>
 
         <h4 class="mt-3">Social Share</h4>
@@ -38,12 +88,12 @@
         {% post_to_gplus object_or_url "Share on Google+!" %}
         {% post_to_linkedin object.title object_or_url "Share on LinkedIn" %}
         {% send_email object.title "{{object.title}}. Check it out!" object_or_url "Share via email" %}
-        
+
         {% comment %}
         {% post_to_reddit "{{object.title}}" object_or_url "Share on Reddit" %}
         {% post_to_telegram "{{object.title}}" object_or_url "Share on Telegram" %}
         {% endcomment %}
-        
+
         {% endif %}
     </div>
 </div>

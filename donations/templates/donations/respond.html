@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Respond to Donation
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+{% block extra_css %}
+<!-- intlInputPhone CSS -->
+<link rel="stylesheet" href="{% static 'vendor/intlTelInput/intlTelInput.css' %}" type="text/css" />
+{% endblock %}
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card p-3">
+            {% if respondant_exists == False %}
+            <form method="POST" id="donation_respond_form" data-toggle="validator">
+                {% csrf_token %}
+                <div class="card-header">
+                    <div class="card-title text-center">
+                        Respond to Donation
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    {% include 'donations/snippets/donation-respond-form.html' %}
+
+                </div>
+                <div class="card-action text-center form-group">
+                    <button type="submit" class="btn btn-success m-2" id="submitBtn">
+                        Respond
+                    </button>
+                    <button class="btn btn-danger" id="go_back">Cancel</button>
+                </div>
+            </form>
+            {% else %}
+            <div class="text-center">
+                <div class="alert alert-success text-center" role="alert">
+                    <span class="font-20 font-bold">
+                        You have already responded to this post
+                    </span>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-danger btn-md">
+                        <span class="font-15 font-bold">
+                            Withdraw my response
+                        </span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card p-3">
+            <span class="stamp stamp-md bg-secondary">
+                Providing contact number helps to reach more quickly.
+            </span>
+        </div>
+    </div>
+
+</div>
+
+
+{% block extra_js %}
+<!-- intlInputPhone JS -->
+<script type="text/javascript" src="{% static 'vendor/intlTelInput/intlTelInput-jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/intlTelInput/intlTelInput-conf.js' %}"></script>
+
+<script>
+    window.intlTelInputGlobals.loadUtils("{% static 'vendor/intlTelInput/utils.js' %}");
+</script>
+<script type="text/javascript" src="{% static 'assets/js/form-validator/donation-respond-form.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

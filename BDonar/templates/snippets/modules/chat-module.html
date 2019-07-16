@@ -1,0 +1,10 @@
+{% if not instance.user == request.user and not instance.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+<a href="/chat/{{instance.user.username}}/" class="{{ class }}">
+    <span class="btn-label">
+        <i class="flaticon-chat-4 font-20"></i>
+        {% if not text == "" %}
+        <span class="font-bold font-13">{{text}}</span>
+        {% endif %}
+    </span>
+</a>
+{% endif %}

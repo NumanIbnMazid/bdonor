@@ -22,11 +22,7 @@ My Profile
         <h4 class="card-title text-center">
             <span class="">Profile Details</span>
             <span class="pull-right">
-                {% if not object.user == request.user and not object.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
-                <a href="/chat/{{object.user.username}}/" class="text-deco-none">
-                    <i class="flaticon-chat-4 font-20"></i>
-                </a>
-                {% endif %}
+                {% include 'snippets/modules/chat-module.html' with instance=object class="btn btn-sm text-deco-none border-info-1" text="chat" %}
             </span>
         </h4>
     </div>

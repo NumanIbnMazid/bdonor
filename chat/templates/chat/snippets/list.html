@@ -52,11 +52,11 @@
 </a>
 
 {% endif %}
-{% endfor %}
 {% empty %}
-<div class="alert alert-warning">
+<div class="alert alert-warning font-20">
     <strong>No messages to show!</strong>
 </div>
+{% endfor %}
 {% endfor %}
 
 {% if chat_list.count >= 1 %}

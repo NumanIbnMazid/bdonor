@@ -7,6 +7,13 @@
     - .truncate, .truncate-50, .truncate-100 - .truncate-300
     - .pointer
 
+# opacity
+    - .opacity-high, .opacity-mid, .opacity-low
+    - .bg-opacity-high, .bg-opacity-mid, .bg-opacity-low
+
+# Overflow
+    - .overflow-xxl, .overflow-lg, .overflow-md, .overflow-sm, .overflow-xs
+
 # font
     - .font-10, .font-13, .font-15, .font-17 - .font-40
     - .font-bold
@@ -46,9 +53,27 @@
     - .bg-c-mixed-green
     - .bg-c-green
     - .bg-c-soft-green
+    - .bg-c-red-yellow
+    - .bg-c-warning
+    - .bg-c-soft-blue
+    - .bg-c-green-yellow-soft
+    - .bg-c-muted
+    - .bg-c-mud
+    - .bg-c-secondary
+    - .bg-c-default-dark
+    - .bg-c-danger
+    - .bg-c-peace
+    - .bg-c-success
+    - .bg-c-whale
+    - .bg-c-primary
+    - .bg-c-info
+    - .bg-c-deep
+    - .bg-c-aircraft
 
 # background-color
+    - .bg-c-white-raw
     - .bg-c-ash-raw
+    - .bg-c-muted-raw
     - .bg-c-azure-raw
     - .bg-c-smoke-raw
     - .bg-c-water-raw

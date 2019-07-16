@@ -47,7 +47,7 @@ class UserProfile(models.Model):
                               null=True, max_length=10, verbose_name='gender')
     dob = models.DateField(blank=True, null=True, verbose_name='DOB')
     blood_group = models.CharField(
-        max_length=10, choices=BLOOD_GROUP_CHOICES, null=True, blank=True, verbose_name='blood group')
+        max_length=10, choices=BLOOD_GROUP_CHOICES, verbose_name='blood group')
     contact = models.CharField(
         max_length=20, blank=True, null=True, verbose_name='contact')
     address = models.TextField(max_length=200, blank=True,

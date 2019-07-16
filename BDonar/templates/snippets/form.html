@@ -40,7 +40,7 @@
             <div class="col-md-4">
                 <label for="{{ field.id_for_label }}" class="control-label" id="{{ field.id_for_label }}-label">
 
-                    <span class="font-13">{{ field.label |title }}</span>
+                    <span class="font-13" id="{{field.name}}-label">{{ field.label |title }}</span>
 
                     {% if field.field.required %}
                     <small class="text-info"><i class="field_priority"
@@ -74,9 +74,11 @@
 
                 {% if field.errors %}
                 {% for error in field.errors %}
-                <div class="error m-t-sm">
-                    <b class="text-danger">
-                        <p id="form_error">{{ error|safe }}</p>
+                <div class="row form-error-div">
+                    <b class="col-md-12 text-danger">
+                        <span id="{{field.name}}_error" class="form-error">
+                            {{ error|safe }}
+                        </span>
                     </b>
                 </div>
                 {% endfor %}

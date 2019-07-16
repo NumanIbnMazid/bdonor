@@ -13,6 +13,7 @@
     window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';
 </script>
 <!-- <script>window.CKEDITOR_BASEPATH = "{% static 'ckeditor/ckeditor/' %}";</script> -->
+
 <!-- intlInputPhone CSS -->
 <link rel="stylesheet" href="{% static 'vendor/intlTelInput/intlTelInput.css' %}" type="text/css" />
 <!-- date-time picker CSS -->
@@ -23,18 +24,22 @@
 
 {% endblock %}
 
+<input type="hidden" name="page_title" id="page_title" value="{{ page_title }}">
+
 <div class="row">
     <div class="col-md-8">
         <div class="card">
             <form method="POST" id="offer_create_form" data-toggle="validator">
                 {% csrf_token %}
                 <div class="card-header">
-                    <div class="card-title text-center">{{ page_title }}</div>
+                    <div class="card-title text-center">
+                        {{ page_title }}
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            
+
                             {% include 'donations/snippets/donation-form.html' %}
 
                             <h5 class="font-15 text-primary pointer mt-1" id="advanced">
@@ -50,6 +55,21 @@
                     </div>
                 </div>
                 <div class="card-action text-center form-group">
+                    <div class="form-check" id="termsConditionsDiv">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value="" id="termsConditions_input">
+                            <span class="form-check-sign">
+                                I have read and agree to the 
+                                <a href='#' class='text-deco-none' id="termsConditionsModalBtn" data-toggle="modal"
+                                    data-target="#modal-terms-conditions">
+                                    terms & conditions
+                                </a>
+                            </span>
+                        </label>
+                        <p class="font-15 font-bold text-danger hidden" id="termsConditions_error">
+                            You must read and agree to the terms & conditions. Please ensure that terms & conditions checkbox is checked.
+                        </p>
+                    </div>
                     <button type="submit" class="btn btn-success m-2" id="submitBtn">
                         {{ page_title }}
                     </button>
@@ -59,9 +79,20 @@
         </div>
 
     </div>
+
+    <div class="col-md-4">
+        {% include 'donations/snippets/faq.html' %}
+    </div>
+
 </div>
 
+
+{% include 'donations/snippets/modals.html' %}
+
+
+{% comment %}
 {% block extra_js %}
+{% endcomment %}
 
 <!-- <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
 <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script> -->
@@ -82,11 +113,10 @@
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}"/> -->
 <script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
 
-<!-- ajax-setup JS -->
-<!-- <script type="text/javascript" src="{% static 'assets/js/form-validator/ajax-setup.js' %}"></script> -->
-
 <script type="text/javascript" src="{% static 'assets/js/form-validator/donation-form.js' %}"></script>
 
+{% comment %}
 {% endblock %}
+{% endcomment %}
 
 {% endblock %}
