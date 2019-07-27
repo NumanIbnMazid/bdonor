@@ -20,13 +20,21 @@ class SitePreferenceView(TemplateView):
         user_profile = UserProfile.objects.filter(user=request.user).first()
         site_preference_filter = SitePreference.objects.filter(
             user=user_profile)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin/base.html'
+        else:
+            base_template = 'base.html'
+        # Ends Base Template Context
         if site_preference_filter.exists():
             context = {
-                'site_preference': site_preference_filter.first()
+                'site_preference': site_preference_filter.first(),
+                'base_template': base_template
             }
         else:
             context = {
-                'site_preference': None
+                'site_preference': None,
+                'base_template': base_template
             }
         return render(request, "site-preference/preference.html", context=context)
 

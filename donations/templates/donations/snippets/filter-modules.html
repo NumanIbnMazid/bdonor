@@ -1,0 +1,126 @@
+{% load static %}
+<div class="form-group" id="donation_filter_form_div">
+    <form action="{% url 'donations:donation_filter' %}" method="GET" id="donation_filter_form">
+        <input type="hidden" name="page-type" value="{{page_type}}" id="page_type">
+        <input type="text" name="q" class="form-control" placeholder="Search for..." value="{{ query }}">
+        <div class="form-check mt-2" id="filter_modules_holder">
+
+            <div>
+                <label class="text-info">Type</label><br>
+                <label
+                    class="form-radio-label {% if query_type == '' or query_type == None %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-type" id="filter_all" value=""
+                        {% if query_type == '' or query_type == None %}checked="" {% endif %}>
+                    <span class="form-radio-sign">All</span>
+                </label>
+                <label
+                    class="form-radio-label ml-3 {% if query_type == '0' %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-type" id="filter_blood" value="0"
+                        {% if query_type == '0' %}checked="" {% endif %}>
+                    <span class="form-radio-sign">Blood</span>
+                </label>
+                <label
+                    class="form-radio-label ml-3 {% if query_type == '1' %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-type" id="filter_organ" value="1"
+                        {% if query_type == '1' %}checked="" {% endif %}>
+                    <span class="form-radio-sign">Organ</span>
+                </label>
+                <label
+                    class="form-radio-label ml-3 {% if query_type == '2' %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-type" id="filter_tissue"
+                        value="2" {% if query_type == '2' %}checked="" {% endif %}>
+                    <span class="form-radio-sign">Tissue</span>
+                </label>
+            </div>
+
+            <hr>
+
+            <div>
+                <label class="text-info">Priority</label><br>
+                <label
+                    class="form-radio-label {% if query_priority == '' or query_priority == None %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-priority"
+                        id="filter_priority_all" value=""
+                        {% if query_priority == '' or query_priority == None %}checked="" {% endif %}>
+                    <span class="form-radio-sign">All</span>
+                </label>
+                <label
+                    class="form-radio-label {% if query_priority == '0' %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-priority"
+                        id="filter_priority_normal" value="0" {% if query_priority == '0' %}checked="" {% endif %}>
+                    <span class="form-radio-sign">Normal</span>
+                </label>
+                <label
+                    class="form-radio-label ml-3 {% if query_priority == '1' %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-priority"
+                        id="filter_priority_important" value="1" {% if query_priority == '1' %}checked="" {% endif %}>
+                    <span class="form-radio-sign">Important</span>
+                </label>
+            </div>
+
+            <hr>
+
+            <div>
+                <label class="text-info">Status</label><br>
+                <label
+                    class="form-radio-label {% if query_status == '' or query_status == None %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-status" id="filter_status_all"
+                        value="" {% if query_status == '' or query_status == None %}checked="" {% endif %}>
+                    <span class="form-radio-sign">All</span>
+                </label>
+                <label
+                    class="form-radio-label {% if query_status == '0' %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-status"
+                        id="filter_status_pending" value="0" {% if query_status == '0' %}checked="" {% endif %}>
+                    <span class="form-radio-sign">Pending</span>
+                </label>
+                <label
+                    class="form-radio-label ml-3 {% if query_status == '1' %}border-bottom border-info p-1 font-italic{% endif %}">
+                    <input class="form-radio-input" type="radio" name="donation-filter-status"
+                        id="filter_status_completed" value="1" {% if query_status == '1' %}checked="" {% endif %}>
+                    <span class="form-radio-sign">Completed</span>
+                </label>
+            </div>
+
+            <div class="{% if not user.is_superuser %}hidden{% endif %}">
+                <hr>
+
+                <div>
+                    <label class="text-info">Donate Type</label><br>
+                    <label
+                        class="form-radio-label {% if query_donate_type == '' or query_donate_type == None %}border-bottom border-info p-1 font-italic{% endif %}">
+                        <input class="form-radio-input" type="radio" name="donation-filter-donate_type"
+                            id="filter_donate_type_all" value=""
+                            {% if query_donate_type == '' or query_donate_type == None %}checked="" {% endif %}>
+                        <span class="form-radio-sign">All</span>
+                    </label>
+                    <label
+                        class="form-radio-label {% if query_donate_type == '0' %}border-bottom border-info p-1 font-italic{% endif %}">
+                        <input class="form-radio-input" type="radio" name="donation-filter-donate_type"
+                            id="filter_donate_type_living" value="0" {% if query_donate_type == '0' %}checked=""
+                            {% endif %}>
+                        <span class="form-radio-sign">Living</span>
+                    </label>
+                    <label
+                        class="form-radio-label ml-3 {% if query_donate_type == '1' %}border-bottom border-info p-1 font-italic{% endif %}">
+                        <input class="form-radio-input" type="radio" name="donation-filter-donate_type"
+                            id="filter_donate_type_deceased" value="1" {% if query_donate_type == '1' %}checked=""
+                            {% endif %}>
+                        <span class="form-radio-sign">Deceased</span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="input-icon-addon">
+            <button class="btn btn-secondary btn-sm" type="submit" id="donation_search_btn">
+                <i class="flaticon-chain"></i> Apply Filter
+            </button>
+        </div>
+    </form>
+</div>
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'assets/js/form-validator/donation-filter.js' %}"></script>
+{% endblock %}

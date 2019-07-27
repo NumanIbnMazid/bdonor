@@ -43,6 +43,8 @@ class DonationForm(forms.ModelForm):
             'id': 'donation_blood_group_input',
             'onchange': "resetMessage()"
         })
+        if user_profile_filter.exists() and not user_profile_filter.first().blood_group == "" and self.object == None:
+            self.initial['blood_group'] = user_profile_filter.first().blood_group
         self.fields['blood_bag'].help_text = "Enter quantity."
         self.fields['blood_bag'].widget.attrs.update({
             'id': 'donation_blood_bag_input',
@@ -57,13 +59,13 @@ class DonationForm(forms.ModelForm):
         self.fields['tissue_name'].help_text = "Select tissue."
         self.fields['tissue_name'].widget.attrs.update({
             'id': 'donation_tissue_name_input',
-            'onchange': "resetMessage()"
+            'onchange': "resetMessage(), tissueFunction()"
         })
         self.fields['quantity'].help_text = "Enter quantity."
         self.fields['quantity'].widget.attrs.update({
             'id': 'donation_quantity_input',
             'placeholder': 'Enter quantity...',
-            'onchange': "resetMessage()"
+            'onkeyup': "resetMessage(), quantityFunction()"
         })
         # self.fields['organ_name'].help_text = "Maximum 30 characters, '_A-z -' and spaces allowed."
         # self.fields['organ_name'].widget.attrs.update({
@@ -153,14 +155,16 @@ class DonationForm(forms.ModelForm):
                 self.initial['preferred_date_to'] = self.object.preferred_date_to.strftime(
                     "%Y-%m-%d %H:%M")
 
-        self.fields['location'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
+        self.fields[
+            'location'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
         self.fields['location'].widget.attrs.update({
             'id': 'donation_location_input',
             'placeholder': 'Type preferred location...',
             'maxlength': 180,
             'pattern': "^[_A-z0-9 +-.,#/]{1,}$",
         })
-        self.fields['hospital'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
+        self.fields[
+            'hospital'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
         self.fields['hospital'].widget.attrs.update({
             'id': 'donation_hospital_input',
             'placeholder': 'Type preferred hospital...',
@@ -171,17 +175,19 @@ class DonationForm(forms.ModelForm):
         self.fields['priority'].widget.attrs.update({
             'id': 'donation_priority_input',
         })
-        self.fields['publication_status'].help_text = "Selecting publication status as unpublished will save your post as draft."
+        self.fields[
+            'publication_status'].help_text = "Selecting publication status as unpublished will save your post as draft."
         self.fields['publication_status'].widget.attrs.update({
             'id': 'donation_publication_status_input',
         })
 
     class Meta:
         model = Donation
-        fields = ['type', 'blood_group', 'blood_bag', 'organ_name', 'tissue_name', 'quantity', 'contact', 'contact2', 'contact3', 'location', 'hospital', 'details', 'details_fake',
+        fields = ['type', 'organ_name', 'tissue_name', 'quantity', 'blood_group', 'blood_bag', 'contact', 'contact2',
+                  'contact3', 'location', 'hospital', 'details', 'details_fake',
                   'preferred_date', 'preferred_date_from', 'preferred_date_to', 'priority', 'publication_status']
         exclude = ['user', 'slug', 'category',
-                   'donate_type', 'created_at', 'updated_at']
+                   'donate_type', 'is_verified', 'created_at', 'updated_at']
 
     # def clean_title(self):
     #     title = self.cleaned_data.get('title')
@@ -378,7 +384,7 @@ class DonationRespondForm(forms.ModelForm):
         })
         if self.object == None:
             self.initial['message'] = "Please contact with me ..."
-        
+
     class Meta:
         model = DonationRespond
         fields = ['contact', 'message']
@@ -392,3 +398,64 @@ class DonationRespondForm(forms.ModelForm):
                 raise forms.ValidationError(
                     f"Maximum 200 characters allowed. [currently using: {length}]")
         return message
+
+
+class DonationProgressForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.object = kwargs.pop('object', None)
+        super(DonationProgressForm, self).__init__(*args, **kwargs)
+        self.fields['progress_status'].help_text = "Select progress status..."
+        self.fields['progress_status'].widget.attrs.update({
+            'id': 'donation_progress_status_input',
+            # 'placeholder': 'Type contact number...',
+        })
+        self.fields['respondent'].help_text = "Select respondent..."
+        self.fields['respondent'].widget.attrs.update({
+            'id': 'donation_respondent_input',
+            # 'placeholder': 'Type contact number...',
+        })
+        self.fields['completion_date'].help_text = "Select completion date..."
+        self.fields['completion_date'].widget.attrs.update({
+            'id': 'donation_completion_date_input',
+            # 'placeholder': 'Type contact number...',
+        })
+        self.fields['management_status'].help_text = "Select management status..."
+        self.fields['management_status'].widget.attrs.update({
+            'id': 'donation_management_status_input',
+            # 'placeholder': 'Type contact number...',
+        })
+        self.fields['details'].help_text = "Maximum 400 characters allowed."
+        self.fields['details'].widget.attrs.update({
+            'id': 'donation_details_input',
+            'placeholder': 'Provide some additional information...',
+            'maxlength': 400,
+            'rows': 2,
+            'cols': 2
+        })
+
+    class Meta:
+        model = DonationProgress
+        fields = ['progress_status', 'respondent', 'completion_date', 'management_status', 'details']
+        exclude = ['donation', 'created_at', 'updated_at']
+
+    def clean_completion_date(self):
+        completion_date = self.cleaned_data.get('completion_date')
+        today = datetime.date.today()
+        if not completion_date == None:
+            if not self.object == None and not self.object.completion_date == None and self.object.completion_date == completion_date:
+                return completion_date
+            else:
+                if completion_date > today:
+                    raise forms.ValidationError(
+                        "Completion date can't be greater than today!")
+        return completion_date
+
+    def clean_details(self):
+        details = self.cleaned_data.get('details')
+        if not details == None:
+            length = len(details)
+            if length > 400:
+                raise forms.ValidationError(
+                    f"Maximum 400 characters allowed. [currently using: {length}]")
+        return details

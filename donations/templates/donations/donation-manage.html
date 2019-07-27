@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends base_template %}
 
 {% load static %}
 
@@ -82,6 +82,10 @@
 
     <div class="col-md-4">
         {% include 'donations/snippets/faq.html' %}
+
+        {% if not object == None %}
+        {% include 'donations/snippets/donation-details-card.html' with object=object %}
+        {% endif %}
     </div>
 
 </div>

@@ -101,6 +101,7 @@ Campaign:
 31. Progress status modal on donation details progress
 32. Confirm a specific respondents
 33. Manage if donated blood between 90 days in donation respond.
+34. Showing error if location auto detect detects location as bangla font.
 
 
 
@@ -139,7 +140,7 @@ Open street map
     2. I need a donor change from I need donor
 3. Important posts goes first
     4. Action tab color different - posts
-5. Post - List view- as table
+    5. Post - List view- as table
     6. Blood and organ, remove others (Type - Blood/Organ/Tissues)
     7. Title - I want to donate- %type (will be able to view)
     8. Blood bag quantity default 1- not viewable - (I want to donate)
@@ -155,13 +156,61 @@ Open street map
     18. if responded, not editable./ Delete - remove.
     19. Confirm before post publish.
     20. Detect  if after death , and notify user. Contact - 2 mandatory
-    21. After death donations can only see administrator, hide from search and other users.
-    22. Manage bags blood.
+21. After death donations can only see administrator, hide from search and other users.
+22. Manage bags blood.
+23. After confirming your death, Donation receipt request
+24. After submit auto open modal
+25. Auto focus to issue field
 
+
+01710457751
+Afroja Aunty Husband (Shahin Uncle)
 
 
 # Questionnaires
 1. Hsopital or Location - required/optional ?
+2. How Deceased type donations will be managed if respondents can't see donation posts?
+3. Should there any limitation of donation post against previous donation?
+4. Is it necessary to ask date of birth for posting donations? if yes, then is it okay if redirect to           update profile before posting donations?
+5. How to keep track of donated blood within 90 days from respondents (there reamins multiple respondents       and only one will be selected and what will happen then if donation post user do not update post            progress   or update multiple user as donated against that particular post?)
+6. Is it necessary to check if user can donate organ or tissue if donated that specific item before?
 
-# Living / Deceased:
-1. 
+
+# Suggestions from Friends:
+++++++++++++++++++++++ Organ ++++++++++++++++++++++ 
+অরগান বেশির ভাগ ১২-৩৬ ঘন্টা er modhe donate korte hobe..
+1. Heart- ১টাই দেওয়া যায়, ডেথ ডিক্লিয়ার করার পর, ৪-৬ ঘন্টার ভিতর, তবে ব্লাড গ্রুপিং ম্যাচ হইতে হবে
+2. lung - ২টাও দেওয়া যায় মরার পরে, আর বাচা অবস্থায় দিলে একটা বা এক্টার পার্ট দেওয়া যায় Lobe বলে       lung এর পার্টকে
+    lobe donate korajay jibito obsthay
+    ekTa Donate kora jay tobe person sushto thakte hbe, heavy exercise kora jabe nA
+3. লিভার একটা ফুলা দেওয়া যায় না সুস্থ থাকলে, পার্ট দেওয়া যায়
+    কেটে দেওয়া লাগে | মারা যাবার পর পারবে
+    বাট পার্ট দিতে পারবে (লিভারের লোব আছে, liver er part)
+    লাং এর মত
+4. কিডনী ১টা দেতে পারে সুস্থ মানুষ
+    ২টা দিলে বাচবে না
+    বাট পার্ট দেওয়া যায় না
+5. Pancrease ফুল দিলে মরার পর, পার্ট দিলে জিবীত থাকতে দেওয়া যাবে | 1 tai thake.
+
+6. Intestine এর পার্ট ডোনেট করা যায়. small ar large 2 dhorner thake
+    large deoya jay full
+    prob na
+    ho morar por sb deoya jay
+    ক্ষুদ্রান্ত্র দিলে বাচবে, কিছুদিন পর মারা যাবে কারণ ক্ষুদ্রান্ত্রে খাবার বিপাক হয়, মানে পুষ্টির অভাবে মরবে. 
+    বৃহদান্ত্র ফুল না
+    পার্ট দেওয়া যায়
+++++++++++++++++++++++ Tissue ++++++++++++++++++++++ 
+1. Cornea মারা যাবার পর দেওয়া লাগে
+    24 hours within
+    এক্টাই থাকে কর্নিয়া |
+2. Skin Donate করা যায় জিবীত থাকা অবস্থাহ স্কিনের কিছু অংশ, Skin graft বলে
+    Dead body thekeo করা যায়, within 24 hours
+3. Tissue within 24 hours, Bones same,Both dead body and Living body
+4. Ligaments same as bones (Part deya jay living obosthay)
+5. Tendons same
+6. fascia same
+7. veins same
+8. Nerves same
+9. Heary vavlve after derh within 24 hours from heart
+    4Ta thake valve
+10. Sclera same as Cornea

@@ -1,0 +1,54 @@
+
+{% comment %}
+{% if instance.user.user == request.user and instance.has_response == False %}
+
+{% if not instance.donation_progress.progress_status == 1 %}
+
+{% if instance.is_virtually_verified == False %}
+{% endcomment %}
+
+{% if instance.is_modifiable == True %}
+
+{% if instance.category == 0 %}
+<a href="{% url 'donations:donation_update' slug=instance.slug %}"
+    class="btn btn-primary btn-sm text-deco-none bg-c-info">
+    <span class="btn-label">
+        <i class="flaticon-pencil"></i>
+        edit
+    </span>
+</a>
+{% endif %}
+
+{% if instance.category == 1 %}
+<a href="{% url 'donations:donation_request_update' slug=instance.slug %}"
+    class="btn btn-primary btn-sm text-deco-none bg-c-info">
+    <span class="btn-label">
+        <i class="flaticon-pencil"></i>
+        edit
+    </span>
+</a>
+{% endif %}
+
+<button type="button" class="btn btn-primary btn-sm text-deco-none bg-c-danger" id="js_delete_donation"
+    value="{{instance.slug}}" data-toggle="modal" data-target="#modal-delete-donation">
+    <i class="flaticon-interface-5"></i>
+    delete
+</button>
+
+{% endif %}
+
+{% comment %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endcomment %}
+
+{% if instance.user.user == request.user %}
+<a href="{% url 'donations:donation_progress' slug=instance.slug %}"
+    class="btn btn-primary btn-sm text-deco-none bg-c-info">
+    <span class="btn-label">
+        <i class="flaticon-mark"></i>
+        progress
+    </span>
+</a>
+{% endif %}

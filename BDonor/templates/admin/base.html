@@ -1,0 +1,100 @@
+{% load tags %}
+{% if request.user.is_authenticated %}
+{% get_site_preference as site_preference %}
+{% get_chat_messages as chat_messages %}
+{% get_threads as threads %}
+{% endif %}
+{% get_datetime_tag as datetime %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        {% block head_title %}BDonor{% endblock %} | BDonor Donation Management System
+    </title>
+    <!-- Head Snippets Files (Meta, Tags) -->
+    {% include 'snippets/head-snippets.html' %}
+    <!-- CSS Files -->
+    {% include 'snippets/css.html' %}
+    {% block extra_css %}{% endblock %}
+    <!-- Head Javascripts -->
+    {% include 'snippets/head-js.html' %}
+</head>
+
+<body
+    data-background-color="{% if not site_preference.background_color == None %}{{site_preference.background_color}}{% else %}bg1{% endif %}">
+    <div class="wrapper {% if not site_preference.sidebar_type == None %}{{site_preference.sidebar_type}}{% endif %}">
+        <div class="main-header">
+            <!-- Logo Header -->
+            {% include 'snippets/logo-header.html' %}
+            <!-- End Logo Header -->
+
+            <!-- Navbar Header -->
+            {% include 'snippets/navbar.html' %}
+            <!-- End Navbar -->
+        </div>
+
+        <!-- Sidebar -->
+        {% if site_preference.sidebar_type == "static-sidebar" %}
+        <div class="classic-grid">
+            {% endif %}
+
+            {% include 'admin/snippets/sidebar.html' %}
+            <!-- End Sidebar -->
+
+            <div class="main-panel">
+                <div class="content">
+                    <div class="page-inner">
+                        <div class="page-header">
+                            <h5 class="page-title">
+                                {% block page_title %}{% endblock %}
+                            </h5>
+                            <ul class="breadcrumbs">
+                                <li class="nav-home">
+                                    <a href="{% url 'home' %}">
+                                        <i class="flaticon-home"></i>
+                                    </a>
+                                </li>
+                                <li class="separator">
+                                    <i class="flaticon-right-arrow"></i>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#">
+                                        {% block breadcrumb %}{% endblock %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% include 'snippets/messages.html' %}
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+                {% include 'snippets/footer.html' %}
+
+            </div>
+
+            {% if site_preference.sidebar_type == "static-sidebar" %}
+        </div>
+        {% endif %}
+
+        <!-- Custom template | don't include it in your project! -->
+        <!-- {% include 'snippets/system-color-preference.html' %} -->
+        <!-- End Custom template -->
+
+    </div>
+
+    {% if not site_preference.scroll_to_top == False %}
+    <div class="auto-scroll-to-top">
+        <i class="fa fa-angle-up"></i>
+    </div>
+    {% endif %}
+
+    {% include 'snippets/js.html' %}
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

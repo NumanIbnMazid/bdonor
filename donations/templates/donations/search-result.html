@@ -1,0 +1,62 @@
+{% extends base_template %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Filter Result
+{% if page_type == "OFFER" %}
+[Donation Offers]
+{% endif %}
+{% if page_type == "REQUEST" %}
+[Donation Requests]
+{% endif %}
+{% endblock %}{% endblock %}Page{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        {% if query %}
+        <div class="">
+            <h4>
+                <span class="text-primary">{{ count }}</span>
+                match found for '<b class="text-dark">{{ query }}</b>'
+                <hr>
+            </h4>
+        </div>
+        {% comment %}
+        {% else %}
+        <div class="">
+            <form action="{% url 'donations:donation_filter' %}" method="GET" id="donation_filter_form">
+                <div class="input-icon">
+                    <input type="text" name="q" class="form-control" placeholder="Search for...">
+                    <span class="input-icon-addon">
+                        <button class="btn btn-search pr-1" type="submit" id="donation_search_btn">
+                            <i class="fa fa-search text-info"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+        <div class="">
+            <hr>
+        </div>
+        {% endcomment %}
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-10">
+                {% include 'donations/snippets/list-table.html' %}
+            </div>
+            <div class="col-md-2 text-center">
+                {% if can_filter == True %}
+                <div class="">
+                    <h4>Filter</h4>
+                    {% include 'donations/snippets/filter-modules.html' %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

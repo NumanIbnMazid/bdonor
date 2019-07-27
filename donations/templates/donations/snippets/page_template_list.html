@@ -13,9 +13,16 @@
     <div class="alert alert-warning">
         No item found!
     </div>
+    {% if page_type == "OFFER" %}
     <a href="{% url 'donations:offer_donation' %}" class="btn btn-primary btn-lg text-deco-none">
         Create donation offer
     </a>
+    {% endif %}
+    {% if page_type == "REQUEST" %}
+    <a href="{% url 'donations:request_donation' %}" class="btn btn-primary btn-lg text-deco-none">
+        Create donation request
+    </a>
+    {% endif %}
 </div>
 {% endfor %}
 

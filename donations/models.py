@@ -40,6 +40,12 @@ class DonationQuerySet(models.query.QuerySet):
     def is_not_published(self):
         return self.filter(publication_status=1)
 
+    def is_verified(self):
+        return self.filter(is_verified=True)
+
+    def is_not_verified(self):
+        return self.filter(is_verified=False)
+
     # Foreign
     def is_done(self):
         return self.filter(donation_progress__progress_status=1)
@@ -78,7 +84,6 @@ class DonationQuerySet(models.query.QuerySet):
 
     def search(self, query):
         lookups = (Q(title__icontains=query) |
-                   Q(user__icontains=query) |
                    Q(category__icontains=query) |
                    Q(type__icontains=query) |
                    Q(tissue_name__icontains=query) |
@@ -146,7 +151,7 @@ class DonationManager(models.Manager):
         return instance
 
     def search(self, query):
-        return self.get_queryset()
+        return self.get_queryset().search(query)
 
 
 class Donation(models.Model):
@@ -266,6 +271,7 @@ class Donation(models.Model):
         blank=True, null=True, max_length=4, verbose_name='quantity')
     donate_type = models.PositiveSmallIntegerField(
         choices=DONATE_TYPE_CHOICES, default=0, verbose_name='donate type')
+    is_verified = models.BooleanField(default=True, verbose_name='is verified')
     details = models.TextField(blank=True,
                                null=True, verbose_name='details')
     # contact = models.CharField(
@@ -351,6 +357,17 @@ class Donation(models.Model):
             response = True
         return response
 
+    def is_virtually_verified(self):
+        virtual_verified = True
+        if self.donate_type == 0:
+            virtual_verified = False
+        elif self.donate_type == 1 and self.is_verified == False:
+            virtual_verified = False
+        else:
+            virtual_verified = True
+        return virtual_verified
+
+
     def get_user_is_responded(self):
         # First we need create an instance of that and later get the current_request assigned
         request = RequestMiddleware(get_response=None)
@@ -359,6 +376,18 @@ class Donation(models.Model):
         if qs.exists():
             return True
         return False
+
+    def is_modifiable(self):
+        is_modifiable = True
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        has_response = self.has_response()
+        is_virtually_verified = self.is_virtually_verified()
+        if self.user.user == request.user and self.donation_progress.progress_status == 0 and has_response == False and is_virtually_verified == False:
+            is_modifiable = True
+        else:
+            is_modifiable = False
+        return is_modifiable
 
 
 class DonationRespond(models.Model):
@@ -411,7 +440,9 @@ class DonationProgress(models.Model):
                                     unique=True, related_name='donation_progress', verbose_name='donation')
     progress_status = models.PositiveSmallIntegerField(
         choices=DONATION_PROGRESS_CHOICES, default=0, verbose_name='progress status')
-    completion_date = models.DateTimeField(
+    respondent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True,
+                                   related_name='donation_progress_respondent', verbose_name='respondent')
+    completion_date = models.DateField(
         blank=True, null=True, verbose_name='completion date')
     management_status = models.PositiveSmallIntegerField(
         blank=True, null=True, choices=DONATION_MANAGEMENT_CHOICES, verbose_name='managed on')
@@ -439,6 +470,14 @@ class DonationProgress(models.Model):
         if self.progress_status == 1:
             progress_status = "Completed"
         return progress_status
+
+    def get_management_status(self):
+        management_status = "Undefined"
+        if self.management_status == 0:
+            management_status = "Managed on site"
+        if self.management_status == 1:
+            management_status = "Managed on somewhere else"
+        return management_status
 
 
 class DonationUtil(models.Model):

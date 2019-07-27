@@ -1,0 +1,223 @@
+{% load static %}
+{% block extra_css %}
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+<input type="hidden" id="total_records_count" value="{{object_list.count}}">
+<div class="table-responsive">
+    <table id="donationDataTable" class="cell-border hover table-bordered table-hover" style="width:100%">
+        <thead>
+            <tr class="text-center">
+                <th>Type</th>
+                <th width="14%">
+                    Info
+                </th>
+                <th>Blood Group</th>
+                <th>By</th>
+                <!-- <th>Published at</th> -->
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for object in object_list %}
+            <tr
+                class="text-center text-dark
+                            {% if object.donation_progress.progress_status == 0 %}{%if object.type == 0 %}bg-c-red-yellow{%elif object.type == 1 %}bg-c-ocean{%elif object.type == 2 %}bg-c-soft-green{%else%}{%endif%}{%else%}bg-c-smoke{%endif%}">
+                <td
+                    class="text-center {%if object.type == 0 %}bg-c-red-yellow{%elif object.type == 1 %}bg-c-ocean{%elif object.type == 2 %}bg-c-soft-green{%else%}{%endif%}">
+                    {{ object.get_donation_type }}
+                </td>
+                <td>
+                    {% if not object.blood_bag == None %}
+                    <span>{{ object.blood_bag }} Bag</span>
+                    {% endif %}
+
+                    {% if not object.organ_name == None %}
+                    <span class="font-bold">
+                        {{ object.organ_name }} <br>
+                    </span>
+                    {% endif %}
+
+                    {% if not object.tissue_name == None %}
+                    <span class="font-bold">
+                        {{ object.tissue_name }} <br>
+                    </span>
+                    {% endif %}
+
+                    {% if not object.quantity == None %}
+                    <span>Quantity- {{ object.quantity }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ object.blood_group }}</td>
+                <td>
+                    <a class="text-deco-none text-dark" href="{{ object.user.get_absolute_url }}">
+                        <div class="avatar avatar-xs">
+                            {% include 'snippets/chunks/user-image.html' with instance=object.user.user class="avatar-img rounded-circle" %}
+                        </div>
+                        <h6>{{ object.user.get_dynamic_name }}</h6>
+                    </a>
+                </td>
+
+                {% comment %}
+                <td>
+                    {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
+                    {{ object.created_at|timesince }} ago
+                    {% else %}
+                    {{ object.created_at }}
+                    {% endif %}
+                </td>
+                {% endcomment %}
+
+                <td>
+                    <span class="{% if object.priority == 1 %}text-danger font-700{% endif %}">
+                        {{ object.get_priority }}
+                    </span>
+                </td>
+                <td>
+                    <span
+                        class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success font-bold{% endif %}">
+                        {{ object.donation_progress.get_progress_status }}
+                        <span class="text-dark">
+                            (<i class="flaticon-medical"></i>
+                            <span class="font-13">{{object.get_viewers.count}}</span>)
+                        </span>
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ object.get_absolute_url }}" class="btn btn-secondary btn-xs text-deco-none">
+                        <span class="">
+                            View
+                        </span>
+                    </a>
+                    {% if object.get_user_is_responded == True %}
+
+                    <a href="#" class="btn btn-secondary btn-xs text-deco-none m-1">
+                        <span class="">
+                            View my response
+                        </span>
+                    </a>
+                    {% else %}
+                    {% if not object.user.user == request.user %}
+                    {% if not object.donation_progress.progress_status == 1 %}
+                    <a href="{% url 'donations:donation_respond_create' slug=object.slug %}"
+                        class="btn btn-success btn-xs text-deco-none m-1">
+                        <span class="btn-label">
+                            <span class="">respond</span>
+                        </span>
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+
+                    {% if not object.user.user == request.user and not object.user.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+                    <a href="/chat/{{object.user.user.username}}/" class="btn btn-primary btn-xs text-deco-none m-1">
+                        <span class="btn-label">
+                            <span class="">chat</span>
+                        </span>
+                    </a>
+                    {% endif %}
+
+
+
+                    {% if object.is_modifiable == True %}
+
+                    {% if page_type == "OFFER" %}
+                    <a href="{% url 'donations:donation_update' slug=object.slug %}"
+                        class="btn btn-info btn-xs text-deco-none bg-c-info m-1">
+                        <span class="btn-label">
+                            edit
+                        </span>
+                    </a>
+                    {% endif %}
+
+                    {% if page_type == "REQUEST" %}
+                    <a href="{% url 'donations:donation_request_update' slug=object.slug %}"
+                        class="btn btn-info btn-xs text-deco-none bg-c-info m-1">
+                        <span class="btn-label">
+                            edit
+                        </span>
+                    </a>
+                    {% endif %}
+
+                    <button type="button" class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1"
+                        id="js_delete_donation" value="{{object.slug}}" data-toggle="modal"
+                        data-target="#modal-delete-donation">
+                        delete
+                    </button>
+
+                    {% endif %}
+
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">
+                    <div class="alert alert-warning">
+                        No item found!
+                    </div>
+                    {% if instance.category == 0 %}
+                    <a href="{% url 'donations:offer_donation' %}" class="btn btn-primary btn-lg text-deco-none">
+                        Create donation offer
+                    </a>
+                    {% endif %}
+                    {% if instance.category == 1 %}
+                    <a href="{% url 'donations:request_donation' %}" class="btn btn-primary btn-lg text-deco-none">
+                        Create donation request
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="text-center">
+                <th>Type</th>
+                <th width="14%">Info</th>
+                <th>Blood Group</th>
+                <th>By</th>
+                <!-- <th>Published at</th> -->
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+{% include 'donations/snippets/modals.html' %}
+
+{% block extra_js %}
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#donationDataTable').DataTable({
+            destroy: true,
+            //"retrieve": true,
+            //"order": [[ 1, 'desc' ]],
+            "ordering": false,
+            //"searching": false,
+            //"paging": false,
+            //"scrollY": 400,
+            //"scrollX": 400,
+            //"scrollY": '62vh',
+            //"scrollX": '50vh',
+            "scrollCollapse": true,
+            "stateSave": true,
+            "pagingType": "full_numbers",
+            "language": {
+                "lengthMenu": "Display _MENU_ records per page. <span class='ml-4 text-primary'>Total Records: <span class='font-13 font-bold'>" +
+                    $("#total_records_count").val() + "</span></span>",
+                "zeroRecords": "Nothing found - sorry",
+                "info": "Showing page _PAGE_ of _PAGES_",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+        });
+    });
+</script>
+{% endblock %}

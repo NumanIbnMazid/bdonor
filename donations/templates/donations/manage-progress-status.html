@@ -1,0 +1,63 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Manage Progress Status
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+{% block extra_css %}
+<!-- date-time picker CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}"/>
+{% endblock %}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <form method="POST" id="donation_progress_form" data-toggle="validator">
+                {% csrf_token %}
+                <div class="card-header">
+                    <div class="card-title text-center">
+                        Manage Progress Status
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            {% include 'donations/snippets/donation-progress-form.html' %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action text-center form-group">
+                    <button type="submit" class="btn btn-success m-2" id="submitBtn">
+                        Update Progress Status
+                    </button>
+                    <button class="btn btn-danger" id="go_back">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+        {% include 'donations/snippets/donation-details-card.html' with object=object.donation %}
+    </div>
+
+</div>
+
+
+{% comment %}
+{% block extra_js %}
+{% endcomment %}
+<!-- date-time picker JS -->
+<script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/form-validator/donation-progress.js' %}"></script>
+{% comment %}
+{% endblock %}
+{% endcomment %}
+
+{% endblock %}

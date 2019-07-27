@@ -20,6 +20,17 @@ class UserListView(AjaxListView):
     def get_queryset(self):
         qs = UserProfile.objects.all()
         return qs
+    
+    def get_context_data(self, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -31,6 +42,17 @@ class ProfileDetailView(DetailView):
         if qs.exists():
             return qs.first()
         return None
+    
+    def get_context_data(self, **kwargs):
+        context = super(ProfileDetailView, self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        return context
 
     def user_passes_test(self, request):
         if request.user.is_authenticated:
@@ -67,6 +89,17 @@ class ProfileUpdateView(UpdateView):
         messages.add_message(self.request, messages.SUCCESS,
                              "Your profile has been updated successfully !")
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileUpdateView, self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        return context
 
     def user_passes_test(self, request):
         if request.user.is_authenticated:

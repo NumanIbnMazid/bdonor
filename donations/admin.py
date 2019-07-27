@@ -11,7 +11,7 @@ class DonationAdmin(admin.ModelAdmin):
 
 
 class DonationProgressAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'get_donation_user', 'progress_status',
+    list_display = ['__str__', 'get_donation_user', 'respondent', 'progress_status',
                     'management_status', 'created_at', 'updated_at']
 
     class Meta:

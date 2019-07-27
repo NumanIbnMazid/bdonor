@@ -1,107 +1,752 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f26ab2a4-6fd8-45d3-91cb-4b5bda0d09dc" name="Default Changelist" comment="" />
+    <list default="true" id="f26ab2a4-6fd8-45d3-91cb-4b5bda0d09dc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/numan.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BDonor/static_proj/assets/js/form-validator/donation-progress.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/donations/templates/donations/manage-progress-status.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/donations/templates/donations/snippets/donation-progress-form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/adapter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/asgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/routing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/settings/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/settings/common.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/settings/pythonanywhere.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/settings/third_party_configs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/atlantis.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/atlantis.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/atlantis.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/custom.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/demo.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/fonts.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/fonts.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/images/ui-bg_flat_75_ffffff_40x100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/images/ui-bg_glass_65_ffffff_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/jquery-ui.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/css/normalize.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/flaticon/Flaticon.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/flaticon/Flaticon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/flaticon/Flaticon.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/flaticon/Flaticon.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/flaticon/_flaticon.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/flaticon/flaticon.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/flaticon/flaticon.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-brands-400.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-brands-400.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-brands-400.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-brands-400.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-brands-400.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-regular-400.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-regular-400.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-regular-400.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-regular-400.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-regular-400.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-solid-900.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-solid-900.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-solid-900.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-solid-900.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/fontawesome/fa-solid-900.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/simple-line-icons/Simple-Line-Icons.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/simple-line-icons/Simple-Line-Icons.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/simple-line-icons/Simple-Line-Icons.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/simple-line-icons/Simple-Line-Icons.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/simple-line-icons/Simple-Line-Icons.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/summernote/summernote.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/summernote/summernote.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/fonts/summernote/summernote.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/arashmil.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/bg-404.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/bg-abstract.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/bg-abstract2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/blogpost.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/chadengle.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example1-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example1.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example10-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example10.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example11-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example11.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example12-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example12.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example2-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example2.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example3-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example3.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example4-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example4.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example5-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example5.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example6-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example6.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example7-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example7.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example8-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example8.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example9-300x300.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/example9.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/logoinvoice.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product10.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product11.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product12.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/examples/product8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ad.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ae.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/af.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ag.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/al.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/am.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/an.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ao.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/as.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/at.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/au.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/aw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ax.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/az.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ba.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/be.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/br.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/by.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/bz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ca.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/catalonia.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ch.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ci.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ck.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/co.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cx.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/cz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/de.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/dj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/dk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/dm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/do.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/dz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ec.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ee.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/eg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/eh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/england.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/er.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/es.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/et.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/europeanunion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/fam.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/fi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/fj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/fk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/fm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/fo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/fr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ga.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gq.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/gy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/hk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/hm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/hn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/hr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ht.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/hu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/id.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ie.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/il.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/in.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/io.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/iq.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ir.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/is.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/it.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/jm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/jo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/jp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ke.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/kg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/kh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ki.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/km.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/kn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/kp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/kr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/kw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ky.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/kz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/la.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/lb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/lc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/li.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/lk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/lr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ls.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/lt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/lu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/lv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ly.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ma.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/md.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/me.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ml.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mq.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ms.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mx.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/my.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/mz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/na.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/nc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ne.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/nf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ng.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ni.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/nl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/no.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/np.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/nr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/nu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/nz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/om.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pa.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pe.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ph.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ps.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/pw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/py.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/qa.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/re.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/readme.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ro.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/rs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ru.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/rw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sa.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/scotland.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/se.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/si.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/so.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/st.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/sz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/td.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/th.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/to.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/tz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ua.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ug.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/um.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/us.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/uy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/uz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/va.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/vc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ve.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/vg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/vi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/vn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/vu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/wales.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/wf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ws.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/ye.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/yt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/za.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/zm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/flags/zw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/icon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/img-shadow.gvdesign" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/img-shadow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/jm_denis.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/logo2.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/logoalternatif.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/logoproduct.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/logoproduct2.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/logoproduct3.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/mlane.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product1.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product2.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product3.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product4.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product5.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product6.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product7.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product8.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/productimg/product9.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/profile.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/profile2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/sauro.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/talha.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/img/visa.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/atlantis.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/atlantis.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/atlantis2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/core/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/core/jquery.3.2.1.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/core/popper.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/custom.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/form-validator/ajax-setup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/form-validator/donation-form.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/form-validator/donation-respond-form.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/form-validator/profile-form.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/chart-circle/circles.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/chart.js/chart.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/datatables/datatables.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jquery-ui/jquery-ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jquery/jquery-3.4.1.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/jquery.vmap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/continents/jquery.vmap.africa.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/continents/jquery.vmap.asia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/continents/jquery.vmap.australia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/continents/jquery.vmap.europe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/continents/jquery.vmap.north-america.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/continents/jquery.vmap.south-america.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.algeria.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.argentina.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.brazil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.canada.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.croatia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.europe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.france.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.germany.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.greece.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.indonesia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.iran.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.iraq.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.new_regions_france.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.russia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.serbia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.tunisia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.turkey.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.ukraine.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.usa.counties.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.usa.districts.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.usa.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/jqvmap/maps/jquery.vmap.world.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/sweetalert/sweetalert.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/velocity/velocity.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/velocity/velocity.ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/plugin/webfont/webfont.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/setting-demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/js/setting-demo2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_background.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_components.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_flaticon.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_font-awesome.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_layouts-colors.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_layouts.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_opacity.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_outlinefocus.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_plugins.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_responsive-horizontal.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_responsive.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_typography.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/_variables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_activityfeed.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_alerts.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_avatars.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_badges.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_breadcrumbs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_buttons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_cards.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_charts.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_colorinputs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_dropdowns.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_gutters.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_imagecheck.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_inputs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_listgroup.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_loader.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_maps.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_modals.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_navbars.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_navsearch.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_navtabs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_paginations.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_popovers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_progress.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_selectgroup.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_sliders.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_stamps.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_tables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/components/_timeline.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/plugins/_animate.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/plugins/_datatables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/plugins/_jqueryscrollbar.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/plugins/_jqueryui.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/assets/sass/atlantis/plugins/_sweetalert.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/icon/icon-128.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/icon/icon-256.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/icon/icon-32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/icon/icon-48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/icon/icon-96.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/icon/icon-original.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/icon/icon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/icon/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/raw/avatar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/raw/checked.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/raw/heart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/raw/help.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/raw/loader.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/raw/preloader.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/images/raw/success.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/addons/datatables-select.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/addons/datatables-select.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/addons/datatables.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/addons/datatables.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/addons/directives.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/addons/directives.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/bootstrap.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/mdb.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/mdb.lite.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/mdb.lite.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/mdb.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/modules/animations-extended.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/modules/animations-extended.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/css/style.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Bold.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Bold.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Bold.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Bold.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Light.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Light.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Light.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Light.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Medium.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Medium.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Medium.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Medium.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Regular.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Regular.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Regular.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Thin.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Thin.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Thin.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/font/roboto/Roboto-Thin.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/lightbox/default-skin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/lightbox/default-skin.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/lightbox/preloader.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/overlays/09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/svg/arrow_left.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/img/svg/arrow_right.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/addons/datatables-select.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/addons/datatables-select.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/addons/datatables.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/addons/datatables.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/addons/imagesloaded.pkgd.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/addons/masonry.pkgd.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/addons/rating.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/jquery-3.4.0.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/mdb.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/mdb.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/bs-custom-file-input.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/chart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/enhanced-modals.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/forms-free.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/jquery.easing.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/scrolling-navbar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/treeview.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/velocity.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/velocity.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/waves.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/modules/wow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/js/popper.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/_custom-skin.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/_custom-styles.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/_custom-variables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/addons/_datatables-select.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/addons/_datatables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/addons/_directives.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/_colors.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/_global.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/_helpers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/_masks.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/_mixins.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/_typography.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/_variables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/_waves.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/bootstrap/_functions.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/bootstrap/_rfs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/core/bootstrap/_variables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_animations-basic.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_badges.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_buttons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_cards.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_carousels.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_depreciated.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_dropdowns.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_footers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_forms.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_input-group.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_list-group.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_loader.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_modals.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_msc.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_navbars.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_pagination.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_steppers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_switch.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_tables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/_treeview.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/modules/animations-extended/_module.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/free/modules/animations-extended/animations-extended.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/mdb.lite.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/mdb/scss/mdb.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/bootstrap-validator/validator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/chat/chat.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/chat/chat.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/click-tap-ripple-effect/ripple-effect.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/click-tap-ripple-effect/ripple-effect.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/click-tap-ripple-effect/ripple-effect.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/click-tap-ripple-effect/ripple-effect.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/datetimepicker/jquery.datetimepicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/datetimepicker/jquery.datetimepicker.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/datetimepicker/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/el-pagination/el-pagination.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/el-pagination/el-pagination.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/emojionearea/emojionearea-conf.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/emojionearea/emojionearea.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/emojionearea/emojionearea.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/geo-location/jquery-geolocate.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/image-magnify/jquery.magnify.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/image-magnify/jquery.magnify.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/image-magnify/magnify-conf.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/img/flags.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/img/flags@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/flags.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/flags@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/intlTelInput-conf.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/intlTelInput-jquery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/intlTelInput-jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/intlTelInput.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/intlTelInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/intlTelInput.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/intlTelInput.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/intlTelInput/utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/jquery-modal/jquery.modal.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/jquery-modal/jquery.modal.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/moment/moment-with-locales.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/static_proj/vendor/websocket-reconnect/reconnecting-websocket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/account_inactive.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/email.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/email/email_confirmation_message.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/email/email_confirmation_signup_message.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/email/email_confirmation_signup_subject.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/email/email_confirmation_subject.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/email/password_reset_key_message.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/email/password_reset_key_subject.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/email_confirm.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/logout.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/cannot_delete_primary_email.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/email_confirmation_sent.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/email_confirmed.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/email_deleted.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/logged_in.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/logged_out.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/password_changed.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/password_set.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/primary_email_set.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/messages/unverified_primary_email.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/password_change.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/password_reset.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/password_reset_done.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/password_reset_from_key.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/password_reset_from_key_done.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/password_set.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/signup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/signup_closed.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/snippets/already_logged_in.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/verification_sent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/account/verified_email_required.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/django_social_share/templatetags/post_to_facebook.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/django_social_share/templatetags/post_to_gplus.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/django_social_share/templatetags/post_to_linkedin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/django_social_share/templatetags/post_to_reddit.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/django_social_share/templatetags/post_to_telegram.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/django_social_share/templatetags/post_to_twitter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/django_social_share/templatetags/send_email.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/pages/account-form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/pages/home.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/pages/privacy-policy.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/pages/terms-conditions.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/chunks/chat-message.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/chunks/notification.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/chunks/user-image.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/css.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/head-js.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/head-snippets.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/js.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/logo-header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/messages.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/modals/modals.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/modules/chat-module.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/modules/donation-modify-module.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/modules/respond-module.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/navbar.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/sidebar.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/snippets/system-color-preference.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/authentication_error.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/connections.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/login_cancelled.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/messages/account_connected.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/messages/account_connected_other.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/messages/account_disconnected.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/signup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/snippets/login_extra.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/templates/socialaccount/snippets/provider_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BDonar/wsgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TODO.md" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/profile/snippets/profile-card.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/profile/snippets/profile-card.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/donations/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/donations/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/donations/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/donation-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/donation-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/donation-manage.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/donation-manage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/respond.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/respond.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/snippets/donation-card.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/snippets/donation-card.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/snippets/donation-details-card.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/snippets/donation-details-card.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/snippets/donation-form.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/snippets/donation-form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/snippets/faq.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/snippets/faq.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/snippets/modals.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/snippets/modals.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/templates/donations/snippets/page_template_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/donations/templates/donations/snippets/page_template_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/donations/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/donations/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/donations/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/models.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="1730906016">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="6" />
-          <entry key="project.open.time.2" value="1" />
-          <entry key="project.open.time.5" value="1" />
-          <entry key="project.open.time.6" value="1" />
-          <entry key="project.open.time.7" value="3" />
-          <entry key="project.opened" value="6" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="Python Console" value="10" />
-          <entry key="html" value="129" />
-          <entry key="py" value="149" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="HTML" value="129" />
-          <entry key="Python" value="159" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="html" value="3" />
-          <entry key="py" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="HTML" value="3" />
-          <entry key="Python" value="1" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BDonar/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="8" column="41" selection-start-line="8" selection-start-column="41" selection-end-line="8" selection-end-column="41" />
-              <folding>
-                <element signature="e#0#45#0" expanded="true" />
-                <marker date="1557348756169" expanded="true" signature="206:211" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BDonar/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
-              <folding>
-                <element signature="e#1#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BDonar/templates/base.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="388">
-              <caret line="1209" column="29" selection-start-line="1209" selection-start-column="29" selection-end-line="1209" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/BDonar/templates/snippets/js.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BDonar/templates/snippets/css.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="21">
-              <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -109,6 +754,9 @@
         <option value="HTML File" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -118,6 +766,19 @@
         <option value="$PROJECT_DIR$/BDonar/templates/snippets/css.html" />
         <option value="$PROJECT_DIR$/BDonar/templates/snippets/js.html" />
         <option value="$PROJECT_DIR$/BDonar/templates/base.html" />
+        <option value="$PROJECT_DIR$/donations/admin.py" />
+        <option value="$PROJECT_DIR$/donations/urls.py" />
+        <option value="$PROJECT_DIR$/BDonor/templates/snippets/modules/donation-modify-module.html" />
+        <option value="$PROJECT_DIR$/donations/views.py" />
+        <option value="$PROJECT_DIR$/donations/templates/donations/snippets/donation-details-card.html" />
+        <option value="$PROJECT_DIR$/donations/models.py" />
+        <option value="$PROJECT_DIR$/donations/templates/donations/snippets/donation-progress-form.html" />
+        <option value="$PROJECT_DIR$/donations/templates/donations/manage-progress-status.html" />
+        <option value="$PROJECT_DIR$/donations/templates/donations/donation-manage.html" />
+        <option value="$PROJECT_DIR$/donations/templates/donations/snippets/faq.html" />
+        <option value="$PROJECT_DIR$/BDonor/static_proj/assets/js/form-validator/donation-form.js" />
+        <option value="$PROJECT_DIR$/donations/forms.py" />
+        <option value="$PROJECT_DIR$/BDonor/static_proj/assets/js/form-validator/donation-progress.js" />
       </list>
     </option>
   </component>
@@ -126,47 +787,33 @@
     <option name="width" value="1370" />
     <option name="height" value="742" />
   </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Course" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="BDonar" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BDonar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BDonar" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BDonar" type="462c0819:PsiDirectoryNode" />
-              <item name="BDonar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BDonar" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BDonar" type="462c0819:PsiDirectoryNode" />
-              <item name="BDonar" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BDonar" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BDonar" type="462c0819:PsiDirectoryNode" />
-              <item name="BDonar" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="snippets" type="462c0819:PsiDirectoryNode" />
+              <item name="BDonor" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BDonor" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Course" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../venv" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -212,9 +859,9 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-2" y="0" width="1370" height="742" extended-state="6" />
+    <frame x="-2" y="0" width="1370" height="744" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24497394" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24459359" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -223,58 +870,187 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.32868218" />
+      <window_info anchor="bottom" id="Educational.CheckDetails" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.js" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/BDonar/views.py">
+    <entry file="file://$PROJECT_DIR$/BDonar/views.py" />
+    <entry file="file://$PROJECT_DIR$/BDonar/urls.py" />
+    <entry file="file://$PROJECT_DIR$/BDonar/templates/snippets/css.html" />
+    <entry file="file://$PROJECT_DIR$/BDonar/templates/base.html" />
+    <entry file="file://$PROJECT_DIR$/BDonar/templates/snippets/js.html" />
+    <entry file="file://$PROJECT_DIR$/donations/templates/donations/search-result.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="8" column="41" selection-start-line="8" selection-start-column="41" selection-end-line="8" selection-end-column="41" />
+        <state relative-caret-position="420">
+          <caret line="20" column="33" lean-forward="true" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="13" column="65" selection-start-line="13" selection-start-column="65" selection-end-line="13" selection-end-column="65" />
           <folding>
-            <element signature="e#0#45#0" expanded="true" />
-            <marker date="1557348756169" expanded="true" signature="206:211" ph="..." />
+            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BDonar/urls.py">
+    <entry file="file://$PROJECT_DIR$/../venv/lib/python3.7/site-packages/django/views/generic/detail.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
+        <state relative-caret-position="-2721">
+          <caret line="19" column="19" lean-forward="true" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/templates/donations/donation-list-card.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1239">
+          <caret line="59" column="4" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BDonor/static_proj/assets/js/form-validator/profile-form.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="132" column="23" lean-forward="true" selection-start-line="132" selection-start-column="23" selection-end-line="132" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/templates/donations/donation-list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="39" column="12" lean-forward="true" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BDonor/templates/snippets/modules/donation-modify-module.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="642">
+          <caret line="39" column="4" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="534">
+          <caret line="35" column="91" selection-start-line="35" selection-start-column="74" selection-end-line="35" selection-end-column="91" />
           <folding>
-            <element signature="e#1#33#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BDonar/templates/snippets/css.html">
+    <entry file="file://$PROJECT_DIR$/donations/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+        <state relative-caret-position="162">
+          <caret line="1247" column="44" lean-forward="true" selection-start-line="1247" selection-start-column="44" selection-end-line="1247" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BDonar/templates/base.html">
+    <entry file="file://$PROJECT_DIR$/donations/templates/donations/snippets/donation-details-card.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="1209" column="29" selection-start-line="1209" selection-start-column="29" selection-end-line="1209" selection-end-column="29" />
+        <state relative-caret-position="438">
+          <caret line="37" column="72" selection-start-line="37" selection-start-column="72" selection-end-line="37" selection-end-column="72" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BDonar/templates/snippets/js.html">
+    <entry file="file://$PROJECT_DIR$/donations/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="91">
+          <caret line="414" column="33" selection-start-line="414" selection-start-column="33" selection-end-line="414" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/BDonor/templates/snippets/form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="7" column="6" lean-forward="true" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/templates/donations/snippets/faq.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="11" column="52" lean-forward="true" selection-start-line="11" selection-start-column="52" selection-end-line="11" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/templates/donations/donation-manage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="86" column="85" selection-start-line="86" selection-start-column="85" selection-end-line="86" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BDonor/static_proj/assets/js/form-validator/donation-form.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26595">
+          <caret line="1773" selection-start-line="1773" selection-end-line="1778" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BDonor/static_proj/assets/js/form-validator/donation-progress.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/templates/donations/manage-progress-status.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="47" column="10" lean-forward="true" selection-start-line="47" selection-start-column="10" selection-end-line="47" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/templates/donations/snippets/donation-progress-form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="545">
+          <caret line="96" selection-start-line="96" selection-end-line="96" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/donations/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="429" column="35" selection-start-line="429" selection-start-column="35" selection-end-line="429" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>

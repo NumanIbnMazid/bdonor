@@ -14,6 +14,17 @@ class InboxView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Thread.objects.by_user(self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = super(InboxView, self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        return context
 
 
 class ThreadView(LoginRequiredMixin, FormMixin, DetailView):
@@ -38,6 +49,13 @@ class ThreadView(LoginRequiredMixin, FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
         context['form'] = self.get_form()
         return context
 

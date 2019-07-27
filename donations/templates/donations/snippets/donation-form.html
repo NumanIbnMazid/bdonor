@@ -114,8 +114,16 @@
                             </div>
                             {% endif %}
 
-                            <div class="text-center">
-                                <p class="text-info font-15" id="extra_info"></p>
+                            <div class="">
+                                <p class="text-primary font-13" id="{{field.name}}_extra_info"></p>
+                                <div class="text-center">
+                                    {% if field.name == 'contact2' %}
+                                    <a href='#' class='hidden font-13' id="contact2InfoModalBtn" data-toggle="modal"
+                                        data-target="#modal-contact2-info">
+                                        Why Contact Number 2 is required?
+                                    </a>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="help-block with-errors text-center"></div>
                             <div class="text-center">
@@ -138,6 +146,8 @@
                 {% endif %}
 
                 {% if field.name == 'type' %}
+
+                <input type="hidden" name='donate-type' id="donate_type" value="0">
 
                 <input type="hidden" name='can-donate-blood' id="can_donate_blood" value="{{ can_donate_blood }}">
 

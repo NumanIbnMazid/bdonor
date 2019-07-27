@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 import datetime
-from .utils import unique_slug_generator_custom
+from .utils import time_str_mix_slug
 
 
 class SitePreference(models.Model):
@@ -147,7 +147,9 @@ def create_or_update_utils_module_from_donations(sender, instance, **kwargs):
 
 def notification_slug_pre_save_receiver(sender, instance, *args, **kwargs):
     if not instance.slug:
-        instance.slug = unique_slug_generator_custom(instance)
+        slug_bind = instance.sender.username + "-" + instance.receiver.username + "_" + time_str_mix_slug()
+        instance.slug = slug_bind
 
 
 pre_save.connect(notification_slug_pre_save_receiver, sender=Notification)
+

@@ -1,0 +1,68 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+{% url 'donations:donation_offers_list' as donation_offers_list_url %}
+{% url 'donations:donation_offers_list_card' as donation_offers_list_card_url %}
+{% url 'donations:donation_requests_list_card' as donation_requests_list_card_url %}
+{% url 'donations:donation_requests_list' as donation_requests_list_url %}
+
+{% block extra_css %}
+<!-- el-pagination css -->
+<link rel="stylesheet" href="{% static 'vendor/el-pagination/el-pagination.css' %}" type="text/css" />
+{% endblock %}
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="row">
+            {% include page_template %}
+        </div>
+    </div>
+    <div class="col-md-2 text-center">
+        {% if request.path == donation_offers_list_card_url %}
+        <div class="mb-3">
+            <span class="font-17 font-bold text-muted">Actions</span> <br>
+            <a href="{{ donation_offers_list_url }}"
+                class="btn btn-dark btn-xs font-13 text-deco-none mt-1">
+                <i class="flaticon-list m-1"></i>
+                List View
+            </a>
+        </div>
+        {% endif %}
+        {% if request.path == donation_requests_list_card_url %}
+        <div class="mb-3">
+            <span class="font-17 font-bold text-muted">Actions</span> <br>
+            <a href="{{ donation_requests_list_url }}" class="btn btn-dark btn-xs font-13 text-deco-none mt-1">
+                <i class="flaticon-list m-1"></i>
+                List View
+            </a>
+        </div>
+        {% endif %}
+
+        {% if can_filter == True %}
+        <div>
+            <span class="font-17 font-bold text-muted">Filter</span> <br>
+            {% include 'donations/snippets/filter-modules.html' %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+<!-- el-pagination JS -->
+<script type="text/javascript" src="{% static 'vendor/el-pagination/el-pagination.js' %}"></script>
+<script>
+    $.endlessPaginate({
+        paginateOnScroll: true,
+        paginateOnScrollChunkSize: 5
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

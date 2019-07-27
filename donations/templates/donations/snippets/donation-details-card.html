@@ -1,5 +1,74 @@
+{% if object.user.user == request.user %}
 <div class="card">
     <div class="card-body">
+        <div class="mb-2 text-center">
+            <span class="font-17 font-bold text-muted">Progress Information</span> <br>
+        </div>
+        <hr>
+        <h5>
+            <span class="text-secondary">
+                Progress Status:
+            </span>
+            <span
+                class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success font-700{% endif %}">
+                {{ object.donation_progress.get_progress_status }}
+            </span>
+        </h5>
+        {% if not object.donation_progress.respondent == None %}
+        <h5>
+            <span class="text-secondary">
+                Respondent:
+            </span>
+            <span class="text-primary ml-2">
+                <a class="text-deco-none" href="{{ object.donation_progress.respondent.get_absolute_url }}">
+                    <div class="avatar avatar-sm">
+                        {% include 'snippets/chunks/user-image.html' with instance=object.donation_progress.respondent class="avatar-img rounded-circle" %}
+                    </div>
+                    <h6>{{ object.donation_progress.respondent.get_dynamic_name }}</h6>
+                </a>
+            </span>
+        </h5>
+        {% endif %}
+        {% if not object.donation_progress.completion_date == None %}
+        <h5>
+            <span class="text-secondary">
+                Completion Date:
+            </span>
+            <span class="text-primary ml-2">
+                {{ object.donation_progress.completion_date|date:"d-M-Y" }}
+            </span>
+        </h5>
+        {% endif %}
+        {% if not object.donation_progress.management_status == None %}
+        <h5>
+            <span class="text-secondary">
+                Management Status:
+            </span>
+            <span class="text-primary ml-2">
+                {{ object.donation_progress.get_management_status }}
+            </span>
+        </h5>
+        {% endif %}
+        {% if object.donation_progress.details %}
+        <h5>
+            <span class="text-secondary">
+                Details:
+            </span>
+            <span class="text-primary ml-2">
+                {{ object.donation_progress.details|safe }}
+            </span>
+        </h5>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-body">
+        <div class="mb-2 text-center">
+            <span class="font-17 font-bold text-muted">Donation Details</span> <br>
+        </div>
+        <hr>
         <div class="d-flex justify-content-between">
             <div>
                 <h5>
@@ -17,7 +86,11 @@
                         Published:
                     </span>
                     <span class="ml-2">
+                        {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
                         {{ object.created_at|timesince }} ago
+                        {% else %}
+                        {{ object.created_at }}
+                        {% endif %}
                     </span>
                 </div>
                 <p class="text-muted text-small">
@@ -28,13 +101,15 @@
                         {{ object.get_priority }}
                     </span>
                     <br>
+                    {% if not object.user.user == request.user %}
                     <span class="text-secondary">
                         Progress Status:
                     </span>
                     <span
-                        class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success font-700{% endif %}">
+                            class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success font-700{% endif %}">
                         {{ object.donation_progress.get_progress_status }}
                     </span>
+                    {% endif %}
                 </p>
             </div>
             <h3 class="text-secondary">
@@ -63,17 +138,6 @@
                     {{ object.get_donation_type }}
                 </span>
             </h5>
-
-            {% if object.custom_type %}
-            <h5>
-                <span class="text-secondary">
-                    Custom type name:
-                </span>
-                <span class="text-primary ml-2">
-                    {{ object.custom_type }}
-                </span>
-            </h5>
-            {% endif %}
 
             {% if object.blood_group %}
             <h5>

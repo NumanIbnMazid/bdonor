@@ -30,11 +30,13 @@
                             <div class="avatar avatar-sm">
                                 {% include 'snippets/chunks/user-image.html' with instance=object.user.user class="avatar-img rounded-circle" %}
                             </div>
+                            {% if object.blood_group and not object.type == 0 %}
+                            <span class="c-text-highlight-green font-15 font-bold">
+                                {{ object.blood_group }}
+                            </span>
+                            {% endif %}
                         </a>
                     </span>
-                </div>
-                <div class="text-small op-8 mt-1 font-italic">
-                    {{ object.created_at|timesince }} ago
                 </div>
             </div>
             <div class="col-4 pl-0 text-right">
