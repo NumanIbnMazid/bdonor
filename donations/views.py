@@ -13,8 +13,8 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse
 from django import forms
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from el_pagination.views import AjaxListView
+from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from suspicious.utils import block_suspicious_user
 from django.views.decorators.csrf import csrf_exempt
 import datetime
@@ -212,7 +212,7 @@ class OfferDonationCreateView(CreateView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context 
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -226,8 +226,7 @@ class OfferDonationCreateView(CreateView):
         can_donate_blood = True
         if last_blood_donated_filter.exists():
             if not last_blood_donated_filter.last().completion_date == None:
-                day_difference = datetime.datetime.now(
-                ) - last_blood_donated_filter.last().completion_date
+                day_difference = datetime.date.today() - last_blood_donated_filter.last().completion_date
                 if day_difference.days < 90:
                     can_donate_blood = False
                     context['last_donated_ago'] = day_difference.days
@@ -431,7 +430,7 @@ class OfferDonationUpdateView(UpdateView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -445,8 +444,7 @@ class OfferDonationUpdateView(UpdateView):
         can_donate_blood = True
         if last_blood_donated_filter.exists():
             if not last_blood_donated_filter.last().completion_date == None:
-                day_difference = datetime.datetime.now(
-                ) - last_blood_donated_filter.last().completion_date
+                day_difference = datetime.date.today() - last_blood_donated_filter.last().completion_date
                 if day_difference.days < 90:
                     can_donate_blood = False
                     context['last_donated_ago'] = day_difference.days
@@ -476,7 +474,7 @@ class DonationOffersCardListView(AjaxListView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -505,7 +503,7 @@ class DonationOffersListView(ListView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -533,7 +531,7 @@ class MyDonationOffersListView(AjaxListView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -709,7 +707,7 @@ class DonationRequestCreateView(CreateView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -913,7 +911,7 @@ class DonationRequestUpdateView(UpdateView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -958,7 +956,7 @@ class DonationRequestsCardListView(AjaxListView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -987,7 +985,7 @@ class DonationRequestsListView(ListView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -1015,7 +1013,7 @@ class MyDonationRequestsListView(AjaxListView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -1040,7 +1038,7 @@ class DonationDetailView(DetailView):
         context = super(DonationDetailView, self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -1107,7 +1105,7 @@ class DonationRespondCreateView(CreateView):
             # Sending Email
             mail_msg = f"Hello {respondent_receiver} ! <br> {respondent} has responded to your post. <br> click <a href='{redirect_url}' target='_blank'>here</a> to view. <br> <br> Respondent Contact: <b><a href='#'>{contact_bind}</a></b> <br> Respondent Message: {message_bind} <br> Have a good day. <br>Thanks for being with us."
             mail_subject = f'{respondent} has responded to your post.'
-            mail_from = 'admin@bdonar.com'
+            mail_from = 'admin@bdonor.com'
             mail_text = 'Please do not Reply'
             subject = mail_subject
             from_email = mail_from
@@ -1156,7 +1154,7 @@ class DonationRespondCreateView(CreateView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -1176,8 +1174,7 @@ class DonationRespondCreateView(CreateView):
         can_donate_blood = True
         if last_blood_donated_filter.exists():
             if not last_blood_donated_filter.last().completion_date == None:
-                day_difference = datetime.datetime.now(
-                ) - last_blood_donated_filter.last().completion_date
+                day_difference = datetime.date.today() - last_blood_donated_filter.last().completion_date
                 if day_difference.days < 90:
                     can_donate_blood = False
                     context['last_donated_ago'] = day_difference.days
@@ -1242,7 +1239,7 @@ class DonationFilteredListView(ListView):
                         self).get_context_data(*args, **kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -1393,7 +1390,7 @@ class ManageProgressStatus(UpdateView):
     def form_valid(self, form):
         # category = 0
         self.object = self.get_object()
-        print(form.instance.completion_date)
+        # print(form.instance.completion_date)
         messages.add_message(self.request, messages.SUCCESS,
                              "Donation Progress Status has been updated successfully!")
         return super().form_valid(form)
@@ -1431,7 +1428,7 @@ class ManageProgressStatus(UpdateView):
                         self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template

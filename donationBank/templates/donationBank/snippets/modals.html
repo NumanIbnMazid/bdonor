@@ -1,0 +1,223 @@
+<!-- Donation bank delete Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-delete-donation_bank" tabindex="-1" role="dialog"
+    aria-labelledby="donation_bankDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="donation_bankDeleteModalLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'donation_bank:bank_delete' %}" id="donation_bankDeleteForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="donation_bank_slug" name="slug" value="2">
+                    <div class="text-center">
+                        <p class="c-text-danger font-bold font-15">
+                            You are going to delete this item permanently. Are you sure???
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="delete-donation_bank">Yes, Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Donation bank Join Request Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-member-request" tabindex="-1" role="dialog"
+    aria-labelledby="donation_bankMemberRequest" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="donation_bankMemberRequest">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'donation_bank:bank_member_request_create' %}"
+                    id="donation_bankMemberRequestForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="member_request_bank_slug" name="slug" value="2">
+                    <div class="text-center">
+                        <p class="c-text-info font-bold font-15">
+                            You won't be able to send any member request to join another Donation Bank and cannot create
+                            Donation Bank before
+                            before you cancel the request by yourself or canceled by the administrator of
+                            {{object.institute}}. You can cancel request at any time from the quick actions
+                            (<i class="fas fa-layer-group"></i>)
+                            of top navigation bar section.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" id="send-request">Send Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Donation bank Accept Member Request Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-member-request-accept" tabindex="-1" role="dialog"
+    aria-labelledby="donation_bankMemberRequestAccept" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="donation_bankMemberRequestAccept">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'donation_bank:bank_member_request_accept' %}"
+                    id="donation_bankMemberRequestAcceptForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="member_request_accept_slug" name="slug" value="2">
+                    <div class="text-center">
+                        <p class="c-text-info font-bold font-15">
+                            By accpeting member request, the request sender will be a member of your
+                            DOnation Bank and will be able to manage data of your Donation Bank.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" id="send-request">Ok, Accept</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Donation bank Reject Member Request Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-member-request-reject" tabindex="-1" role="dialog"
+    aria-labelledby="donation_bankMemberRequestReject" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="donation_bankMemberRequestReject">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'donation_bank:bank_member_request_reject' %}"
+                    id="donation_bankMemberRequestRejectForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="member_request_reject_slug" name="slug" value="2">
+                    <div class="text-center">
+                        <p class="c-text-danger font-bold font-15">
+                            You are going to reject this member request. Are you sure?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="reject-request">Yes, Reject</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Donation bank Remove Membership Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-membership-remove" tabindex="-1" role="dialog"
+    aria-labelledby="donation_bankMembershipRemove" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="donation_bankMembershipRemove">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'donation_bank:bank_membership_remove' %}"
+                    id="donation_bankMembershipRemoveForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="membership_profile_slug" name="slug" value="2">
+                    <div class="text-center">
+                        <p class="c-text-danger font-bold font-15">
+                            You are going to remove his/her membership permanently. Are you sure?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="remove-member">Yes, Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // delete donation_bank
+    $("#js_delete_donation_bank").click(function () {
+        let donation_bank_slug = this.value;
+        $('#donation_bank_slug').val(donation_bank_slug);
+        //console.log(donation_slug);
+    });
+    document.querySelector('#donation_bankDeleteForm').addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    });
+    // send member request
+    $("#js_send_member_request").click(function () {
+        let member_request_bank_slug = this.value;
+        $('#member_request_bank_slug').val(member_request_bank_slug);
+        //console.log(member_request_bank_slug);
+    });
+    document.querySelector('#donation_bankMemberRequestForm').addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    });
+    // accept member request
+    $(".js_accept_member_request").click(function () {
+        let member_request_accept_slug = this.value;
+        $('#member_request_accept_slug').val(member_request_accept_slug);
+        //console.log(member_request_accept_slug);
+    });
+    document.querySelector('#donation_bankMemberRequestAcceptForm').addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    });
+    // reject member request
+    $(".js_reject_member_request").click(function () {
+        let member_request_reject_slug = this.value;
+        $('#member_request_reject_slug').val(member_request_reject_slug);
+        //console.log(member_request_reject_slug);
+    });
+    document.querySelector('#donation_bankMemberRequestRejectForm').addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    });
+    // remove membership
+    $(".js_remove_membership").click(function () {
+        let membership_profile_slug = this.value;
+        $('#membership_profile_slug').val(membership_profile_slug);
+        //console.log(membership_profile_slug);
+    });
+    document.querySelector('#donation_bankMembershipRemoveForm').addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    });
+</script>
+{% endblock %}

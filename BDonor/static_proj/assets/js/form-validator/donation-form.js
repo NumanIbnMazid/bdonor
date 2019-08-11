@@ -124,7 +124,11 @@ $(function () {
 
 // Autocomplete ends---------------------------------------------
 
+
 // force to enter only number 0-9
+
+// https: //jsfiddle.net/emkey08/tvx5e7q3
+
 (function ($) {
   $.fn.inputFilter = function (inputFilter) {
     return this.on(

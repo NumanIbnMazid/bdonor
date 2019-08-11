@@ -64,7 +64,8 @@
                     </div>
                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
                         {% if field.help_text %}
-                        <span class="label ml-2" data-toggle="tooltip" data-placement="top" title=""
+                        <span class="label ml-2" data-toggle="tooltip"
+                            title="{{ field.help_text|safe }}"
                             data-original-title="{{ field.help_text|safe }}">
                             <i class="fa fa-exclamation-circle"></i>
                         </span>

@@ -1,0 +1,38 @@
+{% if member_requests.count >= 1 %}
+<div class="card-title fw-mediumbold">Member Requests</div>
+<!-- <p class="font-15 font-bold">Member Requests</p> -->
+{% for member_request in member_requests %}
+<div class="card-list">
+  <div class="item-list">
+    <a href="{{ member_request.user.profile.get_absolute_url }}">
+      <div class="avatar avatar-sm">
+        {% include 'snippets/chunks/user-image.html' with instance=member_request.user.profile.user class="avatar-img rounded-circle" %}
+      </div>
+    </a>
+    <div class="info-user ml-3">
+      <div class="username">
+        {{ member_request.user.profile.get_dynamic_name }}
+      </div>
+      <div class="status">
+        {% if datetime|date:"d-M-Y" == member_request.created_at|date:"d-M-Y" %}
+        {{ member_request.created_at | timesince }} ago {% else %}
+        {{ member_request.created_at }}
+        {% endif %}
+      </div>
+    </div>
+    <button class="btn btn-icon btn-danger btn-round btn-xs js_reject_member_request"
+      value="{{ member_request.slug }}" data-toggle="modal" data-target="#modal-member-request-reject">
+      <i class="fas fa-times"></i>
+    </button>
+    <button class="btn btn-icon btn-primary btn-round btn-xs ml-1 js_accept_member_request"
+      value="{{ member_request.slug }}" data-toggle="modal" data-target="#modal-member-request-accept">
+      <i class="fas fa-check"></i>
+    </button>
+  </div>
+</div>
+{% empty %}
+<div class="alert alert-warning" role="alert">
+  There is no member request available!
+</div>
+{% endfor %} {% endif %}
+

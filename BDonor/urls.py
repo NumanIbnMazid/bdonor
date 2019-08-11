@@ -14,6 +14,10 @@ urlpatterns = [
     path('chat-messages/', get_chat_list_template, name='chat_list'),
     path('utils/', include(('utils.urls', 'utils'), namespace='utils')),
     path('donations/', include(('donations.urls', 'donations'), namespace='donations')),
+    path('checkout/', include(('checkout.urls', 'checkout'), namespace='checkout')),
+    path('price-plan/', include(('priceplan.urls', 'priceplan'), namespace='priceplan')),
+    path('donation-bank/', include(('donationBank.urls',
+                                    'donationBank'), namespace='donation_bank')),
 ]
 
 

@@ -25,8 +25,8 @@ django-allauth==0.39.1
 django-ckeditor==5.7.1
 django-cleanup==3.2.0
 django-cors-headers==2.5.3
+django-countries==5.3.3
 django-el-pagination==3.2.4
-django-heroku==0.3.1
 django-js-asset==1.2.2
 django-social-share==1.3.2
 django-widget-tweaks==1.4.3
@@ -41,14 +41,14 @@ msgpack==0.6.1
 mysqlclient==1.4.2.post1
 oauthlib==3.0.1
 Pillow==6.0.0
-psycopg2==2.8.2
-psycopg2-binary==2.8.2
+psycopg2-binary==2.8.3
 pyasn1==0.4.5
 pyasn1-modules==0.2.5
 pycodestyle==2.5.0
 pycparser==2.19
 PyHamcrest==1.9.0
 pyOpenSSL==19.0.0
+python-dateutil==2.8.0
 python-decouple==3.1
 python3-openid==3.1.0
 pytz==2019.1
@@ -58,6 +58,7 @@ requests-toolbelt==0.9.1
 service-identity==18.1.0
 six==1.12.0
 sqlparse==0.3.0
+stripe==2.32.1
 toml==0.10.0
 Twisted==19.2.0
 txaio==18.8.1

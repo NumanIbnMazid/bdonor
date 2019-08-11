@@ -1,0 +1,148 @@
+{% extends base_template %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Bank Members
+{% endblock %}{% endblock %}{% endblock %}
+
+
+{% load static %}
+
+{% block extra_css %}
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            <div class="col-md-10">
+               <div class="table-responsive">
+                   <table id="donationBankDataTable" class="cell-border hover table-bordered table-hover text-center">
+                       <thead>
+                           <tr>
+                               <th>#</th>
+                               <th>Member</th>
+                               <th>Role</th>
+                               <th>Joined</th>
+                               {% if request.user.user_bank_member.role == 0 %}
+                               <th>Action</th>
+                               {% endif %}
+                           </tr>
+                       </thead>
+                       <tbody>
+                           {% for object in object_list %}
+                           <tr class="text-dark">
+                               <th scope="row">{{ forloop.counter }}</th>
+                               <td>
+                                   <a class="text-deco-none" href="{{ object.user.profile.get_absolute_url }}">
+                                       <div class="avatar avatar-sm">
+                                           {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img rounded-circle" %}
+                                       </div>
+                                       <small>{{ object.user.profile.get_dynamic_name|truncatechars_html:13 }}</small>
+                                   </a>
+                               </td>
+                               <td>
+                                   {% if object.role == 0 %}
+                                   <span class="text-danger font-bold">
+                                       {{ object.get_bank_member_role }}
+                                   </span>
+                                   {% else %}
+                                   <span class="text-success font-bold">
+                                       {{ object.get_bank_member_role }}
+                                   </span>
+                                   {% endif %}
+                               </td>
+                               <td>
+                                   {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
+                                   {{ object.created_at|timesince }} ago
+                                   {% else %}
+                                   {{ object.created_at }}
+                                   {% endif %}
+                               </td>
+                               {% if request.user.user_bank_member.role == 0 %}
+                               <td>
+                                   {% if not object.role == 0 %}
+                                   <button class="btn btn-danger btn-round btn-xs js_remove_membership"
+                                       value="{{ object.user.profile.slug }}" data-toggle="modal"
+                                       data-target="#modal-membership-remove">
+                                       <i class="fas fa-times"></i> Remove Membership
+                                   </button>
+                                   {% else %}
+                                   -
+                                   {% endif %}
+                               </td>
+                               {% endif %}
+                           </tr>
+                           {% empty %}
+                           <tr>
+                               <td colspan="5" class="text-center">
+                                   <div class="alert alert-warning">
+                                       No Member found!
+                                   </div>
+                               </td>
+                           </tr>
+                           {% endfor %}
+                       </tbody>
+                       <tfoot>
+                           <tr class="text-center">
+                               <th>#</th>
+                               <th>Member</th>
+                               <th>Role</th>
+                               <th>Joined</th>
+                               {% if request.user.user_bank_member.role == 0 %}
+                               <th>Action</th>
+                               {% endif %}
+                           </tr>
+                       </tfoot>
+                   </table>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<input type="hidden" id="total_records_count" value="{{object_list.count}}">
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#donationBankDataTable').DataTable({
+            destroy: true,
+            //"retrieve": true,
+            //"order": [[ 1, 'desc' ]],
+            "ordering": false,
+            //"searching": false,
+            //"paging": false,
+            //"scrollY": 400,
+            //"scrollX": 400,
+            //"scrollY": '62vh',
+            //"scrollX": '50vh',
+            "scrollCollapse": true,
+            "stateSave": true,
+            "pagingType": "full_numbers",
+            "language": {
+                "lengthMenu": "Display _MENU_ records per page. <span class='ml-4 text-primary'>Total Records: <span class='font-13 font-bold'>" +
+                    $("#total_records_count").val() + "</span></span>",
+                "zeroRecords": "Nothing found - sorry",
+                "info": "Showing page _PAGE_ of _PAGES_",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+        });
+    });
+</script>
+{% endblock %}

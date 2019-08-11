@@ -1,0 +1,169 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Checkout
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<!-- Example card Information:
+Card Number: 4242424242424242
+Expiration: 01/19
+CVC: 123 -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-7 mx-auto">
+            <div class="bg-white rounded-lg shadow-sm p-5">
+                <!-- Credit card form tabs -->
+                <ul class="nav bg-light nav-pills rounded-pill nav-fill mb-3">
+                    <li class="nav-item bg-white">
+                        <p class="rounded-pill">
+                            <i class="fa fa-credit-card"></i>
+                            Credit Card
+                        </p>
+                    </li>
+                </ul>
+                <!-- End -->
+
+                <!-- Credit card form content -->
+                <div class="tab-content">
+                    <!-- credit card info-->
+                    <div id="nav-tab-card" class="tab-pane fade show active">
+                        <div class="text-center">
+                            <span class="payment-errors text-danger font-15 font-bold"></span>
+                        </div>
+                        <form role="form" action="" method="POST" id="payment-form" class="form"
+                            data-toggle="validator">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="cardNumber">Card number</label>
+                                <div class="input-group">
+                                    <input type="text" name="cardNumber" placeholder="Credit card number" id="card_number"
+                                        maxlength="16" size="20" data-stripe="number" class="form-control" required>
+                                </div>
+                                <small id="cardHelp" class="form-text text-muted text-center">
+                                    EX: 4242424242424242
+                                </small>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label><span class="hidden-xs">Expiration</span></label>
+                                        <div class="input-group">
+                                            <input type="number" size="4" data-stripe="exp_month" maxlength="2"
+                                                placeholder="MM" id="exp_month" name="" class="form-control" required>
+                                            <input type="number" size="4" data-stripe="exp_year" maxlength="2"
+                                                placeholder="YY" id="exp_year" name="" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group mb-4">
+                                        <label data-toggle="tooltip"
+                                            title="Three-digits code on the back of your card">CVC
+                                            <i class="fa fa-question-circle"></i>
+                                        </label>
+                                        <input type="text" size="4" data-stripe="CVC" maxlength="3" id="cvc"
+                                            class="form-control" placeholder="CVC" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="subscribe btn btn-primary btn-block rounded-pill shadow-sm"
+                                id="submitBtn">
+                                Confirm 
+                            </button>
+                        </form>
+                    </div>
+                    <!-- End -->
+                </div>
+                <!-- End -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- stripe version 2 js -->
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+{% comment %}
+<!-- https://js.stripe.com/v2/ -->
+<script type="text/javascript" src="{% static 'vendor/stripe/stripe-v2.js' %}"></script>
+{% endcomment %}
+
+<script type="text/javascript">
+    Stripe.setPublishableKey('{{publishKey}}');
+
+    function stripeResponseHandler(status, response) {
+        var $form = $('#payment-form');
+        if (response.error) {
+            //$form.find('.payment-errors').text(response.error.message);
+            $form.find('.submit').prop('disabled', false);
+            //== Class definition
+            var SweetAlertMessages = function () {
+                var initDemos = function () {
+                    //== Sweetalert Demo 4
+                    $(document).ready(function (e) {
+                        swal({
+                            title: "ERROR!",
+                            text: response.error.message,
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    text: "OK",
+                                    value: true,
+                                    visible: true,
+                                    className: "btn btn-success",
+                                    closeModal: true
+                                },
+                            }
+                        });
+                    });
+                };
+                return {
+                    //== Init
+                    init: function () {
+                        initDemos();
+                    },
+                };
+            }();
+            //== Class Initialization
+            jQuery(document).ready(function () {
+                SweetAlertMessages.init();
+            });
+
+        } else {
+            var token = response.id;
+
+            $form.append($('<input type="hidden" name="stripeToken">').val(token));
+
+            $form.get(0).submit();
+        }
+    };
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var $form = $('#payment-form');
+        $form.submit(function (event) {
+            // Disable the submit button to prevent repeated clicks;
+            $form.find('.submit').prop('disabled', true);
+
+            // Request a token  from stripe:
+            Stripe.card.createToken($form, stripeResponseHandler);
+
+            // Prevent the form from being submitted;
+            return false;
+        });
+    });
+</script>
+
+<script type="text/javascript" src="{% static 'assets/js/form-validator/checkout-form.js' %}"></script>
+
+{% endblock %}

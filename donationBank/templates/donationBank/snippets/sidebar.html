@@ -1,0 +1,24 @@
+
+<div class="nav flex-column nav-pills nav-secondary nav-pills-no-bd">
+
+    {% if request.user.user_bank_member.bank.institute == object.institute %}
+    {% url 'donationBank:bank_dashboard' as bank_dashboard_url %}
+    <a href="{{ bank_dashboard_url }}" class="nav-link {% if request.path == bank_dashboard_url %}active{% endif %}">
+        Dashboard
+    </a>
+    {% endif %}
+
+    {% if request.user.user_bank_member.bank.institute == object.institute %}
+    {% url 'donationBank:bank_members_list' as bank_members_list_url %}
+    <a href="{{ bank_members_list_url }}" class="nav-link {% if request.path == bank_members_list_url %}active{% endif %}">
+        Members
+    </a>
+    {% endif %}
+
+    {% if not object == None %}
+    {% url 'donationBank:bank_details' slug=object.slug as bank_details_url %}
+    <a href="{{ bank_details_url }}" class="nav-link {% if request.path == bank_details_url %}active{% endif %}">
+        About
+    </a>
+    {% endif %}
+</div>

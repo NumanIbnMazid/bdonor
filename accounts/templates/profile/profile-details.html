@@ -10,12 +10,12 @@ My Profile
 {% endif %}
 {% endblock %}{% endblock %}{% endblock %}
 
-{% block content %}
-
 {% block extra_css %}
 <!-- Image-Magnify CSS -->
 <link rel="stylesheet" href="{% static 'vendor/image-magnify/jquery.magnify.css' %}" type="text/css" />
 {% endblock %}
+
+{% block content %}
 
 <div class="card">
     <div class="card-header">
@@ -207,12 +207,10 @@ My Profile
     </div>
 </div>
 
-<script>
+{% endblock %}
 
-</script>
-
+{% block extra_js %}
 <!-- Image-Magnify JS -->
 <script src="{% static 'vendor/image-magnify/magnify-conf.js' %}"></script>
 <script src="{% static 'vendor/image-magnify/jquery.magnify.js' %}"></script>
-
 {% endblock %}

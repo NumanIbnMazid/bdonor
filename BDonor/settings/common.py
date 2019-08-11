@@ -26,12 +26,17 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_social_share',
+    'django_countries',
     # --- Local Apps ---
     'accounts',
     'utils',
     'suspicious',
     'chat',
     'donations',
+    'stripe',
+    'priceplan',
+    'checkout',
+    'donationBank',
 ]
 
 SITE_ID = 1
@@ -143,3 +148,16 @@ USE_TZ = False
 
 
 from BDonor.settings.third_party_configs import *
+
+# stripe
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+
+# Custom for Stripe by Numan
+# if DEBUG:
+#     STRIPE_PUBLISHABLE_KEY = ''
+#     STRIPE_SECRET_KEY = ''
+
+# else:
+#     STRIPE_PUBLISHABLE_KEY = ''
+#     STRIPE_SECRET_KEY = ''

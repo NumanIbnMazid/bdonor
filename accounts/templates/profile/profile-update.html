@@ -6,8 +6,6 @@
 Update Profile
 {% endblock %}{% endblock %}{% endblock %}
 
-{% block content %}
-
 {% block extra_css %}
 
 <!-- intlInputPhone CSS -->
@@ -19,6 +17,8 @@ Update Profile
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQGXPTnUyBYyQQt3v0NTkihsR1WU-1Tr8"></script>
 
 {% endblock %}
+
+{% block content %}
 
 <div class="card">
     <div class="card-header text-center">
@@ -52,6 +52,9 @@ Update Profile
 
 {% include 'profile/snippets/modals.html' %}
 
+
+{% endblock %}
+
 {% block extra_js %}
 
 <!-- jquery-geo-locate -->
@@ -66,7 +69,5 @@ Update Profile
 <script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
 
 <script type="text/javascript" src="{% static 'assets/js/form-validator/profile-form.js' %}"></script>
-
-{% endblock %}
 
 {% endblock %}

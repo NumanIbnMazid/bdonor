@@ -1,0 +1,57 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-7 mx-auto">
+        <div class="card">
+            <form method="POST" id="plan_manage_form" data-toggle="validator">
+                {% csrf_token %}
+                <div class="card-header">
+                    <div class="card-title text-center">
+                        {{ page_title }}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            {% include 'snippets/form.html' %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action text-center form-group">
+                    <button type="submit" class="btn btn-success m-2" id="submitBtn">
+                        {{ page_title }}
+                    </button>
+                    <button class="btn btn-danger" id="go_back">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    {% if not object_list == None %}
+    <div class="col-md-5">
+        {% include 'priceplan/snippets/plan-list.html' %}
+    </div>
+    {% endif %}
+
+</div>
+
+{% include 'priceplan/snippets/modals.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'assets/js/form-validator/price-plan-form.js' %}"></script>
+{% endblock %}

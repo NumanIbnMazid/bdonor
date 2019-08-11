@@ -25,7 +25,7 @@ class UserListView(AjaxListView):
         context = super(UserListView, self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -47,7 +47,7 @@ class ProfileDetailView(DetailView):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -94,7 +94,7 @@ class ProfileUpdateView(UpdateView):
         context = super(ProfileUpdateView, self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template

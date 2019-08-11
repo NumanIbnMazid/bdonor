@@ -22,7 +22,7 @@ class SitePreferenceView(TemplateView):
             user=user_profile)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         # Ends Base Template Context

@@ -1,0 +1,96 @@
+{% load widget_tweaks %}
+
+{% if form.visible_fields %}
+<div class="text-center m-b-sm">
+    <small class="text-muted">
+        Please fill the <span class="text-info"><i>required</i></span> fields properly
+    </small>
+</div>
+{% endif %}
+
+{% for hidden_field in form.hidden_fields %}
+{% if hidden_field.errors %}
+<div class="alert alert-danger" role="alert">
+    {% for error in hidden_field.errors %}
+    <p class="text-danger font-italic">
+        <strong>(Hidden field {{ hidden_field.name }}) {{ error }}</strong>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+{{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+    <p class="text-danger">
+        <strong>{{ error }}</strong>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% for field in form.visible_fields %}
+<div class="form-group" id="{{ field.id_for_label }}-group">
+
+    <div class="form">
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="{{ field.id_for_label }}" class="control-label" id="{{ field.id_for_label }}-label">
+
+                    <span class="font-13" id="{{field.name}}-label">{{ field.label |title }}</span>
+
+                    {% if field.field.required %}
+                    <small class="text-info"><i class="field_priority"
+                            id="{{field.name}}_priority">(required)</i></small>
+                    {% else %}
+                    <small class="text-muted"><i class="field_priority"
+                            id="{{field.name}}_priority">(optional)</i></small>
+                    {% endif %}
+
+                </label>
+            </div>
+            <div class="col-md-8">
+
+                <div class="row">
+                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
+                        {{ field|add_class:'form-control form-control' }}
+                        <div class="help-block with-errors text-center"></div>
+                        <div class="text-center">
+                            <span class="input-message text-danger font-13" id="{{field.name}}_msg"></span>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                        {% if field.help_text %}
+                        <span class="label ml-2" data-toggle="tooltip" title="{{ field.help_text|safe }}"
+                            data-original-title="{{ field.help_text|safe }}">
+                            <i class="fa fa-exclamation-circle"></i>
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <div class="row form-error-div">
+                    <b class="col-md-12 text-danger">
+                        <span id="{{field.name}}_error" class="form-error">
+                            {{ error|safe }}
+                        </span>
+                    </b>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}

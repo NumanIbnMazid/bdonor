@@ -1,0 +1,42 @@
+
+<div class="text-center">
+    <h4 class="card-title">
+        {% if request.user.user_bank_member.bank.institute == object.institute %}
+        {% if request.user.user_bank_member.role == 0 %}
+        {% url 'donationBank:bank_update' slug=object.slug as bank_update_url %}
+        <span class="pull-left text-primary font-15">
+            <a href="{{ bank_update_url }}" class="text-deco-none">
+                <i class="flaticon-interface-4"></i> 
+                <span class="ml-1">Update Info</span>
+            </a>
+        </span>
+        {% url 'donationBank:bank_setting_update' as bank_setting_update_url %}
+        <span class="pull-left text-primary font-15 ml-2">
+            <a href="{{ bank_setting_update_url }}" class="text-deco-none">
+                <i class="flaticon-settings"></i>
+                <span class="ml-1">Update Settings</span>
+            </a>
+        </span>
+        {% endif %}
+        {% endif %}
+
+        {{ object.institute }}
+        
+        {% if request.user.user_bank_member.role == "" and request.user.user_member_request.bank == "" and object.bank_setting.member_request == 0 and not object.bank_member.count >= 3 %}
+        <span class="">
+            <button type="button" class="btn btn-success btn-xs text-deco-none bg-c-primary m-1"
+                id="js_send_member_request" value="{{object.slug}}" data-toggle="modal"
+                data-target="#modal-member-request">
+                <i class="flaticon-add font-13"></i>
+            </button>
+        </span>
+        {% endif %}
+        
+        {% if request.user.user_bank_member.bank.institute == object.institute %}
+        <span class="pull-right font-13 {% if request.user.user_bank_member.role == 0 %}text-danger{% else %}text-success{% endif %}">
+            <i class="flaticon-user"></i>
+            {{ request.user.user_bank_member.get_bank_member_role }}
+        </span>
+        {% endif %}
+    </h4>
+</div>

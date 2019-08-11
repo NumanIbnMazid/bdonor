@@ -6,17 +6,17 @@
 {{ page_title }}
 {% endblock %}{% endblock %}{% endblock %}
 
+{% block extra_css %}
+<!-- el-pagination css -->
+<link rel="stylesheet" href="{% static 'vendor/el-pagination/el-pagination.css' %}" type="text/css" />
+{% endblock %}
+
 {% block content %}
 
 {% url 'donations:donation_offers_list' as donation_offers_list_url %}
 {% url 'donations:donation_offers_list_card' as donation_offers_list_card_url %}
 {% url 'donations:donation_requests_list_card' as donation_requests_list_card_url %}
 {% url 'donations:donation_requests_list' as donation_requests_list_url %}
-
-{% block extra_css %}
-<!-- el-pagination css -->
-<link rel="stylesheet" href="{% static 'vendor/el-pagination/el-pagination.css' %}" type="text/css" />
-{% endblock %}
 
 <div class="row">
     <div class="col-md-10">
@@ -54,6 +54,9 @@
     </div>
 </div>
 
+
+{% endblock %}
+
 {% block extra_js %}
 <!-- el-pagination JS -->
 <script type="text/javascript" src="{% static 'vendor/el-pagination/el-pagination.js' %}"></script>
@@ -63,6 +66,4 @@
         paginateOnScrollChunkSize: 5
     });
 </script>
-{% endblock %}
-
 {% endblock %}

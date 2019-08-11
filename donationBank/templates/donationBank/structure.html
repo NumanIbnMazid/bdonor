@@ -1,0 +1,31 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Bank Dashboard
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            <div class="col-md-10">
+                <p>Content</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}
+
+

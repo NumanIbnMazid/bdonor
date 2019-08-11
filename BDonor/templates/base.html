@@ -1,12 +1,17 @@
 {% load tags %}
+{% load static %}
+
 {% if request.user.is_authenticated %}
 {% get_site_preference as site_preference %}
 {% get_chat_messages as chat_messages %}
 {% get_threads as threads %}
+{% get_notifications_tag as notifications %}
+{% get_notifications_unread_counter_tag as notifications_unread %}
 {% endif %}
 {% get_datetime_tag as datetime %}
+{% get_is_premium_user as is_premium_user %}
 
-{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 

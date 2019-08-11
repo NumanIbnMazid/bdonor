@@ -1,0 +1,51 @@
+<div class="card">
+    <div class="card-header">
+        <div class="card-title text-center">Price Plans</div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in object_list %}
+                    <tr>
+                        <td>{{ object.title }}</td>
+                        <td>
+                            <a href="{% url 'priceplan:plan_details' slug=object.slug %}"
+                                class="btn btn-secondary btn-xs text-deco-none">
+                                <span class="">
+                                    View
+                                </span>
+                            </a>
+                            <a href="{% url 'priceplan:plan_update' slug=object.slug %}"
+                                class="btn btn-info btn-xs text-deco-none bg-c-info m-1">
+                                <span class="btn-label">
+                                    edit
+                                </span>
+                            </a>
+                            <button type="button" class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1"
+                                id="js_delete_priceplan" value="{{object.slug}}" data-toggle="modal"
+                                data-target="#modal-delete-priceplan">
+                                delete
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            <div class="alert alert-warning">
+                                No item found!
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

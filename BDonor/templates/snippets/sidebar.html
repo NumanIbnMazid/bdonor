@@ -3,15 +3,18 @@
 {% url 'utils:site_preference' as site_preference_url %}
 {% url 'home' as home_url %}
 {% url 'user_list' as user_list_url %}
+{% url 'donations:donation_offers_list' as donation_offers_list_url %}
+{% url 'donations:donation_requests_list' as donation_requests_list_url %}
+{% url 'donationBank:bank_list' as bank_list_url %}
 {% if request.user.is_authenticated %}
 {% url 'profile_details' slug=request.user.profile.slug as profile_details_url %}
 {% url 'profile_update' slug=request.user.profile.slug as profile_update_url %}
 {% url 'donations:my_donation_offers' as my_donation_offers_url %}
-{% url 'donations:donation_offers_list' as donation_offers_list_url %}
 {% url 'donations:donation_offers_list_card' as donation_offers_list_card_url %}
 {% url 'donations:my_donation_requests' as my_donation_requests_url %}
-{% url 'donations:donation_requests_list' as donation_requests_list_url %}
 {% url 'donations:donation_requests_list_card' as donation_requests_list_card_url %}
+{% url 'donation_bank:bank_create' as bank_create_url %}
+{% url 'donation_bank:bank_dashboard' as bank_dashboard_url %}
 {% endif %}
 
 <div class="sidebar sidebar-style-2"
@@ -32,7 +35,9 @@
                             {% else %}
                             {{ request.user.profile.get_dynamic_name|truncatechars_html:17 }}
                             {% endif %}
-                            <span class="user-level">{{ request.user.profile.get_account_type }}</span>
+                            <span class="user-level {% if request.user.profile.account_type == 1 %}text-secondary{% endif %}">
+                                {{ request.user.profile.get_account_type }}
+                            </span>
                             <span class="caret"></span>
                         </span>
                     </a>
@@ -68,13 +73,6 @@
                         <p>Home</p>
                     </a>
                 </li>
-                <li class="nav-item {% if request.path == user_list_url %}active{% endif %}">
-                    <a href="{{ user_list_url }}">
-                        <i class="flaticon-users"></i>
-                        <p>Users</p>
-                    </a>
-                </li>
-                {% if request.user.is_authenticated %}
                 <li
                     class="nav-item {% if request.path == donation_offers_list_url or request.path == donation_offers_list_card_url %}active{% endif %}">
                     <a href="{{ donation_offers_list_url }}">
@@ -99,6 +97,20 @@
                         <p>Donation Requests</p>
                     </a>
                 </li>
+                <li class="nav-item {% if request.path == bank_list_url %}active{% endif %}">
+                    <a href="{{ bank_list_url }}">
+                        <i>
+                            <div class="avatar avatar-xs">
+                                <img src="{% static 'images/raw/banks.png' %}" alt="donation bank"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                        </i>
+                        <p>Donation Banks</p>
+                    </a>
+                </li>
+
+                {% if request.user.is_authenticated %}
+                
                 <li
                     class="nav-item {% if request.path == my_donation_offers_url or request.path == my_donation_requests_url %}active submenu{% endif %}">
                     <a data-toggle="collapse" href="#myContribution" class="collapsed">
@@ -134,7 +146,43 @@
                         </ul>
                     </div>
                 </li>
+
+                {% if request.user.user_bank_member.role == "" and request.user.user_member_request.bank == "" %}
+                <li class="nav-item {% if request.path == bank_create_url %}active{% endif %}">
+                    <a href="{{ bank_create_url }}">
+                        <i>
+                            <div class="avatar avatar-xs">
+                                <img src="{% static 'images/raw/donation_bank.png' %}" alt="donation bank"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                        </i>
+                        <p>Create Donation Bank</p>
+                    </a>
+                </li>
                 {% endif %}
+                {% if not request.user.user_bank_member.role == "" %}
+                <li
+                    class="nav-item {% if request.path == bank_dashboard_url %}active{% endif %}">
+                    <a href="{{ bank_dashboard_url }}">
+                        <i>
+                            <div class="avatar avatar-xs">
+                                <img src="{% static 'images/raw/donation_bank.png' %}" alt="donation bank"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                        </i>
+                        <p>My Donation Bank</p>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% endif %}
+                
+                <li class="nav-item {% if request.path == user_list_url %}active{% endif %}">
+                    <a href="{{ user_list_url }}">
+                        <i class="flaticon-users"></i>
+                        <p>Users</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

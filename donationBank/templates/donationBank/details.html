@@ -1,0 +1,96 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+About
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            <div class="col-md-10">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tbody>
+                            {% if object.address %}
+                            <tr>
+                                <td>Address</td>
+                                <td>{{ object.address }}</td>
+                            </tr>
+                            {% endif %}
+
+                            {% if object.city %}
+                            <tr>
+                                <td>City</td>
+                                <td>{{ object.city }}</td>
+                            </tr>
+                            {% endif %}
+
+                            {% if object.state %}
+                            <tr>
+                                <td>State</td>
+                                <td>{{ object.state }}</td>
+                            </tr>
+                            {% endif %}
+
+                            {% if object.country %}
+                            <tr>
+                                <td>Country</td>
+                                <td>{{ object.country.name }}</td>
+                            </tr>
+                            {% endif %}
+
+                            {% if object.contact %}
+                            <tr>
+                                <td>Contact</td>
+                                <td>
+                                    <a href="#">
+                                        {{ object.contact }}
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}
+
+                            {% if object.email %}
+                            <tr>
+                                <td>Email</td>
+                                <td>{{ object.email }}</td>
+                            </tr>
+                            {% endif %}
+
+                            {% if object.description %}
+                            <tr>
+                                <td>Description</td>
+                                <td>{{ object.description|safe|linebreaks }}</td>
+                            </tr>
+                            {% endif %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not request.user.user_bank_member.bank.institute == object.institute %}
+    <div class="card-footer">
+        <button class="btn btn-primary btn-block">
+            <b>Ask for a donation</b>
+        </button>
+    </div>
+    {% endif %}
+    
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}

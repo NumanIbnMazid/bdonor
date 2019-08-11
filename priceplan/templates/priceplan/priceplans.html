@@ -1,0 +1,47 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Price Plans
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<div class="justify-content-center align-items-center mb-5">
+    <div class="row">
+        {% for object in object_list %}
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 mx-auto">
+            <div class="card-deck mb-3 text-center">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{ object.title }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">
+                            {{ object.currency }} {{ object.amount }}
+                            <small class="text-muted">/ {{ object.expiration_cycle }} Month</small>
+                        </h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            {% if object.description %}
+                            <li>
+                                {{ object.description|safe|linebreaks }}
+                            </li>
+                            {% endif %}
+                        </ul>
+                        <a href="{% url 'checkout:checkout' slug=object.slug %}" class="btn btn-lg btn-block btn-primary">
+                            Get started
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="alert alert-warning" role="alert">
+            Currently no price plans available!
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

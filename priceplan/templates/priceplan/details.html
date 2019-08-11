@@ -1,0 +1,66 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="mx-auto">
+            {% comment %}
+            <div class="card-pricing2 card-primary">
+                <div class="pricing-header">
+                    <h3 class="fw-bold">{{ object.title }}</h3>
+                    <!-- <span class="sub-title">Lorem ipsum</span> -->
+                </div>
+                <div class="price-value">
+                    <div class="value">
+                        <span class="">{{ object.currency }}</span>
+                        <span class="amount">{{ object.amount }}</span>
+                        <span class="month">/{{ object.expiration_cycle }} Month</span>
+                    </div>
+                </div>
+                <ul class="pricing-content">
+                    {% if object.description %}
+                    <li>
+                        {{ object.description|safe|linebreaks }}
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endcomment %}
+            <div class="card-deck mb-3 text-center">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{ object.title }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">
+                            {{ object.currency }} {{ object.amount }}
+                            <small class="text-muted">/ {{ object.expiration_cycle }} Month</small>
+                        </h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            {% if object.description %}
+                            <li>
+                                {{ object.description|safe|linebreaks }}
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        {% if not object_list == None %}
+        {% include 'priceplan/snippets/plan-list.html' %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -12,6 +12,9 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 
+FACEBOOK_CLIENT_ID_PROD = config('FACEBOOK_CLIENT_ID_PROD', default='')
+FACEBOOK_SECRET_KEY_PROD = config('FACEBOOK_SECRET_KEY_PROD', default='')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

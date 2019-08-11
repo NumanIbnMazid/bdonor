@@ -6,12 +6,12 @@
 Manage Progress Status
 {% endblock %}{% endblock %}{% endblock %}
 
-{% block content %}
-
 {% block extra_css %}
 <!-- date-time picker CSS -->
-<link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}" />
 {% endblock %}
+
+{% block content %}
 
 <div class="row">
     <div class="col-md-8">
@@ -50,14 +50,10 @@ Manage Progress Status
 </div>
 
 
-{% comment %}
+{% endblock %}
+
 {% block extra_js %}
-{% endcomment %}
 <!-- date-time picker JS -->
 <script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
 <script type="text/javascript" src="{% static 'assets/js/form-validator/donation-progress.js' %}"></script>
-{% comment %}
-{% endblock %}
-{% endcomment %}
-
 {% endblock %}

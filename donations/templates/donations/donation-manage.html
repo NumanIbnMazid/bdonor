@@ -6,8 +6,6 @@
 {{ page_title }}
 {% endblock %}{% endblock %}{% endblock %}
 
-{% block content %}
-
 {% block extra_css %}
 <script>
     window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';
@@ -23,6 +21,8 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQGXPTnUyBYyQQt3v0NTkihsR1WU-1Tr8"></script>
 
 {% endblock %}
+
+{% block content %}
 
 <input type="hidden" name="page_title" id="page_title" value="{{ page_title }}">
 
@@ -93,11 +93,9 @@
 
 {% include 'donations/snippets/modals.html' %}
 
+{% endblock %}
 
-{% comment %}
 {% block extra_js %}
-{% endcomment %}
-
 <!-- <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
 <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script> -->
 
@@ -118,9 +116,4 @@
 <script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
 
 <script type="text/javascript" src="{% static 'assets/js/form-validator/donation-form.js' %}"></script>
-
-{% comment %}
-{% endblock %}
-{% endcomment %}
-
 {% endblock %}

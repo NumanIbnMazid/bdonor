@@ -161,6 +161,7 @@ Open street map
 23. After confirming your death, Donation receipt request
 24. After submit auto open modal
 25. Auto focus to issue field
+26. managed on - BDonor, Somewhere else
 
 
 01710457751

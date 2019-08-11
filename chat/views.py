@@ -19,7 +19,7 @@ class InboxView(LoginRequiredMixin, ListView):
         context = super(InboxView, self).get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
@@ -51,7 +51,7 @@ class ThreadView(LoginRequiredMixin, FormMixin, DetailView):
         context = super().get_context_data(**kwargs)
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         context['base_template'] = base_template

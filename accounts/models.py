@@ -5,6 +5,10 @@ from django.dispatch import receiver
 from django.db.models import Q
 from .utils import time_str_mix_slug, upload_image_path
 from django.urls import reverse
+from allauth.account.signals import user_logged_in, user_signed_up
+import stripe
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class UserProfile(models.Model):
@@ -15,12 +19,6 @@ class UserProfile(models.Model):
         (MALE, 'Male'),
         (FEMALE, 'Female'),
         (OTHERS, 'Others'),
-    )
-    REGULAR = 0
-    PREMIUM = 1
-    ACCOUNT_TYPE_CHOICES = (
-        (REGULAR, 'Regular'),
-        (PREMIUM, 'Premium')
     )
     A_POSITIVE = 'A+'
     A_NEGATIVE = 'A-'
@@ -40,9 +38,17 @@ class UserProfile(models.Model):
         (AB_POSITIVE, 'AB+'),
         (AB_NEGATIVE, 'AB-')
     )
+    REGULAR = 0
+    PREMIUM = 1
+    ACCOUNT_TYPE_CHOICES = (
+        (REGULAR, 0),
+        (PREMIUM, 1),
+    )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, unique=True, related_name='profile', verbose_name='user')
     slug = models.SlugField(unique=True, verbose_name='slug')
+    account_type = models.PositiveSmallIntegerField(
+        default=0, choices=ACCOUNT_TYPE_CHOICES, verbose_name='account type')
     gender = models.CharField(choices=GENDER_CHOICES, blank=True,
                               null=True, max_length=10, verbose_name='gender')
     dob = models.DateField(blank=True, null=True, verbose_name='DOB')
@@ -62,8 +68,6 @@ class UserProfile(models.Model):
         max_length=300, blank=True, null=True, verbose_name='website')
     image = models.ImageField(
         upload_to=upload_image_path, null=True, blank=True, verbose_name='image')
-    account_type = models.PositiveSmallIntegerField(
-        choices=ACCOUNT_TYPE_CHOICES, default=0, verbose_name='account type')
     is_volunteer = models.BooleanField(
         default=False, verbose_name='is volunteer')
     created_at = models.DateTimeField(
@@ -105,13 +109,33 @@ class UserProfile(models.Model):
     def get_account_type(self):
         account_type = "Undefined"
         if self.account_type == 0:
-            account_type = "Regular Account"
+            account_type = "Regular User"
         if self.account_type == 1:
-            account_type = "Premium Account"
+            account_type = "Premium User"
         return account_type
 
     def __str__(self):
         return self.user.username
+
+
+class UserStripe(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='user')
+    stripe_id = models.CharField(max_length=200, null=True, blank=True, verbose_name='stripe id')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='created at')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    class Meta:
+        verbose_name = ("User Stripe")
+        verbose_name_plural = ("User Stripes")
+        ordering = ["-user__date_joined"]
+
+    def __str__(self):
+        if self.stripe_id:
+            return str(self.stripe_id)
+        else:
+            return self.user.username
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -121,3 +145,16 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance, slug=slug_binding)
     instance.profile.save()
+
+
+def stripeCallback(sender, request, user, **kwargs):
+    user_stripe_account, created = UserStripe.objects.get_or_create(user=user)
+    if created:
+        print('Created for %s' % (user.username))
+    if user_stripe_account.stripe_id is None or user_stripe_account.stripe_id == '':
+        new_stripe_id = stripe.Customer.create(email=user.email)
+        user_stripe_account.stripe_id = new_stripe_id['id']
+        user_stripe_account.save()
+
+user_logged_in.connect(stripeCallback)
+user_signed_up.connect(stripeCallback)

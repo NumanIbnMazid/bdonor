@@ -6,12 +6,12 @@
 Respond to Donation
 {% endblock %}{% endblock %}{% endblock %}
 
-{% block content %}
-
 {% block extra_css %}
 <!-- intlInputPhone CSS -->
 <link rel="stylesheet" href="{% static 'vendor/intlTelInput/intlTelInput.css' %}" type="text/css" />
 {% endblock %}
+
+{% block content %}
 
 <div class="row">
     <div class="col-md-7">
@@ -64,6 +64,7 @@ Respond to Donation
 
 </div>
 
+{% endblock %}
 
 {% block extra_js %}
 <!-- intlInputPhone JS -->
@@ -74,6 +75,4 @@ Respond to Donation
     window.intlTelInputGlobals.loadUtils("{% static 'vendor/intlTelInput/utils.js' %}");
 </script>
 <script type="text/javascript" src="{% static 'assets/js/form-validator/donation-respond-form.js' %}"></script>
-{% endblock %}
-
 {% endblock %}

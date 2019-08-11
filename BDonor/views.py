@@ -13,7 +13,7 @@ class HomeView(TemplateView):
         user = request.user
         # Starts Base Template Context
         if self.request.user.is_superuser:
-            base_template = 'admin/base.html'
+            base_template = 'admin-site/base.html'
         else:
             base_template = 'base.html'
         # Ends Base Template Context
@@ -21,7 +21,7 @@ class HomeView(TemplateView):
             'base_template': base_template
         }
         if user.is_superuser:
-            return render(request, "admin/pages/home.html", context=context)
+            return render(request, "admin-site/pages/home.html", context=context)
         return render(request, "pages/home.html", context=context)
 
 
@@ -42,7 +42,7 @@ def get_chat_list_template(request,
         chat_list = qs.order_by('-updated_at')
     # Starts Base Template Context
     if request.user.is_superuser:
-        base_template = 'admin/base.html'
+        base_template = 'admin-site/base.html'
     else:
         base_template = 'base.html'
     # Ends Base Template Context

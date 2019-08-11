@@ -1,0 +1,41 @@
+{% extends base_template %} 
+
+{% load static %} 
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %} 
+Bank Dashboard 
+{% endblock %}{% endblock %}{% endblock %} 
+
+{% block content %}
+
+<div class="card">
+  <div class="card-header">
+    {% include 'donationBank/snippets/header.html' %}
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-2">
+        {% include 'donationBank/snippets/sidebar.html' %}
+      </div>
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-8">
+            <p>
+              Far far away, behind the word mountains, far from the countries
+              Vokalia and Consonantia, there live the blind texts. Separated
+              they live in Bookmarksgrove right at the coast of the Semantics, a
+              large language ocean.
+            </p>
+          </div>
+          <div class="col-md-4 text-center">
+            {% include 'donationBank/snippets/member-requests.html' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}
