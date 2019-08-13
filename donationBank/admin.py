@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import DonationBank, DonationBankSetting, BankMember, MemberRequest
+from .models import DonationBank, DonationBankSetting, BankMember, MemberRequest, Donation, DonationProgress
 
 class DonationBankAdmin(admin.ModelAdmin):
     list_display = ['institute', 'city',
@@ -29,7 +29,24 @@ class MemberRequestAdmin(admin.ModelAdmin):
     class Meta:
         model = MemberRequest
 
+
+class DonationAdmin(admin.ModelAdmin):
+    list_display = ['bank', 'first_name', 'last_name', 'gender', 'blood_group',
+                    'country', 'blood_group', 'donation_type']
+
+    class Meta:
+        model = Donation
+
+
+class DonationProgressAdmin(admin.ModelAdmin):
+    list_display = ['donation', 'progress_status', 'completion_date']
+
+    class Meta:
+        model = DonationProgress
+
 admin.site.register(DonationBank, DonationBankAdmin)
 admin.site.register(DonationBankSetting, DonationBankSettingAdmin)
 admin.site.register(BankMember, BankMemberAdmin)
 admin.site.register(MemberRequest, MemberRequestAdmin)
+admin.site.register(Donation, DonationAdmin)
+admin.site.register(DonationProgress, DonationProgressAdmin)

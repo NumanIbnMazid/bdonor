@@ -1,0 +1,33 @@
+{% extends base_template %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Notification Details
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<div class="d-flex">
+    {% if object.sender == request.user %}
+    <i class="fa fa-user-plus"></i>
+    {% else %}
+    <div class="avatar-xs">
+        {% include 'snippets/chunks/user-image.html' with instance=object.sender class="avatar-img rounded" %}
+    </div>
+    {% endif %}
+    <div class="flex-1 ml-3 pt-1">
+        <span class="text-muted">
+                {{ object.message|safe|linebreaks }}
+        </span>
+    </div>
+    <div class="float-right pt-1">
+        <small class="text-muted">
+            {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
+            {{ object.created_at|timesince }} ago
+            {% else %}
+            {{ object.created_at }}
+            {% endif %}
+        </small>
+    </div>
+</div>
+
+{% endblock %}

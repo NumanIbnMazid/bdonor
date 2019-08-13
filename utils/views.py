@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, DetailView
+from el_pagination.views import AjaxListView
 from django.urls import reverse
 from accounts.models import UserProfile
-from .models import SitePreference, Location
+from .models import SitePreference, Location, Notification
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 import datetime
@@ -12,6 +13,8 @@ from django.utils.decorators import method_decorator
 # autocomplete
 import json
 from django.db.models import Count
+from suspicious.utils import block_suspicious_user
+from suspicious.models import Suspicious
 
 
 @method_decorator(login_required, name='dispatch')
@@ -132,3 +135,86 @@ def hospital_autocomplete_view(request):
         data = 'fail'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+
+@method_decorator(login_required, name='dispatch')
+class NotificationListView(AjaxListView):
+    template_name = 'notification/list.html'
+    # paginate_by = 4
+    # model = Notification
+    page_template = 'notification/snippets/page-template-list.html'
+    # context_object_name = 'objects'
+
+    def get_queryset(self, *args, **kwargs):
+        request = self.request
+        query = Notification.objects.filter(
+            receiver=request.user).order_by('-updated_at')
+        if query.exists():
+            return query
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super(NotificationListView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class NotificationDetailView(DetailView):
+    template_name = 'notification/details.html'
+
+    def get_object(self):
+        slug = self.kwargs['slug']
+        notification_filter = Notification.objects.filter(slug=slug)
+        if notification_filter.exists():
+            notification = notification_filter.first()
+            if notification.is_seen == False:
+                notification_filter.update(is_seen=True)
+            return notification
+        return None
+
+    def user_passes_test(self, request):
+        user = request.user
+        self.object = self.get_object()
+        if self.object.receiver == user:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        instance_user = self.request.user
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(NotificationDetailView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(NotificationDetailView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        return context
+
+
+@login_required
+def mark_all_as_read(request):
+    user = request.user
+    url = reverse('home')
+    qs = Notification.objects.filter(receiver=user)
+    if qs.exists():
+        qs.update(is_seen=True)
+        messages.add_message(request, messages.SUCCESS,
+                             "All Notifications has been marked as read !"
+                             )
+        url = reverse('utils:notification_list')
+    return HttpResponseRedirect(url)

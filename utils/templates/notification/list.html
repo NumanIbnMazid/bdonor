@@ -1,0 +1,83 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+All Notifications
+{% endblock %}[Unread: {{notifications_unread}}] [total: {{notifications.count}}]
+{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<!-- el-pagination css -->
+<link rel="stylesheet" href="{% static 'vendor/el-pagination/el-pagination.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="card full-height">
+            <div class="card-header">
+                <div class="card-title">Notifications</div>
+            </div>
+            <div class="card-body">
+                <ol class="activity-feed">
+                    {% include page_template %}
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 text-center">
+        {% if object_list.count >= 1 %}
+        <section class="panel panel-default">
+            <header class="panel-heading font-bold text-center">Action</header>
+            <div class="panel-body text-center">
+                <!-- Button to Open the Modal -->
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#notificationModal">
+                    Mark All As Read
+                </button>
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="notificationModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Please Confirm</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Are you sure you want to mark all notifications as read?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <a href="{% url 'utils:notification_mark_all_read' %}" class="btn btn-success">Yes</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<!-- el-pagination JS -->
+<script type="text/javascript" src="{% static 'vendor/el-pagination/el-pagination.js' %}"></script>
+<script>
+    $.endlessPaginate({
+        paginateOnScroll: true,
+        paginateOnScrollChunkSize: 5
+    });
+</script>
+{% endblock %}
