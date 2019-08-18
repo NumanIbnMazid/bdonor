@@ -2,17 +2,30 @@
 <div class="nav flex-column nav-pills nav-secondary nav-pills-no-bd">
 
     {% if request.user.user_bank_member.bank.institute == object.institute %}
+
     {% url 'donationBank:bank_dashboard' as bank_dashboard_url %}
     <a href="{{ bank_dashboard_url }}" class="nav-link {% if request.path == bank_dashboard_url %}active{% endif %}">
         Dashboard
     </a>
-    {% endif %}
 
-    {% if request.user.user_bank_member.bank.institute == object.institute %}
+    {% url 'donationBank:bank_add_donation' as bank_add_donation_url %}
+    <a href="{{ bank_add_donation_url }}"
+        class="nav-link {% if request.path == bank_add_donation_url %}active{% endif %}">
+        Add Donation
+    </a>
+
+    {% url 'donationBank:bank_donation_list' as bank_donation_list_url %}
+    <a href="{{ bank_donation_list_url }}"
+        class="nav-link {% if request.path == bank_donation_list_url %}active{% endif %}">
+        Donations
+    </a>
+
     {% url 'donationBank:bank_members_list' as bank_members_list_url %}
-    <a href="{{ bank_members_list_url }}" class="nav-link {% if request.path == bank_members_list_url %}active{% endif %}">
+    <a href="{{ bank_members_list_url }}"
+        class="nav-link {% if request.path == bank_members_list_url %}active{% endif %}">
         Members
     </a>
+
     {% endif %}
 
     {% if not object == None %}

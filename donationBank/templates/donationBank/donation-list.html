@@ -1,0 +1,165 @@
+{% extends base_template %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Bank Donation List
+{% endblock %}{% endblock %}{% endblock %}
+
+{% load static %}
+
+{% block extra_css %}
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            <div class="col-md-10">
+                <div class="table-responsive">
+                    <table id="donationBankDataTable" class="cell-border hover table-bordered table-hover text-center"
+                        style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Donor</th>
+                                <th width="2%">Blood Group</th>
+                                <th width="2%">Donation Type</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                                <th>Expire in</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for donation in donation_list %}
+                            <tr class="text-dark">
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>
+                                    <b>
+                                        {{ donation.get_donor_name }}
+                                    </b>
+                                </td>
+                                <td>
+                                    {{ donation.blood_group }}
+                                </td>
+                                <td>
+                                    {{ donation.get_donation_type }}
+                                </td>
+                                <td>
+                                    {{ donation.get_type_dynamic_short_detail }}
+                                </td>
+                                <td>
+                                    {{ donation.donation_progress.get_progress_status }}
+                                </td>
+                                <td>
+                                    {% if not donation.get_expiration_days >= 0 %}
+                                    <div class="avatar avatar-sm">
+                                        <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                            class="avatar-img rounded-circle">
+                                    </div>
+                                    {% else %}
+                                    <span
+                                        class="{% if donation.get_expiration_days < 4 %}text-danger{% else %}text-muted{% endif %} font-bold">
+                                        {% if donation.get_expiration_days == 0 %}
+                                        Today
+                                        {% else %}
+                                        {{donation.get_expiration_days}}
+                                        day{% if donation.get_expiration_days > 1 %}s{% endif %}
+                                        {% endif %}
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'donation_bank:bank_donation_details' slug=donation.slug %}"
+                                        class="btn btn-secondary btn-xs text-deco-none">
+                                        <span class="">
+                                            View
+                                        </span>
+                                    </a>
+                                    <a href="{% url 'donation_bank:bank_donation_update' slug=donation.slug %}"
+                                        class="btn btn-primary btn-xs text-deco-none">
+                                        <span class="">
+                                            Edit
+                                        </span>
+                                    </a>
+                                    <button type="button"
+                                        class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_bank_donation"
+                                        value="{{donation.slug}}" data-toggle="modal"
+                                        data-target="#modal-delete-bank_donation">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No item found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>Donor</th>
+                                <th width="2%">Blood Group</th>
+                                <th width="2%">Donation Type</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                                <th>Expire in</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<input type="hidden" id="total_records_count" value="{{donation_list.count}}">
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#donationBankDataTable').DataTable({
+            destroy: true,
+            //"retrieve": true,
+            //"order": [[ 1, 'desc' ]],
+            "ordering": false,
+            //"searching": false,
+            //"paging": false,
+            //"scrollY": 400,
+            //"scrollX": 400,
+            //"scrollY": '62vh',
+            //"scrollX": '50vh',
+            "scrollCollapse": true,
+            "stateSave": true,
+            "pagingType": "full_numbers",
+            "language": {
+                "lengthMenu": "Display _MENU_ records per page. <span class='ml-4 text-primary'>Total Records: <span class='font-13 font-bold'>" +
+                    $("#total_records_count").val() + "</span></span>",
+                "zeroRecords": "Nothing found - sorry",
+                "info": "Showing page _PAGE_ of _PAGES_",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+        });
+    });
+</script>
+{% endblock %}

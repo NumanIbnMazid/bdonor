@@ -6,6 +6,10 @@ from django.dispatch import receiver
 from accounts.utils import unique_slug_generator, time_str_mix_slug
 from django.template.defaultfilters import slugify
 from middlewares.middlewares import RequestMiddleware
+from django.db.models import Q
+import datetime
+from django.urls import reverse
+from django.http import Http404
 
 
 class DonationBank(models.Model):
@@ -112,6 +116,116 @@ class MemberRequest(models.Model):
         return self.user.username
 
 
+class DonationQuerySet(models.query.QuerySet):
+    def blood_type(self):
+        return self.filter(type=0)
+
+    def organ_type(self):
+        return self.filter(type=1)
+
+    def tissue_type(self):
+        return self.filter(type=2)
+
+    # Foreign
+    def is_done(self):
+        return self.filter(donation_progress__progress_status=1)
+
+    def is_pending(self):
+        return self.filter(donation_progress__progress_status=0)
+    # /Foreign
+
+    def latest(self):
+        return self.filter().order_by('-created_at')
+
+    def Donations_current_year(self):
+        today = datetime.datetime.now()
+        return self.filter(created_at__year=today.year)
+
+    def donations_by_year(self, year_search):
+        return self.filter(created_at__year=year_search)
+
+    def donations_by_user(self, user):
+        return self.filter(user=user.profile)
+
+    def search(self, query):
+        lookups = (Q(bank__institute__icontains=query) |
+                   Q(bank__address__icontains=query) |
+                   Q(bank__city__icontains=query) |
+                   Q(bank__state__icontains=query) |
+                   Q(bank__country__icontains=query) |
+                   Q(bank__contact__icontains=query) |
+                   Q(bank__email__icontains=query) |
+                   Q(bank__description__icontains=query) |
+                   Q(first_name__icontains=query) |
+                   Q(last_name__icontains=query) |
+                   Q(gender__icontains=query) |
+                   Q(dob__icontains=query) |
+                   Q(diseases__icontains=query) |
+                   Q(contact__icontains=query) |
+                   Q(email__icontains=query) |
+                   Q(address__icontains=query) |
+                   Q(city__icontains=query) |
+                   Q(state__icontains=query) |
+                   Q(country__icontains=query) |
+                   Q(donation_type__icontains=query) |
+                   Q(tissue_name__icontains=query) |
+                   Q(blood_group__icontains=query) |
+                   Q(quantity__icontains=query) |
+                   Q(organ_name__icontains=query) |
+                   Q(description__icontains=query) |
+                   Q(contact__icontains=query) |
+                   Q(collection_date__icontains=query) |
+                   Q(expiration_date__icontains=query) |
+                   Q(user__user__username__icontains=query) |
+                   Q(user__user__first_name__icontains=query) |
+                   Q(user__user__last_name__icontains=query) |
+                   Q(user__user__email__icontains=query)
+                   )
+        return self.filter(lookups).distinct()
+
+
+class DonationManager(models.Manager):
+    def get_queryset(self):
+        return DonationQuerySet(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset()
+
+    def get_by_id(self, id):
+        try:
+            instance = self.get_queryset().get(id=id)
+        except Donation.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except Donation.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(id=id)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def get_by_slug(self, slug):
+        try:
+            instance = self.get_queryset().get(slug=slug)
+        except Donation.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except Donation.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(slug=slug)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def filter_by_bank_slug(self, slug):
+        try:
+            instance = self.get_queryset().filter(bank__slug=slug)
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def search(self, query):
+        return self.get_queryset().search(query)
+
+
 class Donation(models.Model):
     MALE = 'Male'
     FEMALE = 'Female'
@@ -189,15 +303,14 @@ class Donation(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='first name')
     last_name = models.CharField(max_length=50, verbose_name='last name')
     email = models.EmailField(blank=True, null=True, verbose_name='email')
-    gender = models.CharField(choices=GENDER_CHOICES, blank=True,
-                              null=True, max_length=10, verbose_name='gender')
-    dob = models.DateField(blank=True, null=True, verbose_name='DOB')
+    gender = models.CharField(choices=GENDER_CHOICES, max_length=10, verbose_name='gender')
+    dob = models.DateField(verbose_name='Date of Birth')
     blood_group = models.CharField(
         max_length=10, choices=BLOOD_GROUP_CHOICES, verbose_name='blood group')
-    deseases = models.CharField(
-        max_length=250, blank=True, null=True, verbose_name='deseases (If any)')
+    diseases = models.CharField(
+        max_length=250, blank=True, null=True, verbose_name='diseases (If any)')
     contact = models.CharField(
-        max_length=20, blank=True, null=True, verbose_name='contact')
+        max_length=20, verbose_name='contact')
     address = models.CharField(max_length=250, verbose_name='address')
     city = models.CharField(max_length=100, verbose_name='city')
     state = models.CharField(max_length=100, blank=True,
@@ -210,14 +323,16 @@ class Donation(models.Model):
     tissue_name = models.CharField(
         choices=TISSUE_CHOICES, blank=True, max_length=100, null=True, verbose_name='tissue name')
     quantity = models.PositiveIntegerField(
-        default=1, verbose_name='quantity')
+        default=1, blank=True, null=True, verbose_name='quantity')
     description = models.TextField(
         max_length=1000, blank=True, null=True, verbose_name='description')
-    collection_date = models.DateTimeField(verbose_name='collection date')
-    expiration_date = models.DateTimeField(verbose_name='expiration date')
+    collection_date = models.DateField(verbose_name='collection date')
+    expiration_date = models.DateField(verbose_name='expiration date')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    objects = DonationManager()
 
     class Meta:
         verbose_name = ("Donation")
@@ -225,10 +340,56 @@ class Donation(models.Model):
         ordering = ["-updated_at"]
 
     def __str__(self):
-        full_name = self.last_name
+        return self.bank.institute
+
+    def get_donor_name(self):
+        name = "Undefined"
         if not self.first_name == None and not self.last_name == None:
-            full_name = self.first_name + " " + self.last_name
-        return full_name
+            name = self.first_name + " " + self.last_name
+        return name
+
+    def get_donor_age(self):
+        age = 0
+        if not self.dob == None:
+            age = int((datetime.datetime.now().date() - self.dob).days / 365.25)
+        return age
+
+    def get_donation_type(self):
+        donation_type = "Undefined"
+        if self.donation_type == 0:
+            donation_type = "Blood"
+        if self.donation_type == 1:
+            donation_type = "Organ"
+        if self.donation_type == 2:
+            donation_type = "Tissue"
+        return donation_type
+
+    def get_type_dynamic_short_detail(self):
+        detail = "Undefined"
+        if self.donation_type == 0:
+            detail = f"{self.blood_group} ({self.quantity} bag)"
+        if self.donation_type == 1:
+            detail = f"{self.organ_name} ({self.quantity})"
+        if self.donation_type == 2:
+            detail = f"{self.tissue_name}"
+        return detail
+
+    def is_expired(self):
+        status = False
+        if not self.expiration_date == None and not self.donation_progress.progress_status == 1:
+            today = datetime.date.today()
+            if self.expiration_date < today:
+                status = True
+        return status
+
+    def get_expiration_days(self):
+        expired_in = 0
+        if not self.expiration_date == None and not self.donation_progress.progress_status == 1:
+            expired_in = int((self.expiration_date - datetime.datetime.now().date()).days)
+        return expired_in
+
+    # def get_absolute_url(self):
+    #     return reverse("donation_bank:bank_donation_details", kwargs={"slug": self.slug})
 
 
 class DonationProgress(models.Model):
@@ -293,7 +454,7 @@ class DonationProgress(models.Model):
         ordering = ["-updated_at"]
 
     def __str__(self):
-        return self.donation.donation_type
+        return self.donation.bank.institute
 
     def get_progress_status(self):
         progress_status = "Undefined"
@@ -334,7 +495,11 @@ def donation_slug_pre_save_receiver(sender, instance, *args, **kwargs):
             institute = instance.bank.institute.lower()[:10]
         else:
             institute = instance.bank.institute.lower()
-        slug_binding = slugify(institute) + "-" + instance.id + "_" + time_str_mix_slug()
+        if len(instance.last_name) > 5:
+            last_name = instance.last_name.lower()[:5]
+        else:
+            last_name = instance.last_name.lower()
+        slug_binding = slugify(institute) + "-" + last_name + "_" + time_str_mix_slug()
         # print(slug_binding)
         instance.slug = slug_binding
 

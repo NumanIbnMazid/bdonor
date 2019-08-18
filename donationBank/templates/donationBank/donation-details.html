@@ -1,0 +1,316 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Donation Details
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-2 text-center">
+                            <span class="font-17 font-bold text-muted">Donation Details</span> 
+                            {% if not donation.get_expiration_days >= 0 %}
+                            <div class="avatar avatar-sm">
+                                <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                            {% endif %}
+                            <br>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5>
+                                    <b>
+                                        <span class="text-secondary">
+                                            Donor:
+                                        </span>
+                                        <span class="text-primary ml-2">
+                                            {{ donation.get_donor_name }}
+                                        </span>
+                                    </b>
+                                </h5>
+                                <div class="text-small op-8">
+                                    <span class="text-secondary">
+                                        Published:
+                                    </span>
+                                    <span class="ml-2">
+                                        {% if datetime|date:"d-M-Y" == donation.created_at|date:"d-M-Y" %}
+                                        {{ donation.created_at|timesince }} ago
+                                        {% else %}
+                                        {{ donation.created_at }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <p class="text-muted text-small">
+                                    <span class="text-secondary">
+                                        Progress Status:
+                                    </span>
+                                    <span
+                                        class="ml-2 {% if donation.donation_progress.progress_status == 1 %}text-success font-700{% endif %}">
+                                        {{ donation.donation_progress.get_progress_status }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div>
+                            <div class="text-center">
+                                <h5 class="font-bold">Donation Information</h5>
+                            </div>
+                            <h5>
+                                <span class="text-secondary">
+                                    Donation Type:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.get_donation_type }}
+                                </span>
+                            </h5>
+
+                            {% if donation.blood_group %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Blood Group:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.blood_group }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.organ_name %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Organ name:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.organ_name }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.tissue_name %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Tissue name:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.tissue_name }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.quantity %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Quantity:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.quantity }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.collection_date %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Collection date:
+                                </span>
+                                <span class="ml-2">
+                                    {{ donation.collection_date|date:'d-M-Y' }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.expiration_date %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Expiration date:
+                                </span>
+                                <span class="ml-2">
+                                    {{ donation.expiration_date|date:'d-M-Y' }}
+                                    {% if not donation.get_expiration_days >= 0 %}
+                                    <div class="avatar avatar-sm">
+                                        <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                            class="avatar-img rounded-circle">
+                                    </div>
+                                    {% endif %}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.details %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title text-center text-secondary">
+                                        Details
+                                    </h5>
+                                </div>
+                                <div class="card-body ml-4 mr-4">
+                                    {{ donation.details|safe|linebreaks }}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <hr>
+
+                            <div class="text-center">
+                                <h5 class="font-bold">Donor Information</h5>
+                            </div>
+
+                            {% if donation.first_name %}
+                            <h5>
+                                <span class="text-secondary">
+                                    First Name:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.first_name }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.last_name %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Last Name:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.last_name }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.gender %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Gender:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.gender }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.dob %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Date of Birth:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.dob }} 
+                                    <span class="text-muted ml-2">
+                                        [Age - {{donation.get_donor_age}}]
+                                    </span>
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.diseases %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Diseases:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.diseases }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.email %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Email:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.email }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.contact %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Contact no. :
+                                </span>
+                                <span class="ml-2">
+                                    <a href="#">
+                                        {{ donation.contact }}
+                                    </a>
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.address %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Address:
+                                </span>
+                                <span class="ml-2">
+                                    {{ donation.address }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.city %}
+                            <h5>
+                                <span class="text-secondary">
+                                    City:
+                                </span>
+                                <span class="ml-2">
+                                    {{ donation.city }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.state %}
+                            <h5>
+                                <span class="text-secondary">
+                                    State:
+                                </span>
+                                <span class="ml-2">
+                                    {{ donation.state }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.country %}
+                            <h5>
+                                <span class="text-secondary">
+                                    Country:
+                                </span>
+                                <span class="ml-2">
+                                    {{ donation.country.name }}
+                                </span>
+                            </h5>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-2">
+                            <p class="text-muted mb-0">Comment</p>
+                            <p class="text-muted mb-0">Like</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}

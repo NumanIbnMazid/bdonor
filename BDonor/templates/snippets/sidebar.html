@@ -161,8 +161,9 @@
                 </li>
                 {% endif %}
                 {% if not request.user.user_bank_member.role == "" %}
+                <input type="hidden" name="user_bank" id="user_bank" value="{{ request.user.user_bank_member.bank.slug }}">
                 <li
-                    class="nav-item {% if request.path == bank_dashboard_url %}active{% endif %}">
+                    class="nav-item {% if request.path == bank_dashboard_url %}active{% endif %}" id="dynamic_li">
                     <a href="{{ bank_dashboard_url }}">
                         <i>
                             <div class="avatar avatar-xs">
@@ -187,3 +188,31 @@
         </div>
     </div>
 </div>
+
+{% block extra_js %}
+<script>
+    var loc = window.location;
+    //var protocol = loc.protocol;
+    //var host = loc.host;
+    var pathname = loc.pathname;
+    var target_path = '/donation-bank/';
+    var exception_ending_path = '/details/'
+    //var exception_ending_path2 = '/list/'
+    if ($("#user_bank").val() != "") {
+        var user_bank_slug = $("#user_bank").val();
+    } else {
+        var user_bank_slug = "";
+    }
+    var exception_path = target_path + user_bank_slug + exception_ending_path;
+    if (pathname.match(exception_path)) {
+        $("#dynamic_li").addClass("active");
+    }
+    if((pathname.match("^/donation-bank/")) && !(pathname.match("/details/$")) &&
+    !(pathname.match("/donation-bank/list/$"))) {
+        $("#dynamic_li").addClass("active");
+    }
+    //else {
+    //    $("#dynamic_li").removeClass("active");
+    //}
+</script>
+{% endblock %}
