@@ -20,7 +20,9 @@ Price Plans
                     <div class="card-body">
                         <h1 class="card-title pricing-card-title">
                             {{ object.currency }} {{ object.amount }}
-                            <small class="text-muted">/ {{ object.expiration_cycle }} Month</small>
+                            <small class="text-muted">
+                                / {{ object.expiration_cycle }} Month{{ object.expiration_cycle|pluralize:"s" }}
+                            </small>
                         </h1>
                         <ul class="list-unstyled mt-3 mb-4">
                             {% if object.description %}

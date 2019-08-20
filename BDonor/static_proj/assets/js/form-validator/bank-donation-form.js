@@ -49,10 +49,13 @@ $(document).ready(function () {
     $("#donation_quantity_input").attr("required", false);
     $('form:first *:input[type!=hidden]:first').focus();
 
+    $(".error-group").removeClass("hidden");
+
     // remove hidden if input has value (Required in Update View)
-    $("#donationBank_donation_manage_form input").each(function () {
+    $("form input, form select, form textarea").each(function () {
         var $this = $(this);
         var id = $this.attr("id");
+        // console.log(id);
         if ($this.val() != "") {
             $("#" + id + "-group").removeClass("hidden");
         }
@@ -222,6 +225,7 @@ function donationTypeFunction() {
         $("#quantity_priority").html("(required)");
         $("#quantity_priority").addClass("text-info");
         $("#donation_quantity_input").val(1);
+        $("#donation_quantity_input").attr("disabled", true);
         $("#donation_tissue_name_input").val("");
         $("#donation_organ_name_input").val("");
         // console.log($("#donation_donation_type_input").val());
@@ -294,6 +298,83 @@ function organFunction() {
 }
 
 
+$(document).ready(function () {
+    if ($("#donation_donation_type_input").val() == 0) {
+        $("#donation_tissue_name_input-group").addClass("hidden");
+        $("#donation_organ_name_input-group").addClass("hidden");
+        $("#donation_organ_name_input").attr("required", false);
+        $("#donation_tissue_name_input").attr("required", false);
+        $("#donation_quantity_input-group").removeClass("hidden");
+        $("#donation_quantity_input").attr("required", true);
+        $("#quantity_priority").html("(required)");
+        $("#quantity_priority").addClass("text-info");
+        $("#donation_quantity_input").val(1);
+        $("#donation_quantity_input").attr("disabled", true);
+        $("#donation_tissue_name_input").val("");
+        $("#donation_organ_name_input").val("");
+        // console.log($("#donation_donation_type_input").val());
+    } else if ($("#donation_donation_type_input").val() == 1) {
+        $("#donation_tissue_name_input-group").addClass("hidden");
+        $("#donation_organ_name_input-group").removeClass("hidden");
+        $("#organ_name_priority").html("(required)");
+        $("#organ_name_priority").addClass("text-info");
+        $("#donation_organ_name_input").attr("required", true);
+        $("#donation_tissue_name_input").attr("required", false);
+        $("#donation_quantity_input-group").removeClass("hidden");
+        $("#donation_quantity_input").attr("required", true);
+        $("#quantity_priority").html("(required)");
+        $("#quantity_priority").addClass("text-info");
+        $("#donation_quantity_input").val(1);
+        $("#donation_tissue_name_input").val("");
+        // console.log($("#donation_donation_type_input").val());
+    } else if ($("#donation_donation_type_input").val() == 2) {
+        $("#donation_tissue_name_input-group").removeClass("hidden");
+        $("#tissue_name_priority").html("(required)");
+        $("#tissue_name_priority").addClass("text-info");
+        $("#donation_organ_name_input").attr("required", false);
+        $("#donation_tissue_name_input").attr("required", true);
+        $("#donation_organ_name_input-group").addClass("hidden");
+        $("#donation_quantity_input-group").addClass("hidden");
+        $("#donation_quantity_input").attr("required", false);
+        $("#donation_quantity_input").val("");
+        $("#donation_organ_name_input").val("");
+        // console.log($("#donation_donation_type_input").val());
+    } else {
+        $("#donation_tissue_name_input-group").addClass("hidden");
+        $("#donation_organ_name_input-group").addClass("hidden");
+        $("#donation_blood_group_input-group").addClass("hidden");
+        $("#donation_quantity_input-group").addClass("hidden");
+        $("#donation_quantity_input").val("");
+        $("#donation_tissue_name_input").val("");
+        $("#donation_organ_name_input").val("");
+        $("#donation_blood_group_input").val("");
+    }
+
+    if ($("#donation_organ_name_input").val() == "Heart") {
+        $("#donation_quantity_input").val(1);
+        $("#donation_quantity_input").attr("disabled", true);
+    } else if ($("#donation_organ_name_input").val() == "Liver") {
+        $("#donation_quantity_input").val(1);
+        $("#donation_quantity_input").attr("disabled", true);
+    } else if ($("#donation_organ_name_input").val() == "Pancreas") {
+        $("#donation_quantity_input").val(1);
+        $("#donation_quantity_input").attr("disabled", true);
+    } else if ($("#donation_organ_name_input").val() == "Intestines") {
+        $("#donation_quantity_input").val(1);
+        $("#donation_quantity_input").attr("disabled", true);
+    }
+    // Living Donations
+    else if ($("#donation_organ_name_input").val() == "Lungs") {
+        $("#donation_quantity_input").val(1);
+        $("#donation_quantity_input").attr("disabled", false);
+    } else if ($("#donation_organ_name_input").val() == "Kidney") {
+        $("#donation_quantity_input").val(1);
+        $("#donation_quantity_input").attr("disabled", false);
+    } else {
+        $("#donation_quantity_input").attr("disabled", false);
+    }
+
+});
 
 (function ($) {
     $.fn.inputFilter = function (inputFilter) {

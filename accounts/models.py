@@ -7,6 +7,7 @@ from .utils import time_str_mix_slug, upload_image_path
 from django.urls import reverse
 from allauth.account.signals import user_logged_in, user_signed_up
 import stripe
+from django_countries.fields import CountryField
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -58,6 +59,11 @@ class UserProfile(models.Model):
         max_length=20, blank=True, null=True, verbose_name='contact')
     address = models.TextField(max_length=200, blank=True,
                                null=True, verbose_name='address')
+    city = models.CharField(blank=True, null=True,
+                            max_length=100, verbose_name='city')
+    state = models.CharField(blank=True, null=True,
+                             max_length=100, verbose_name='state/province')
+    country = CountryField(blank=True, null=True)
     about = models.TextField(max_length=300, blank=True,
                              null=True, verbose_name='about')
     facebook = models.URLField(

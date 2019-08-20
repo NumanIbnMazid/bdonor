@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from allauth.socialaccount.models import SocialApp
 from django.conf import settings
+from priceplan.models import Plan
 
 # https://eli.thegreenplace.net/2014/02/15/programmatically-populating-a-django-database
 
@@ -52,7 +53,22 @@ class Command(BaseCommand):
             u_test.set_password("test12345")
             u_test.save()
 
+    def _create_priceplan(self):
+        if not Plan.objects.filter(title__iexact='Monthly', slug__iexact='monthly').exists():
+            p_monthly = Plan(title='Monthly', slug='monthly', amount=99,
+                             currency='usd', expiration_cycle=1, description='BDonor monthly plan')
+            p_monthly.save()
+        if not Plan.objects.filter(title__iexact='Half Annual', slug__iexact='half_annual').exists():
+            p_half_annual = Plan(title='Half Annual', slug='half_annual', amount=589,
+                            currency='usd', expiration_cycle=6, description='BDonor half annual plan')
+            p_half_annual.save()
+        if not Plan.objects.filter(title__iexact='Annual', slug__iexact='annual').exists():
+            p_annual = Plan(title='Annual', slug='annual', amount=1149,
+                             currency='usd', expiration_cycle=12, description='BDonor annual plan')
+            p_annual.save()
+
     def handle(self, *args, **options):
         self._update_default_site()
         self._create_social_app()
         self._create_users()
+        self._create_priceplan()

@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.urls import reverse
 from django.http import Http404
 from middlewares.middlewares import RequestMiddleware
+from django_countries.fields import CountryField
 
 
 class DonationQuerySet(models.query.QuerySet):
@@ -96,6 +97,9 @@ class DonationQuerySet(models.query.QuerySet):
                    Q(contact2__icontains=query) |
                    Q(contact3__icontains=query) |
                    Q(location__icontains=query) |
+                   Q(city__icontains=query) |
+                   Q(state__icontains=query) |
+                   Q(country__name__icontains=query) |
                    Q(hospital__icontains=query) |
                    Q(preferred_date__icontains=query) |
                    Q(preferred_date_from__icontains=query) |
@@ -285,6 +289,10 @@ class Donation(models.Model):
     contact_privacy = models.PositiveSmallIntegerField(
         choices=CONTACT_PRIVACY_CHOICES, default=0, verbose_name='contact privacy')
     location = models.CharField(max_length=200, verbose_name='location')
+    city = models.CharField(max_length=100, verbose_name='city')
+    state = models.CharField(blank=True, null=True,
+                             max_length=100, verbose_name='state/province')
+    country = CountryField()
     hospital = models.CharField(
         max_length=200, null=True, blank=True, verbose_name='hospital')
     preferred_date = models.DateTimeField(

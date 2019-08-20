@@ -17,6 +17,7 @@ from utils.models import Notification
 from accounts.utils import time_str_mix_slug
 from accounts.models import UserProfile
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import Count, F, Sum
 
 
 @method_decorator(login_required, name='dispatch')
@@ -149,6 +150,23 @@ class DonationBankDetailView(DetailView):
             base_template = 'base.html'
         context['base_template'] = base_template
         # Ends Base Template Context
+        # Bank Storage Calculation
+        self.object = self.get_object()
+        blood_qs = Donation.objects.values('blood_group').annotate(
+            total_count=Sum(F('quantity'))).order_by().filter(donation_type=0, bank=self.object).is_not_expired().is_pending()
+        organ_qs = Donation.objects.values('organ_name').annotate(
+            total_count=Sum(F('quantity'))).order_by().filter(donation_type=1, bank=self.object).is_not_expired().is_pending()
+        tissue_qs = Donation.objects.values('tissue_name').annotate(
+            total_count=Count('id')).order_by().filter(donation_type=2, bank=self.object).is_not_expired().is_pending()
+        context['blood_list'] = blood_qs
+        context['blood_count'] = Donation.objects.filter(
+            donation_type=0, bank=self.object).is_not_expired().is_pending().aggregate(total=Sum(F('quantity'))).get('total', 0)
+        context['organ_list'] = organ_qs
+        context['organ_count'] = Donation.objects.filter(
+            donation_type=1, bank=self.object).is_not_expired().is_pending().aggregate(total=Sum(F('quantity'))).get('total', 0)
+        context['tissue_list'] = tissue_qs
+        context['tissue_count'] = Donation.objects.filter(
+            donation_type=2, bank=self.object).is_not_expired().is_pending().count()
         return context
 
     # def user_passes_test(self, request):
@@ -183,7 +201,7 @@ class DonationBankUpdateView(UpdateView):
             if qs.exists():
                 form.add_error(
                     'institute', forms.ValidationError(
-                        "This institute is alreay exists!"
+                        "This institute is already exists!"
                     )
                 )
                 return super().form_invalid(form)
@@ -431,8 +449,8 @@ def member_request_create(request):
                     category = 'memberRequest_Create'
                     identifier = slug_binding
                     subject = f"{sender.profile.get_dynamic_name()} wants to be a member of your Donation bank."
-                    message = f"{sender.profile.get_dynamic_name()} wants to be a member of your Donation bank. <br> Requested sent at : {instance.created_at}"
-                    
+                    message = f"{sender.profile.get_dynamic_name()} wants to be a member of your Donation bank. <br> Requested at : {instance.created_at}"
+
                     notification_pre_qs = Notification.objects.filter(
                         category__iexact='memberRequest_Create', sender=sender, receiver=receiver)
                     if notification_pre_qs.exists():
@@ -472,8 +490,8 @@ def member_request_delete(request):
                 receiver = receiver_qs.first().user
                 category = 'memberRequest_Delete'
                 identifier = member_request.bank.slug
-                subject = f"{sender.profile.get_dynamic_name()} cancels his request to join your Donation Bank."
-                message = f"{sender.profile.get_dynamic_name()} cancels his request to join your Donation Bank."
+                subject = f"{sender.profile.get_dynamic_name()} cancels his/her request to join your Donation Bank."
+                message = f"{sender.profile.get_dynamic_name()} cancels his/her request to join your Donation Bank."
                 notification_pre_qs = Notification.objects.filter(
                     category__iexact='memberRequest_Delete', sender=sender, receiver=receiver)
                 if notification_pre_qs.exists():
@@ -509,19 +527,21 @@ def member_request_accept(request):
             bank_member_qs = BankMember.objects.filter(
                 user=user, bank=member_request.bank, role=0)
             if bank_member_qs.exists():
-                bank_qs = DonationBank.objects.filter(slug=member_request.bank.slug)
+                bank_qs = DonationBank.objects.filter(
+                    slug=member_request.bank.slug)
                 if bank_qs.exists():
                     bank = bank_qs.first()
                     url = reverse('donation_bank:bank_dashboard')
                     filter_member = BankMember.objects.filter(
                         user=member_request.user)
-                    count_members = BankMember.objects.filter(bank=bank).count()
+                    count_members = BankMember.objects.filter(
+                        bank=bank).count()
                     if filter_member.exists():
                         messages.add_message(request, messages.WARNING,
                                              f"{member_request.user.profile.get_dynamic_name()} is already a member of '{filter_member.first().bank.institute}'.")
                     elif count_members >= 3:
                         messages.add_message(request, messages.WARNING,
-                                     "There are no free slot remaining! Maximum 3 members can join each Donation Bank.")
+                                             "There are no free slot remaining! Maximum 3 members can join each Donation Bank.")
                     else:
                         instance = BankMember.objects.create(
                             user=member_request.user, bank=member_request.bank, role=1)
@@ -598,10 +618,10 @@ def member_request_reject(request):
                     notification_qs = Notification.objects.filter(
                         category__iexact='memberRequest_Create', sender=receiver, receiver=request.user)
                     if notification_qs.exists():
-                            notification_qs.delete()
+                        notification_qs.delete()
                     # ----------- Notification Ends -----------
                     messages.add_message(request, messages.SUCCESS,
-                                            f"Request Rejected Successfully!")
+                                         f"Request Rejected Successfully!")
             else:
                 block_suspicious_user(request)
     return HttpResponseRedirect(url)
@@ -686,7 +706,7 @@ def membership_remove(request):
                     )
                 # ----------- Notification Ends -----------
                 messages.add_message(request, messages.SUCCESS,
-                                        f"Membership removed Successfully!")
+                                     f"Membership removed Successfully!")
     return HttpResponseRedirect(url)
 
 
@@ -728,9 +748,11 @@ class DonationCreateView(CreateView):
             else:
                 if form.instance.organ_name == "Heart" or form.instance.organ_name == "Liver" or form.instance.organ_name == "Pancreas" or form.instance.organ_name == "Intestines":
                     form.instance.quantity = 1
+                if form.instance.donation_type == 0:
+                    form.instance.quantity = 1
                 form.instance.bank = bank_object
                 messages.add_message(self.request, messages.SUCCESS,
-                                        "Donation item has been created successfully!")
+                                     "Donation item has been created successfully!")
                 return super().form_valid(form)
         return super().form_invalid(form)
 
@@ -774,6 +796,7 @@ class DonationCreateView(CreateView):
             return HttpResponseRedirect(reverse('home'))
         return super(DonationCreateView, self).dispatch(request, *args, **kwargs)
 
+
 @method_decorator(login_required, name='dispatch')
 class DonationListView(ListView):
     template_name = 'donationBank/donation-list.html'
@@ -787,7 +810,7 @@ class DonationListView(ListView):
             qs = Donation.objects.filter_by_bank_slug(bank.slug)
             return qs
         return None
-    
+
     def get_context_data(self, **kwargs):
         context = super(DonationListView,
                         self).get_context_data(**kwargs)
@@ -902,6 +925,8 @@ class DonationUpdateView(UpdateView):
             else:
                 if form.instance.organ_name == "Heart" or form.instance.organ_name == "Liver" or form.instance.organ_name == "Pancreas" or form.instance.organ_name == "Intestines":
                     form.instance.quantity = 1
+                if form.instance.donation_type == 0:
+                    form.instance.quantity = 1
                 form.instance.bank = bank_object
                 messages.add_message(self.request, messages.SUCCESS,
                                      "Donation item has been updated successfully!")
@@ -963,7 +988,7 @@ def donation_delete(request):
         if qs.exists():
             qs.delete()
             messages.add_message(request, messages.SUCCESS,
-                                    "Deleted successfully!")
+                                 "Deleted successfully!")
             url = reverse('donation_bank:bank_donation_list')
         else:
             messages.add_message(request, messages.WARNING,

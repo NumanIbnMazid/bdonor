@@ -81,12 +81,14 @@ Bank Donation List
                                     <a href="{% url 'donation_bank:bank_donation_details' slug=donation.slug %}"
                                         class="btn btn-secondary btn-xs text-deco-none">
                                         <span class="">
+                                            <!-- <i class="flaticon-medical"></i> -->
                                             View
                                         </span>
                                     </a>
                                     <a href="{% url 'donation_bank:bank_donation_update' slug=donation.slug %}"
                                         class="btn btn-primary btn-xs text-deco-none">
                                         <span class="">
+                                            <!-- <i class="flaticon-pencil"></i> -->
                                             Edit
                                         </span>
                                     </a>
@@ -94,6 +96,7 @@ Bank Donation List
                                         class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_bank_donation"
                                         value="{{donation.slug}}" data-toggle="modal"
                                         data-target="#modal-delete-bank_donation">
+                                        <!-- <i class="flaticon-interface-5"></i> -->
                                         Delete
                                     </button>
                                 </td>

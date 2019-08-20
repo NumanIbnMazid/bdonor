@@ -438,3 +438,52 @@ class DonationManageForm(forms.ModelForm):
                 #     raise forms.ValidationError(
                 #         'You cannot select previous date!')
         return expiration_date
+
+
+class DonationProgressForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.object = kwargs.pop('object', None)
+        super(DonationProgressForm, self).__init__(*args, **kwargs)
+        self.fields['progress_status'].help_text = "Select progress status..."
+        self.fields['progress_status'].widget.attrs.update({
+            'id': 'donation_progress_status_input',
+        })
+        self.fields['completion_date'].help_text = "Select completion date..."
+        self.fields['completion_date'].widget.attrs.update({
+            'id': 'donation_completion_date_input',
+        })
+        self.fields['details'].help_text = "Maximum 400 characters allowed."
+        self.fields['details'].widget.attrs.update({
+            'id': 'donation_details_input',
+            'placeholder': 'Provide some additional information...',
+            'maxlength': 400,
+            'rows': 2,
+            'cols': 2
+        })
+
+    class Meta:
+        model = DonationProgress
+        fields = ['progress_status', 'completion_date', 'details']
+        exclude = ['donation', 'created_at', 'updated_at']
+
+    def clean_completion_date(self):
+        completion_date = self.cleaned_data.get('completion_date')
+        today = datetime.date.today()
+        if not completion_date == None:
+            if not self.object == None and not self.object.completion_date == None and self.object.completion_date == completion_date:
+                return completion_date
+            else:
+                if completion_date > today:
+                    raise forms.ValidationError(
+                        "Completion date can't be greater than today!")
+        return completion_date
+
+    def clean_details(self):
+        details = self.cleaned_data.get('details')
+        if not details == None:
+            length = len(details)
+            if length > 400:
+                raise forms.ValidationError(
+                    f"Maximum 400 characters allowed. [currently using: {length}]")
+        return details

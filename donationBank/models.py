@@ -10,6 +10,7 @@ from django.db.models import Q
 import datetime
 from django.urls import reverse
 from django.http import Http404
+from django.db.models import F, Sum
 
 
 class DonationBank(models.Model):
@@ -125,6 +126,14 @@ class DonationQuerySet(models.query.QuerySet):
 
     def tissue_type(self):
         return self.filter(type=2)
+
+    def is_not_expired(self):
+        qs = self.filter(expiration_date__gte=datetime.date.today())
+        return qs
+
+    def is_expired(self):
+        qs = self.filter(expiration_date__lt=datetime.date.today())
+        return qs
 
     # Foreign
     def is_done(self):
@@ -388,6 +397,20 @@ class Donation(models.Model):
             expired_in = int((self.expiration_date - datetime.datetime.now().date()).days)
         return expired_in
 
+    # def get_total_quantity(self):
+    #     total = 0
+    #     if self.donation_type == 0:
+    #         qs = Donation.objects.filter(bank=self.bank, donation_type=0, blood_group=self.blood_group)
+    #     elif self.donation_type == 1:
+    #         qs = Donation.objects.filter(bank=self.bank, donation_type=1, organ_name=self.organ_name)
+    #     elif self.donation_type == 2:
+    #         qs = Donation.objects.filter(bank=self.bank, donation_type=2, tissue_name=self.tissue_name)
+    #     else:
+    #         qs = Donation.objects.filter(bank=self.bank, donation_type=self.donation_type)
+    #     if qs.exists():
+    #         total = qs.aggregate(total=Sum(F('quantity'))).get('total', 0)
+    #     return total
+
     # def get_absolute_url(self):
     #     return reverse("donation_bank:bank_donation_details", kwargs={"slug": self.slug})
 
@@ -433,11 +456,13 @@ class DonationProgress(models.Model):
         blank=True, null=True, verbose_name='completion date')
     first_name = models.CharField(blank=True, null=True, max_length=50, verbose_name='first name')
     last_name = models.CharField(blank=True, null=True, max_length=50, verbose_name='last name')
-    email = models.EmailField(blank=True, null=True, verbose_name='email')
     gender = models.CharField(choices=GENDER_CHOICES, blank=True,
                               null=True, max_length=10, verbose_name='gender')
     blood_group = models.CharField(
         blank=True, null=True, max_length=10, choices=BLOOD_GROUP_CHOICES, verbose_name='blood group')
+    dob = models.DateField(blank=True, null=True, verbose_name='Date of Birth')
+    contact = models.CharField(blank=True, null=True, max_length=20, verbose_name='contact')
+    email = models.EmailField(blank=True, null=True, verbose_name='email')
     address = models.CharField(blank=True, null=True, max_length=250, verbose_name='address')
     city = models.CharField(blank=True, null=True, max_length=100, verbose_name='city')
     state = models.CharField(blank=True, null=True, max_length=100, verbose_name='state/province')

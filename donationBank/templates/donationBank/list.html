@@ -41,26 +41,48 @@ Donation Bank List
                     </b>
                 </td>
                 <td>
+                    {% if not object.address == None %}
                     {{ object.address }}
+                    {% else %}
+                    -
+                    {% endif %}
                 </td>
                 <td>
+                    {% if not object.city == None %}
                     {{ object.city }}
+                    {% else %}
+                    -
+                    {% endif %}
                 </td>
                 <td>
                     {% if not object.state == None %}
                     {{ object.state }}
+                    {% else %}
+                    -
                     {% endif %}
                 </td>
                 <td>
+                    {% if not object.country == None %}
                     {{ object.country.name }}
+                    {% else %}
+                    -
+                    {% endif %}
                 </td>
                 <td>
                     <a href="#">
+                        {% if not object.contact == None %}
                         {{ object.contact }}
+                        {% else %}
+                        -
+                        {% endif %}
                     </a>
                 </td>
                 <td>
+                    {% if not object.email == None %}
                     {{ object.email }}
+                    {% else %}
+                    -
+                    {% endif %}
                 </td>
                 <td>
                     <a href="/donation-bank/{{object.slug}}/details/" class="btn btn-secondary btn-xs text-deco-none">

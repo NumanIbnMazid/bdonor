@@ -21,6 +21,15 @@ Donation Details
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-2 text-center">
+                            <div class="pull-left">
+                                <a href="{% url 'donations:donation_progress' slug=donation.slug %}"
+                                    class="btn btn-primary btn-xs text-deco-none bg-c-info">
+                                    <span class="btn-label">
+                                        <i class="flaticon-mark"></i>
+                                        progress
+                                    </span>
+                                </a>
+                            </div>
                             <span class="font-17 font-bold text-muted">Donation Details</span> 
                             {% if not donation.get_expiration_days >= 0 %}
                             <div class="avatar avatar-sm">
@@ -28,6 +37,21 @@ Donation Details
                                     class="avatar-img rounded-circle">
                             </div>
                             {% endif %}
+                            <div class="pull-right">
+                                <a href="{% url 'donation_bank:bank_donation_update' slug=donation.slug %}"
+                                    class="btn btn-primary btn-xs text-deco-none">
+                                    <span class="">
+                                        <i class="flaticon-pencil"></i>
+                                        Edit
+                                    </span>
+                                </a>
+                                <button type="button"
+                                    class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_bank_donation"
+                                    value="{{donation.slug}}" data-toggle="modal" data-target="#modal-delete-bank_donation">
+                                    <i class="flaticon-interface-5"></i>
+                                    Delete
+                                </button>
+                            </div>
                             <br>
                         </div>
                         <hr>

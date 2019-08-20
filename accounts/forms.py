@@ -85,7 +85,22 @@ class UserProfileUpdateForm(forms.ModelForm):
             'rows': 2,
             'cols': 2,
             'placeholder': 'Enter your address',
-            'maxlength': 150
+            'maxlength': 100
+        })
+        self.fields['city'].widget.attrs.update({
+            'id': 'profile_city',
+            'placeholder': 'Enter city...',
+            'maxlength': 25,
+        })
+        self.fields['state'].widget.attrs.update({
+            'id': 'profile_state',
+            'placeholder': 'Enter state...',
+            'maxlength': 25,
+        })
+        self.fields['country'].widget.attrs.update({
+            'id': 'profile_country',
+            'placeholder': 'Select country...',
+            'maxlength': 25,
         })
         self.fields['facebook'].widget.attrs.update({
             'placeholder': 'Enter your facebook profile link...',
@@ -110,6 +125,9 @@ class UserProfileUpdateForm(forms.ModelForm):
         self.fields['blood_group'].help_text = 'Enter your Blood Group.'
         self.fields['contact'].help_text = 'Phone number must be valid and start with +880'
         self.fields['address'].help_text = 'Enter your Address.'
+        self.fields['city'].help_text = 'Enter your City.'
+        self.fields['state'].help_text = 'Enter your State.'
+        self.fields['country'].help_text = 'Select your Country.'
         self.fields['about'].help_text = 'Enter More About You.'
         self.fields['facebook'].help_text = 'Enter your Facebook Profile Link.'
         self.fields['linkedin'].help_text = 'Enter your Linkedin Profile Link.'
@@ -119,8 +137,8 @@ class UserProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['about', 'website', 'linkedin',
-                  'facebook', 'address', 'image', 'dob', 'contact', 'gender', 'blood_group']
+        fields = ['about', 'website', 'linkedin', 'facebook', 'address', 'country',
+                  'state', 'city', 'image', 'dob', 'contact', 'gender', 'blood_group']
         # fields = ['gender', 'dob', 'blood_group',
         #           'contact', 'image', 'address', 'about', 'facebook', 'linkedin', 'website']
         # exclude = ['user', 'slug', 'account_type', 'is_volunteer']
@@ -201,9 +219,37 @@ class UserProfileUpdateForm(forms.ModelForm):
         address = self.cleaned_data.get('address')
         if not address == None:
             length = len(address)
-            if length > 150:
-                raise forms.ValidationError("Maximum 150 characters allowed !")
+            if length > 100:
+                raise forms.ValidationError(
+                    f"Maximum 100 characters allowed. [currently using: {length}]")
         return address
+
+    def clean_city(self):
+        city = self.cleaned_data.get('city')
+        if not city == None:
+            length = len(city)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return city
+
+    def clean_state(self):
+        state = self.cleaned_data.get('state')
+        if not state == None:
+            length = len(state)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return state
+
+    def clean_country(self):
+        country = self.cleaned_data.get('country')
+        if not country == None:
+            length = len(country)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return country
 
     def clean_about(self):
         about = self.cleaned_data.get('about')

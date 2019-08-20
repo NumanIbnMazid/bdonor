@@ -664,7 +664,7 @@ function typeFunction() {
     quantity_input.attr("required", false);
     quantity_group.addClass("hidden");
     quantity_input.val("");
-    blood_group_input.val("");
+    // blood_group_input.val("");
     tissue_name_input.val("");
     organ_name_input.val("");
     if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
@@ -708,9 +708,7 @@ function typeFunction() {
     $("#blood_warning_simple").addClass("hidden");
     quantity_input.val(1);
     tissue_name_input.val("");
-    // blood_group_input.val("");
     blood_bag_input.val("");
-    blood_group_input.val("");
     $("#blood_group_priority").html("(required)");
     $("#blood_group_priority").addClass("text-info");
     blood_group_input.attr("required", true);
@@ -748,7 +746,6 @@ function typeFunction() {
     $("#blood_warning_simple").addClass("hidden");
     quantity_input.val("");
     organ_name_input.val("");
-    blood_group_input.val("");
     // blood_group_input.val("");
     blood_bag_input.val("");
     hospital_input.val("");
@@ -1705,16 +1702,16 @@ $(document).ready(function () {
   //   basic_editing.removeClass("hidden");
   // }
 
-  $("#offer_create_form input").each(function () {
+  $("form input, form select, form textarea").each(function () {
     var $this = $(this);
     var id = $this.attr("id");
     if ($this.val() != "") {
       $("#" + id + "-group").removeClass("hidden");
-      if ($this.hasClass("special-input")) {
-        special_input_group.removeClass("hidden");
-        advanced.addClass("hidden");
-        hide_advanced.removeClass("hidden");
-      }
+      // if ($this.hasClass("special-input")) {
+      //   special_input_group.removeClass("hidden");
+      //   advanced.addClass("hidden");
+      //   hide_advanced.removeClass("hidden");
+      // }
     }
   });
   $.each(form_error, function () {
@@ -1756,6 +1753,431 @@ $(document).ready(function () {
 //   var test = $this.intlTelInput("getSelectedCountryData").dialCode;
 //   console.log(test);
 // });
+
+$(document).ready(function () {
+  // console.log(type_input.val());
+  if (type_input.val() == 0) {
+    if ((page_title.val() != "Create donation offer") && page_title.val() != "Update donation offer") {
+      var o = new Option("Any Blood Group", "Any Blood Group");
+      /// jquerify the DOM object 'o' so we can use the html method
+      $(o).html("Any Blood Group");
+      $("#donation_blood_group_input").append(o);
+    } else {
+      $("#donation_blood_group_input option[value='Any Blood Group']").each(function () {
+        $(this).remove();
+      });
+    }
+    tissue_name_group.addClass("hidden");
+    organ_name_group.addClass("hidden");
+    blood_group_group.removeClass("hidden");
+    blood_bag_group.removeClass("hidden");
+    hospital_group.removeClass("hidden");
+    // $("#blood_warning").removeClass("hidden");
+    $("#blood_accordian").removeClass("hidden");
+    $("#organ_accordian").addClass("hidden");
+    $("#blood_group_priority").html("(required)");
+    $("#blood_group_priority").addClass("text-info");
+    blood_group_input.attr("required", true);
+    $("#blood_bag_priority").html("(required)");
+    $("#blood_bag_priority").addClass("text-info");
+    if ((page_title.val() != "Create donation offer") || page_title.val() != "Update donation offer") {
+      blood_bag_input.attr("required", true);
+    }
+    organ_name_input.attr("required", false);
+    tissue_name_input.attr("required", false);
+    quantity_input.attr("required", false);
+    quantity_group.addClass("hidden");
+    quantity_input.val("");
+    // blood_group_input.val("");
+    tissue_name_input.val("");
+    organ_name_input.val("");
+    if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+      blood_bag_input.prop('disabled', true);
+      // blood_bag_group.addClass("hidden");
+      blood_bag_input.val(1);
+    }
+    $("#donate_type").val(0);
+    $("#contact2_priority").html("(optional)");
+    $("#contact2_priority").addClass("text-muted");
+    contact2_input.attr("required", false);
+    // console.log(contact2_input.prop('required'));
+    contact2_group.addClass('hidden');
+    add_second_contact.removeClass("hidden");
+    $("#contact2_extra_info").html("");
+    $("#organ_name_extra_info").html("");
+    $("#contact2InfoModalBtn").addClass("hidden");
+  } else if (type_input.val() == 1) {
+    $("#donation_blood_group_input option[value='Any Blood Group']").each(function () {
+      $(this).remove();
+    });
+    tissue_name_group.addClass("hidden");
+    organ_name_group.removeClass("hidden");
+    hospital_group.removeClass("hidden");
+    $("#blood_accordian").addClass("hidden");
+    $("#organ_accordian").removeClass("hidden");
+    $("#blood_warning").addClass("hidden");
+    $("#organ_name_priority").html("(required)");
+    $("#organ_name_priority").addClass("text-info");
+    // blood_group_input.attr("required", false);
+    blood_bag_input.attr("required", false);
+    organ_name_input.attr("required", true);
+    tissue_name_input.attr("required", false);
+    // blood_group_group.addClass("hidden");
+    blood_bag_group.addClass("hidden");
+    $("#quantity_priority").html("(required)");
+    $("#quantity_priority").addClass("text-info");
+    quantity_input.attr("required", true);
+    quantity_group.removeClass("hidden");
+    $("#blood_warning_simple").addClass("hidden");
+    quantity_input.val(1);
+    tissue_name_input.val("");
+    // blood_group_input.val("");
+    blood_bag_input.val("");
+    // blood_group_input.val("");
+    $("#blood_group_priority").html("(required)");
+    $("#blood_group_priority").addClass("text-info");
+    blood_group_input.attr("required", true);
+    blood_group_group.removeClass("hidden");
+    $("#donate_type").val(0);
+    $("#contact2_priority").html("(optional)");
+    $("#contact2_priority").addClass("text-muted");
+    contact2_input.attr("required", false);
+    contact2_group.addClass('hidden');
+    add_second_contact.removeClass("hidden");
+    $("#contact2_extra_info").html("");
+    $("#organ_name_extra_info").html("");
+    $("#contact2InfoModalBtn").addClass("hidden");
+  } else if (type_input.val() == 2) {
+    $("#donation_blood_group_input option[value='Any Blood Group']").each(function () {
+      $(this).remove();
+    });
+    tissue_name_group.removeClass("hidden");
+    $("#tissue_name_priority").html("(required)");
+    $("#tissue_name_priority").addClass("text-info");
+    // blood_group_input.attr("required", false);
+    blood_bag_input.attr("required", false);
+    organ_name_input.attr("required", false);
+    tissue_name_input.attr("required", true);
+    organ_name_group.addClass("hidden");
+    // blood_group_group.addClass("hidden");
+    blood_bag_group.addClass("hidden");
+    hospital_group.addClass("hidden");
+    $("#blood_accordian").addClass("hidden");
+    $("#organ_accordian").removeClass("hidden");
+    $("#blood_warning").addClass("hidden");
+    quantity_input.attr("required", false);
+    quantity_group.addClass("hidden");
+    $("#blood_warning_simple").addClass("hidden");
+    quantity_input.val("");
+    organ_name_input.val("");
+    // blood_group_input.val("");
+    // blood_group_input.val("");
+    blood_bag_input.val("");
+    hospital_input.val("");
+    $("#blood_group_priority").html("(required)");
+    $("#blood_group_priority").addClass("text-info");
+    blood_group_input.attr("required", true);
+    blood_group_group.removeClass("hidden");
+    $("#donate_type").val(0);
+    $("#contact2_priority").html("(optional)");
+    $("#contact2_priority").addClass("text-muted");
+    contact2_input.attr("required", false);
+    contact2_group.addClass('hidden');
+    add_second_contact.removeClass("hidden");
+    $("#contact2_extra_info").html("");
+    $("#organ_name_extra_info").html("");
+    $("#contact2InfoModalBtn").addClass("hidden");
+  } else {
+    tissue_name_group.addClass("hidden");
+    organ_name_group.addClass("hidden");
+    blood_group_group.addClass("hidden");
+    blood_bag_group.addClass("hidden");
+    hospital_group.addClass("hidden");
+    $("#blood_accordian").addClass("hidden");
+    $("#organ_accordian").addClass("hidden");
+    $("#blood_warning").addClass("hidden");
+    quantity_group.addClass("hidden");
+    $("#blood_warning_simple").removeClass("hidden");
+    quantity_input.val("");
+    tissue_name_input.val("");
+    organ_name_input.val("");
+    blood_group_input.val("");
+    blood_bag_input.val("");
+    hospital_input.val("");
+    $("#donate_type").val(0);
+    $("#contact2_priority").html("(optional)");
+    $("#contact2_priority").addClass("text-muted");
+    contact2_input.attr("required", false);
+    contact2_group.addClass('hidden');
+    add_second_contact.removeClass("hidden");
+    $("#contact2_extra_info").html("");
+    $("#organ_name_extra_info").html("");
+    $("#contact2InfoModalBtn").addClass("hidden");
+  }
+
+  if (organ_name_input.val() == "Heart") {
+    quantity_input.val(1);
+    quantity_input.attr("disabled", true);
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#organ_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (organ_name_input.val() == "Liver") {
+    quantity_input.val(1);
+    quantity_input.attr("disabled", true);
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#organ_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (organ_name_input.val() == "Pancreas") {
+    quantity_input.val(1);
+    quantity_input.attr("disabled", true);
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#organ_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (organ_name_input.val() == "Intestines") {
+    quantity_input.val(1);
+    quantity_input.attr("disabled", true);
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#organ_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  }
+  // Living Donations
+  else if (organ_name_input.val() == "Lungs") {
+    quantity_input.val(1);
+    quantity_input.attr("disabled", false);
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(0);
+    $("#contact2_priority").html("(optional)");
+    $("#contact2_priority").addClass("text-muted");
+    contact2_input.attr("required", false);
+    contact2_group.addClass('hidden');
+    add_second_contact.removeClass("hidden");
+    $("#contact2_extra_info").html("");
+    $("#organ_name_extra_info").html("");
+    $("#contact2InfoModalBtn").addClass("hidden");
+    // }
+  } else if (organ_name_input.val() == "Kidney") {
+    quantity_input.val(1);
+    quantity_input.attr("disabled", false);
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(0);
+    $("#contact2_priority").html("(optional)");
+    $("#contact2_priority").addClass("text-muted");
+    contact2_input.attr("required", false);
+    contact2_group.addClass('hidden');
+    add_second_contact.removeClass("hidden");
+    $("#contact2_extra_info").html("");
+    $("#organ_name_extra_info").html("");
+    $("#contact2InfoModalBtn").addClass("hidden");
+    // }
+  } else {
+    quantity_input.attr("disabled", false);
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#contact2_priority").html("(optional)");
+    $("#contact2_priority").addClass("text-muted");
+    contact2_input.attr("required", false);
+    contact2_group.addClass('hidden');
+    add_second_contact.removeClass("hidden");
+    $("#contact2_extra_info").html("");
+    $("#organ_name_extra_info").html("");
+    $("#contact2InfoModalBtn").addClass("hidden");
+    // quantity_input.inputFilter(function (value) {
+    //   return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 2);
+    // });
+    // }
+  }
+
+  if (tissue_name_input.val() == "Corneas") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Heart Valves") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Sclera") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Bones") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Ligaments") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Tendons") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Fascia") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Veins") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Nerves") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  } else if (tissue_name_input.val() == "Skin") {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#donate_type").val(1);
+    $("#contact2_priority").html("(required)");
+    $("#contact2_priority").addClass("text-info");
+    contact2_input.attr("required", true);
+    contact2_group.removeClass('hidden');
+    add_second_contact.addClass("hidden");
+    hide_contact2.addClass("hidden");
+    $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
+    $("#tissue_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
+    $("#contact2InfoModalBtn").removeClass("hidden");
+    // }
+  }
+  // Living Donations
+  // else if (tissue_name_input.val() == "Skin") {
+  //   if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+  //     $("#donate_type").val(0);
+  //     $("#contact2_priority").html("(optional)");
+  //     $("#contact2_priority").addClass("text-muted");
+  //     contact2_input.attr("required", false);
+  //     contact2_group.addClass('hidden');
+  //     add_second_contact.removeClass("hidden");
+  //     $("#contact2_extra_info").html("");
+  //     $("#tissue_name_extra_info").html("");
+  //   }
+  // }
+  else {
+    // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
+    $("#contact2_priority").html("(optional)");
+    $("#contact2_priority").addClass("text-muted");
+    contact2_input.attr("required", false);
+    contact2_group.addClass('hidden');
+    add_second_contact.removeClass("hidden");
+    $("#contact2_extra_info").html("");
+    $("#tissue_name_extra_info").html("");
+    $("#contact2InfoModalBtn").addClass("hidden");
+  }
+});
 
 // console.log(page_title.val());
 $(document).ready(function () {

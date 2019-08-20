@@ -1,0 +1,219 @@
+{% load static %}
+
+{% block extra_css %}
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+<div class="card">
+    <div class="card-header text-center">
+        <div class="card-title">Storage</div>
+    </div>
+    <div class="card-body pb-0">
+        <div class="d-flex">
+            <div class="avatar">
+                <img src="{% static 'images/raw/blood.png' %}" alt="blood" class="avatar-img rounded-circle">
+            </div>
+            <div class="flex-1 pt-1 ml-2">
+                <h6 class="fw-bold mb-1">Blood</h6>
+                <div class="text-center">
+                    <small class="text-muted">
+                        <a class="btn btn-xs btn-default text-deco-none text-white" data-toggle="collapse"
+                            href="#bloodCollapse" role="button" aria-expanded="false" aria-controls="bloodCollapse">
+                            View details
+                        </a>
+                    </small>
+                </div>
+                <div class="collapse" id="bloodCollapse">
+                    <div class="card card-body">
+                        <div class="table-responsive">
+                            <table id="bloodStorageDataTable"
+                                class="cell-border hover table-bordered table-hover text-center" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Blood Group</th>
+                                        <th>Bag Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for blood in blood_list %}
+                                    <tr class="text-dark">
+                                        <td>
+                                            <b>
+                                                {{ blood.blood_group }}
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{blood.total_count}}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <div class="alert alert-warning text-dark font-bold">
+                                                No item found!
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex ml-auto align-items-center">
+                <h3 class="text-info fw-bold">
+                    {% if not blood_count == None %}
+                    {{blood_count}}
+                    {% else %}
+                    0
+                    {% endif %}
+                </h3>
+            </div>
+        </div>
+        <div class="separator-dashed"></div>
+        <div class="d-flex">
+            <div class="avatar">
+                <img src="{% static 'images/raw/organ.png' %}" alt="organ" class="avatar-img rounded-circle">
+            </div>
+            <div class="flex-1 pt-1 ml-2">
+                <h6 class="fw-bold mb-1">Organ</h6>
+                <div class="text-center">
+                    <small class="text-muted">
+                        <a class="btn btn-xs btn-default text-deco-none text-white" data-toggle="collapse"
+                            href="#organCollapse" role="button" aria-expanded="false" aria-controls="organCollapse">
+                            View details
+                        </a>
+                    </small>
+                </div>
+                <div class="collapse" id="organCollapse">
+                    <div class="card card-body">
+                        <div class="table-responsive">
+                            <table id="organStorageDataTable"
+                                class="cell-border hover table-bordered table-hover text-center" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Organ Name</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for organ in organ_list %}
+                                    <tr class="text-dark">
+                                        <td>
+                                            <b>
+                                                {{ organ.organ_name }}
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{organ.total_count}}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <div class="alert alert-warning text-dark font-bold">
+                                                No item found!
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex ml-auto align-items-center">
+                <h3 class="text-info fw-bold">
+                    {% if not organ_count == None %}
+                    {{organ_count}}
+                    {% else %}
+                    0
+                    {% endif %}
+                </h3>
+            </div>
+        </div>
+        <div class="separator-dashed"></div>
+        <div class="d-flex">
+            <div class="avatar">
+                <img src="{% static 'images/raw/tissue.png' %}" alt="tissue" class="avatar-img rounded-circle">
+            </div>
+            <div class="flex-1 pt-1 ml-2">
+                <h6 class="fw-bold mb-1">Tissue</h6>
+                <div class="text-center">
+                    <small class="text-muted">
+                        <a class="btn btn-xs btn-default text-deco-none text-white" data-toggle="collapse"
+                            href="#tissueCollapse" role="button" aria-expanded="false" aria-controls="tissueCollapse">
+                            View details
+                        </a>
+                    </small>
+                </div>
+                <div class="collapse" id="tissueCollapse">
+                    <div class="card card-body">
+                        <div class="table-responsive">
+                            <table id="tissueStorageDataTable"
+                                class="cell-border hover table-bordered table-hover text-center" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Tissue Name</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tissue in tissue_list %}
+                                    <tr class="text-dark">
+                                        <td>
+                                            <b>
+                                                {{ tissue.tissue_name }}
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{tissue.total_count}}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <div class="alert alert-warning text-dark font-bold">
+                                                No item found!
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex ml-auto align-items-center">
+                <h3 class="text-info fw-bold">
+                    {% if not tissue_count == None %}
+                    {{tissue_count}}
+                    {% else %}
+                    0
+                    {% endif %}
+                </h3>
+            </div>
+        </div>
+        <div class="separator-dashed"></div>
+    </div>
+</div>
+
+{% block extra_js %}
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#bloodStorageDataTable').DataTable();
+    });
+    $(document).ready(function () {
+        $('#organStorageDataTable').DataTable();
+    });
+    $(document).ready(function () {
+        $('#tissueStorageDataTable').DataTable();
+    });
+</script>
+{% endblock %}

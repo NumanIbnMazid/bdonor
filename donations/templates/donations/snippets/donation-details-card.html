@@ -248,6 +248,39 @@
             </h5>
             {% endif %}
 
+            {% if object.city %}
+            <h5>
+                <span class="text-secondary">
+                    City:
+                </span>
+                <span class="ml-2">
+                    {{ object.city }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.state %}
+            <h5>
+                <span class="text-secondary">
+                    State/Province:
+                </span>
+                <span class="ml-2">
+                    {{ object.state }}
+                </span>
+            </h5>
+            {% endif %}
+
+            {% if object.country %}
+            <h5>
+                <span class="text-secondary">
+                    Country:
+                </span>
+                <span class="ml-2">
+                    {{ object.country.name }}
+                </span>
+            </h5>
+            {% endif %}
+
             {% if object.hospital %}
             <h5>
                 <span class="text-secondary">

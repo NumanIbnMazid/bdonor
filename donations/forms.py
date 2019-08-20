@@ -155,16 +155,38 @@ class DonationForm(forms.ModelForm):
                 self.initial['preferred_date_to'] = self.object.preferred_date_to.strftime(
                     "%Y-%m-%d %H:%M")
 
-        self.fields[
-            'location'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
+        self.fields['location'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
         self.fields['location'].widget.attrs.update({
             'id': 'donation_location_input',
             'placeholder': 'Type preferred location...',
             'maxlength': 180,
             'pattern': "^[_A-z0-9 +-.,#/]{1,}$",
         })
-        self.fields[
-            'hospital'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
+        self.fields['city'].help_text = 'Enter your City.'
+        self.fields['city'].widget.attrs.update({
+            'id': 'donation_city_input',
+            'placeholder': 'Enter city...',
+            'maxlength': 25,
+        })
+        if user_profile_filter.exists() and not user_profile_filter.first().city == "" and self.object == None:
+            self.initial['city'] = user_profile_filter.first().city
+        self.fields['state'].help_text = 'Enter your State.'
+        self.fields['state'].widget.attrs.update({
+            'id': 'donation_state_input',
+            'placeholder': 'Enter state...',
+            'maxlength': 25,
+        })
+        if user_profile_filter.exists() and not user_profile_filter.first().state == "" and self.object == None:
+            self.initial['state'] = user_profile_filter.first().state
+        self.fields['country'].help_text = 'Select your Country.'
+        self.fields['country'].widget.attrs.update({
+            'id': 'donation_country_input',
+            'placeholder': 'Select country...',
+            'maxlength': 25,
+        })
+        if user_profile_filter.exists() and not user_profile_filter.first().country == "" and self.object == None:
+            self.initial['country'] = user_profile_filter.first().country
+        self.fields['hospital'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
         self.fields['hospital'].widget.attrs.update({
             'id': 'donation_hospital_input',
             'placeholder': 'Type preferred hospital...',
@@ -184,7 +206,7 @@ class DonationForm(forms.ModelForm):
     class Meta:
         model = Donation
         fields = ['type', 'organ_name', 'tissue_name', 'quantity', 'blood_group', 'blood_bag', 'contact', 'contact2',
-                  'contact3', 'location', 'hospital', 'details', 'details_fake',
+                  'contact3', 'location', 'city', 'state', 'country', 'hospital', 'details', 'details_fake',
                   'preferred_date', 'preferred_date_from', 'preferred_date_to', 'priority', 'publication_status']
         exclude = ['user', 'slug', 'category',
                    'donate_type', 'is_verified', 'created_at', 'updated_at']
@@ -343,6 +365,33 @@ class DonationForm(forms.ModelForm):
                 raise forms.ValidationError(
                     f"Maximum 180 characters allowed. [currently using: {length}]")
         return location
+
+    def clean_city(self):
+        city = self.cleaned_data.get('city')
+        if not city == None:
+            length = len(city)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return city
+
+    def clean_state(self):
+        state = self.cleaned_data.get('state')
+        if not state == None:
+            length = len(state)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return state
+
+    def clean_country(self):
+        country = self.cleaned_data.get('country')
+        if not country == None:
+            length = len(country)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return country
 
     def clean_hospital(self):
         hospital = self.cleaned_data.get('hospital')

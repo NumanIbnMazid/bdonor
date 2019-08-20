@@ -145,6 +145,24 @@ My Profile
                                         <td class="text-muted">{{ object.address }}</td>
                                     </tr>
                                     {% endif %}
+                                    {% if object.city %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>City</td>
+                                        <td class="text-muted">{{ object.city }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.state %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>State</td>
+                                        <td class="text-muted">{{ object.state }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if object.country %}
+                                    <tr>
+                                        <td class="text-muted" width='23%'>Country</td>
+                                        <td class="text-muted">{{ object.country.name }}</td>
+                                    </tr>
+                                    {% endif %}
                                     {% if object.facebook %}
                                     <tr>
                                         <td>

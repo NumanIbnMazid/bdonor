@@ -31,7 +31,7 @@
     {% if not object == None %}
     {% url 'donationBank:bank_details' slug=object.slug as bank_details_url %}
     <a href="{{ bank_details_url }}" class="nav-link {% if request.path == bank_details_url %}active{% endif %}">
-        About
+        Overview
     </a>
     {% endif %}
 </div>

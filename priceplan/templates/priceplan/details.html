@@ -22,7 +22,9 @@
                     <div class="value">
                         <span class="">{{ object.currency }}</span>
                         <span class="amount">{{ object.amount }}</span>
-                        <span class="month">/{{ object.expiration_cycle }} Month</span>
+                        <span class="month">
+                            / {{ object.expiration_cycle }} Month{{ object.expiration_cycle|pluralize:"s" }}
+                        </span>
                     </div>
                 </div>
                 <ul class="pricing-content">
