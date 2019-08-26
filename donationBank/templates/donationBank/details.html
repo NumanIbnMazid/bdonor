@@ -21,6 +21,21 @@ Donation Bank- Overview
                 <div class="table-responsive">
                     <table class="table table-bordered text-muted">
                         <tbody>
+                            {% if request.user.user_bank_member.bank.institute == object.institute %}
+                                {% if not object.bank_setting.privacy == None %}
+                                <tr>
+                                    <td class="font-bold">Privacy</td>
+                                    <td class="font-bold">{{ object.bank_setting.get_privacy_status }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if not object.bank_setting.member_request == None %}
+                                <tr>
+                                    <td class="font-bold">Member Request</td>
+                                    <td class="font-bold">{{ object.bank_setting.get_member_request_status }}</td>
+                                </tr>
+                                {% endif %}
+                            {% endif %}
+
                             {% if object.address %}
                             <tr>
                                 <td>Address</td>

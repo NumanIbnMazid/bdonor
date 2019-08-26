@@ -171,16 +171,18 @@ class DonationBankDetailView(DetailView):
             donation_type=2, bank=self.object).is_not_expired().is_pending().count()
         return context
 
-    # def user_passes_test(self, request):
-    #     if request.user.is_authenticated:
-    #         return True
-    #     return False
+    def user_passes_test(self, request):
+        if request.user.is_authenticated:
+            self.object = self.get_object()
+            if self.object.bank_setting.privacy == 0:
+                return True
+        return False
 
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not self.user_passes_test(request):
-    #         block_suspicious_user(request)
-    #         return HttpResponseRedirect(reverse('home'))
-    #     return super(DonationBankDetailView, self).dispatch(request, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(DonationBankDetailView, self).dispatch(request, *args, **kwargs)
 
 
 class DonationBankUpdateView(UpdateView):
@@ -255,7 +257,7 @@ class DonationBankListView(ListView):
     template_name = 'donationBank/list.html'
 
     def get_queryset(self):
-        qs = DonationBank.objects.all().dynamic_order()
+        qs = DonationBank.objects.all().is_public().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -1178,7 +1180,7 @@ class CampaignPublicListView(ListView):
     context_object_name = 'campaign_list'
 
     def get_queryset(self):
-        qs = Campaign.objects.all()
+        qs = Campaign.objects.all().bank_is_public()
         if qs.exists():
             return qs
         return None
@@ -1236,13 +1238,18 @@ class CampaignDetailView(DetailView):
         return context
 
     def user_passes_test(self, request):
-        # self.object = self.get_object()
+        self.object = self.get_object()
         # qs = DonationBank.objects.filter(
         #     slug=self.object.bank.slug, bank_member__user=request.user
         # )
         # if qs.exists() and self.request.user.profile.account_type == 1:
         if self.request.user.is_authenticated:
-            return True
+            if self.object.bank.institute == request.user.user_bank_member.bank.institute:
+                return True
+            elif not self.object.bank.institute == request.user.user_bank_member.bank.institute and self.object.bank.bank_setting.privacy == 0:
+                return True
+            else:
+                return False
         return False
 
     def dispatch(self, request, *args, **kwargs):

@@ -18,7 +18,7 @@ class HomeView(TemplateView):
         else:
             base_template = 'base.html'
         # Ends Base Template Context
-        campaigns = Campaign.objects.all().dynamic_order()
+        campaigns = Campaign.objects.all().bank_is_public().dynamic_order()
         context = {
             'base_template': base_template,
             'campaigns': campaigns,

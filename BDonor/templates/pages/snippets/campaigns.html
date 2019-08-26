@@ -34,15 +34,6 @@
                                     End Date:
                                     <span class="text-secondary">{{ campaign.end_date }}</span>
                                 </p>
-                                {% if request.user.user_bank_member.bank.institute == campaign.bank.institute %}
-                                <p class="date text-muted">
-                                    Volunteer Request:
-                                    <span
-                                        class="{% if campaign.volunteer_request == 0 %}text-success{% else %}text-danger{% endif %}">
-                                        {{ campaign.get_volunteer_request }}
-                                    </span>
-                                </p>
-                                {% endif %}
                                 <div class="text-center">
                                     <a href="{% url 'donation_bank:bank_campaign_details' slug=campaign.slug %}"
                                         class="btn btn-sm btn-secondary text-deco-none m-2">

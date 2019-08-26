@@ -149,10 +149,14 @@ class DonationBankSettingForm(forms.ModelForm):
         self.fields['member_request'].widget.attrs.update({
             'id': 'bankSetting_member_request_input',
         })
+        self.fields['privacy'].help_text = "Changing privacy to private restricts users to find your bank in bank list."
+        self.fields['privacy'].widget.attrs.update({
+            'id': 'bankSetting_privacy_input',
+        })
 
     class Meta:
         model = DonationBankSetting
-        fields = ['member_request']
+        fields = ['member_request', 'privacy']
         exclude = ['bank', 'created_at', 'updated_at']
 
 

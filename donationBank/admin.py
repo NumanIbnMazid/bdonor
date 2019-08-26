@@ -13,7 +13,7 @@ class DonationBankAdmin(admin.ModelAdmin):
 
 
 class DonationBankSettingAdmin(admin.ModelAdmin):
-    list_display = ['bank', 'member_request', 'created_at', 'updated_at']
+    list_display = ['bank', 'member_request', 'privacy', 'created_at', 'updated_at']
 
     class Meta:
         model = DonationBankSetting

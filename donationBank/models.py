@@ -50,6 +50,14 @@ class DonationBankQuerySet(models.query.QuerySet):
     def banks_by_year(self, year_search):
         return self.filter(created_at__year=year_search)
 
+    # Foreign
+
+    def is_public(self):
+        return self.filter(bank_setting__privacy=0)
+    
+    def is_private(self):
+        return self.filter(bank_setting__privacy=1)
+
     def search(self, query):
         lookups = (Q(institute__icontains=query) |
                    Q(address__icontains=query) |
@@ -132,10 +140,18 @@ class DonationBankSetting(models.Model):
         (ALLOW, 'Allow'),
         (NOT_ALLOW, 'Not Allow')
     )
+    PUBLIC = 0
+    PRIVATE = 1
+    BANK_PRIVACY_CHOICES = (
+        (PUBLIC, 'Public'),
+        (PRIVATE, 'Private')
+    )
     bank = models.OneToOneField(
         DonationBank, on_delete=models.CASCADE, related_name='bank_setting', unique=True, verbose_name='bank')
     member_request = models.PositiveSmallIntegerField(
         choices=MEMBER_REQUEST_STATUS_CHOICES, default=0, verbose_name='member request')
+    privacy = models.PositiveSmallIntegerField(
+        choices=BANK_PRIVACY_CHOICES, default=0, verbose_name='privacy')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
@@ -147,6 +163,22 @@ class DonationBankSetting(models.Model):
 
     def __str__(self):
         return self.bank.institute
+
+    def get_privacy_status(self):
+        status = "Undefined"
+        if self.privacy == 0:
+            status = "Public"
+        if self.privacy == 1:
+            status = "Private"
+        return status
+    
+    def get_member_request_status(self):
+        status = "Undefined"
+        if self.member_request == 0:
+            status = "Allowed"
+        if self.member_request == 1:
+            status = "Not Allowed"
+        return status
 
 
 class BankMember(models.Model):
@@ -265,6 +297,13 @@ class CampaignQuerySet(models.query.QuerySet):
 
     def campaigns_by_year(self, year_search):
         return self.filter(created_at__year=year_search)
+
+    # Foreign
+    def bank_is_public(self):
+        return self.filter(bank__bank_setting__privacy=0)
+    
+    def bank_is_private(self):
+        return self.filter(bank__bank_setting__privacy=1)
 
     def search(self, query):
         lookups = (Q(bank__institute__icontains=query) |
