@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 
 from el_pagination.decorators import page_template
 from chat.models import Thread
+from donationBank.models import Campaign
 from django.db.models import Q
 
 
@@ -17,8 +18,10 @@ class HomeView(TemplateView):
         else:
             base_template = 'base.html'
         # Ends Base Template Context
+        campaigns = Campaign.objects.all().dynamic_order()
         context = {
-            'base_template': base_template
+            'base_template': base_template,
+            'campaigns': campaigns,
         }
         if user.is_superuser:
             return render(request, "admin-site/pages/home.html", context=context)

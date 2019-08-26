@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
 {% endblock %}
 
-<input type="hidden" id="total_records_count" value="{{object_list.count}}">
+<input type="hidden" id="total_records_count" value="{{object_list|length}}">
 <div class="table-responsive">
     <table id="donationDataTable" class="cell-border hover table-bordered table-hover" style="width:100%">
         <thead>

@@ -1,0 +1,64 @@
+{% load static %}
+
+<div class="col-md-12">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <!-- Slide-->
+            {% for campaign in campaigns %}
+            <div class="swiper-slide m-4">
+                <div class="card card-post card-round">
+                    {% if not campaign.image == "" %}
+                    <img class="card-img-top" src="{{ campaign.image.url }}" alt="{{campaign.title}}"
+                        style="height:150px;width:100%;">
+                    {% else %}
+                    <img class="card-img-top" src="{% static 'images/raw/campaign.png' %}" alt="{{campaign.title}}"
+                        style="height:150px;width:100%;">
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="info-post ml-2">
+                                <h3 class="card-title">
+                                    {{ campaign.title }}
+                                </h3>
+                                <h5>
+                                    by 
+                                    <a href="{% url 'donation_bank:bank_details' slug=campaign.bank.slug %}" class="font-italic text-secondary">
+                                        {{campaign.bank.institute|truncatechars_html:24}}
+                                    </a>
+                                </h5>
+                                <p class="date text-muted">
+                                    Held Date:
+                                    <span class="text-secondary">{{ campaign.held_date }}</span>
+                                </p>
+                                <p class="date text-muted">
+                                    End Date:
+                                    <span class="text-secondary">{{ campaign.end_date }}</span>
+                                </p>
+                                {% if request.user.user_bank_member.bank.institute == campaign.bank.institute %}
+                                <p class="date text-muted">
+                                    Volunteer Request:
+                                    <span
+                                        class="{% if campaign.volunteer_request == 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ campaign.get_volunteer_request }}
+                                    </span>
+                                </p>
+                                {% endif %}
+                                <div class="text-center">
+                                    <a href="{% url 'donation_bank:bank_campaign_details' slug=campaign.slug %}"
+                                        class="btn btn-sm btn-secondary text-deco-none m-2">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="alert alert-warning">
+                No item found!
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

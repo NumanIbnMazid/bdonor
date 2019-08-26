@@ -3,7 +3,7 @@ from django_countries.fields import CountryField
 from django.conf import settings
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from accounts.utils import unique_slug_generator, time_str_mix_slug
+from accounts.utils import unique_slug_generator, time_str_mix_slug, upload_campaign_image_path
 from django.template.defaultfilters import slugify
 from middlewares.middlewares import RequestMiddleware
 from django.db.models import Q
@@ -11,6 +11,90 @@ import datetime
 from django.urls import reverse
 from django.http import Http404
 from django.db.models import F, Sum
+
+
+class DonationBankQuerySet(models.query.QuerySet):
+    def banks_by_user(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        qs = self.filter(bank_member__user=self.request.user)
+        if qs.exists():
+            return qs
+        return None
+
+    def dynamic_order(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        if request.user.is_authenticated and not request.user.profile.country == None:
+            from django_countries import countries
+            user_country = request.user.profile.country.name
+            countries_dict = dict(countries)
+            order_field = list(countries_dict.values())
+            order_field.remove(user_country)
+            order_field.insert(0, user_country)
+            # print(order_field)
+            # pre_qs = self.filter(country=order_field)
+            qs = sorted(self.filter().order_by('-created_at'),
+                        key=lambda p: order_field.index(p.country.name))
+        else:
+            qs = self.filter().order_by('-created_at')
+        return qs
+
+    def latest(self):
+        return self.filter().order_by('-created_at')
+
+    def banks_current_year(self):
+        today = datetime.datetime.now()
+        return self.filter(created_at__year=today.year)
+
+    def banks_by_year(self, year_search):
+        return self.filter(created_at__year=year_search)
+
+    def search(self, query):
+        lookups = (Q(institute__icontains=query) |
+                   Q(address__icontains=query) |
+                   Q(city__icontains=query) |
+                   Q(state__icontains=query) |
+                   Q(country__icontains=query) |
+                   Q(contact__icontains=query) |
+                   Q(email__icontains=query) |
+                   Q(description__icontains=query))
+        return self.filter(lookups).distinct()
+
+
+class DonationBankManager(models.Manager):
+    def get_queryset(self):
+        return DonationBankQuerySet(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset()
+
+    def get_by_id(self, id):
+        try:
+            instance = self.get_queryset().get(id=id)
+        except DonationBank.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except DonationBank.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(id=id)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def get_by_slug(self, slug):
+        try:
+            instance = self.get_queryset().get(slug=slug)
+        except DonationBank.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except DonationBank.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(slug=slug)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def search(self, query):
+        return self.get_queryset().search(query)
 
 
 class DonationBank(models.Model):
@@ -29,6 +113,8 @@ class DonationBank(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    objects = DonationBankManager()
 
     class Meta:
         verbose_name = ("DonationBank")
@@ -117,6 +203,189 @@ class MemberRequest(models.Model):
         return self.user.username
 
 
+class CampaignQuerySet(models.query.QuerySet):
+    def campaigns_by_user_bank(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        qs = self.filter(bank__bank_member__user=self.request.user)
+        if qs.exists():
+            return qs
+        return None
+
+    def is_not_expired(self):
+        qs = self.filter(Q(held_date__gte=datetime.datetime.now())
+                         | Q(end_date__gte=datetime.datetime.now()))
+        return qs
+
+    def is_expired(self):
+        qs = self.filter(Q(held_date__lt=datetime.datetime.now())
+                         | Q(end_date__lt=datetime.datetime.now()))
+        return qs
+
+    def held_date_not_expired(self):
+        qs = self.filter(held_date__gte=datetime.datetime.now())
+        return qs
+
+    def held_date_expired(self):
+        qs = self.filter(held_date__lt=datetime.datetime.now())
+        return qs
+
+    def end_date_not_expired(self):
+        qs = self.filter(end_date__gte=datetime.datetime.now())
+        return qs
+
+    def end_date_expired(self):
+        qs = self.filter(end_date__lt=datetime.datetime.now())
+        return qs
+
+    def dynamic_order(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        if request.user.is_authenticated and not request.user.profile.country == None:
+            from django_countries import countries
+            user_country = request.user.profile.country.name
+            countries_dict = dict(countries)
+            order_field = list(countries_dict.values())
+            order_field.remove(user_country)
+            order_field.insert(0, user_country)
+            # print(order_field)
+            # pre_qs = self.filter(country=order_field)
+            qs = sorted(self.filter().order_by('-created_at'),
+                        key=lambda p: order_field.index(p.country.name))
+        else:
+            qs = self.filter().order_by('-created_at')
+        return qs
+
+    def latest(self):
+        return self.filter().order_by('-created_at')
+
+    def campaigns_current_year(self):
+        today = datetime.datetime.now()
+        return self.filter(created_at__year=today.year)
+
+    def campaigns_by_year(self, year_search):
+        return self.filter(created_at__year=year_search)
+
+    def search(self, query):
+        lookups = (Q(bank__institute__icontains=query) |
+                   Q(bank__address__icontains=query) |
+                   Q(bank__city__icontains=query) |
+                   Q(bank__state__icontains=query) |
+                   Q(bank__country__icontains=query) |
+                   Q(bank__contact__icontains=query) |
+                   Q(bank__email__icontains=query) |
+                   Q(bank__description__icontains=query) |
+                   Q(title__icontains=query) |
+                   Q(held_date__icontains=query) |
+                   Q(end_date__icontains=query) |
+                   Q(contact__icontains=query) |
+                   Q(email__icontains=query) |
+                   Q(address__icontains=query) |
+                   Q(city__icontains=query) |
+                   Q(state__icontains=query) |
+                   Q(country__icontains=query) |
+                   Q(details__icontains=query))
+        return self.filter(lookups).distinct()
+
+
+class CampaignManager(models.Manager):
+    def get_queryset(self):
+        return CampaignQuerySet(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset()
+
+    def get_by_id(self, id):
+        try:
+            instance = self.get_queryset().get(id=id)
+        except Donation.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except Donation.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(id=id)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def get_by_slug(self, slug):
+        try:
+            instance = self.get_queryset().get(slug=slug)
+        except Campaign.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except Campaign.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(slug=slug)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def filter_by_bank_slug(self, slug):
+        try:
+            instance = self.get_queryset().filter(bank__slug=slug)
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def search(self, query):
+        return self.get_queryset().search(query)
+
+
+class Campaign(models.Model):
+    bank = models.ForeignKey(
+        DonationBank, on_delete=models.CASCADE, related_name='bank_campaign', verbose_name='bank'
+    )
+    title = models.CharField(max_length=150, verbose_name='campaign name')
+    slug = models.SlugField(unique=True, verbose_name='slug')
+    held_date = models.DateTimeField(verbose_name='held date')
+    end_date = models.DateTimeField(verbose_name='end date')
+    contact = models.CharField(max_length=20, verbose_name='contact')
+    email = models.EmailField(blank=True, null=True, verbose_name='email')
+    address = models.CharField(max_length=200, verbose_name='address')
+    city = models.CharField(max_length=100, verbose_name='city')
+    state = models.CharField(blank=True, null=True,
+                             max_length=100, verbose_name='state/province')
+    country = CountryField()
+    details = models.TextField(blank=True,
+                               null=True, verbose_name='details/rules-regulations')
+    image = models.ImageField(
+        upload_to=upload_campaign_image_path, null=True, blank=True, verbose_name='image/banner')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='created at')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    objects = CampaignManager()
+
+    class Meta:
+        verbose_name = ("Campaign")
+        verbose_name_plural = ("Campaigns")
+        ordering = ["-updated_at"]
+
+    def __str__(self):
+        return self.title
+
+    def get_held_date_remaining(self):
+        remaining_days = 0
+        if not self.held_date == None:
+            remaining_days = int(
+                (self.held_date - datetime.datetime.now()).days)
+        return remaining_days
+
+    def get_end_date_remaining(self):
+        remaining_days = 0
+        if not self.end_date == None:
+            remaining_days = int(
+                (self.end_date - datetime.datetime.now()).days)
+        return remaining_days
+
+    def get_volunteer_request(self):
+        status = "Undefined"
+        if self.volunteer_request == 0:
+            status = "Allow"
+        if self.volunteer_request == 1:
+            status = "Don't Allow"
+        return status
+
+
 class DonationQuerySet(models.query.QuerySet):
     def blood_type(self):
         return self.filter(type=0)
@@ -142,6 +411,24 @@ class DonationQuerySet(models.query.QuerySet):
     def is_pending(self):
         return self.filter(donation_progress__progress_status=0)
     # /Foreign
+
+    def dynamic_order(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        if request.user.is_authenticated and not request.user.profile.country == None:
+            from django_countries import countries
+            user_country = request.user.profile.country.name
+            countries_dict = dict(countries)
+            order_field = list(countries_dict.values())
+            order_field.remove(user_country)
+            order_field.insert(0, user_country)
+            # print(order_field)
+            # pre_qs = self.filter(country=order_field)
+            qs = sorted(self.filter().order_by('-created_at'),
+                        key=lambda p: order_field.index(p.country.name))
+        else:
+            qs = self.filter().order_by('-created_at')
+        return qs
 
     def latest(self):
         return self.filter().order_by('-created_at')
@@ -182,7 +469,6 @@ class DonationQuerySet(models.query.QuerySet):
                    Q(quantity__icontains=query) |
                    Q(organ_name__icontains=query) |
                    Q(description__icontains=query) |
-                   Q(contact__icontains=query) |
                    Q(collection_date__icontains=query) |
                    Q(expiration_date__icontains=query) |
                    Q(user__user__username__icontains=query) |
@@ -312,7 +598,8 @@ class Donation(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='first name')
     last_name = models.CharField(max_length=50, verbose_name='last name')
     email = models.EmailField(blank=True, null=True, verbose_name='email')
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=10, verbose_name='gender')
+    gender = models.CharField(choices=GENDER_CHOICES,
+                              max_length=10, verbose_name='gender')
     dob = models.DateField(verbose_name='Date of Birth')
     blood_group = models.CharField(
         max_length=10, choices=BLOOD_GROUP_CHOICES, verbose_name='blood group')
@@ -394,7 +681,8 @@ class Donation(models.Model):
     def get_expiration_days(self):
         expired_in = 0
         if not self.expiration_date == None and not self.donation_progress.progress_status == 1:
-            expired_in = int((self.expiration_date - datetime.datetime.now().date()).days)
+            expired_in = int(
+                (self.expiration_date - datetime.datetime.now().date()).days)
         return expired_in
 
     # def get_total_quantity(self):
@@ -454,18 +742,24 @@ class DonationProgress(models.Model):
         choices=DONATION_PROGRESS_CHOICES, default=0, verbose_name='progress status')
     completion_date = models.DateField(
         blank=True, null=True, verbose_name='completion date')
-    first_name = models.CharField(blank=True, null=True, max_length=50, verbose_name='first name')
-    last_name = models.CharField(blank=True, null=True, max_length=50, verbose_name='last name')
+    first_name = models.CharField(
+        blank=True, null=True, max_length=50, verbose_name='first name')
+    last_name = models.CharField(
+        blank=True, null=True, max_length=50, verbose_name='last name')
     gender = models.CharField(choices=GENDER_CHOICES, blank=True,
                               null=True, max_length=10, verbose_name='gender')
     blood_group = models.CharField(
         blank=True, null=True, max_length=10, choices=BLOOD_GROUP_CHOICES, verbose_name='blood group')
     dob = models.DateField(blank=True, null=True, verbose_name='Date of Birth')
-    contact = models.CharField(blank=True, null=True, max_length=20, verbose_name='contact')
+    contact = models.CharField(
+        blank=True, null=True, max_length=20, verbose_name='contact')
     email = models.EmailField(blank=True, null=True, verbose_name='email')
-    address = models.CharField(blank=True, null=True, max_length=250, verbose_name='address')
-    city = models.CharField(blank=True, null=True, max_length=100, verbose_name='city')
-    state = models.CharField(blank=True, null=True, max_length=100, verbose_name='state/province')
+    address = models.CharField(
+        blank=True, null=True, max_length=250, verbose_name='address')
+    city = models.CharField(blank=True, null=True,
+                            max_length=100, verbose_name='city')
+    state = models.CharField(blank=True, null=True,
+                             max_length=100, verbose_name='state/province')
     country = CountryField(blank=True, null=True)
     details = models.TextField(max_length=500, blank=True,
                                null=True, verbose_name='details')
@@ -504,7 +798,6 @@ def donation_bank_slug_pre_save_receiver(sender, instance, *args, **kwargs):
 pre_save.connect(donation_bank_slug_pre_save_receiver, sender=DonationBank)
 
 
-
 @receiver(post_save, sender=DonationBank)
 def create_bank_post_save_module(sender, instance, created, **kwargs):
     if created:
@@ -524,7 +817,8 @@ def donation_slug_pre_save_receiver(sender, instance, *args, **kwargs):
             last_name = instance.last_name.lower()[:5]
         else:
             last_name = instance.last_name.lower()
-        slug_binding = slugify(institute) + "-" + last_name + "_" + time_str_mix_slug()
+        slug_binding = slugify(institute) + "-" + \
+            last_name + "_" + time_str_mix_slug()
         # print(slug_binding)
         instance.slug = slug_binding
 
@@ -536,3 +830,11 @@ pre_save.connect(donation_slug_pre_save_receiver, sender=Donation)
 def create_donation_progress(sender, instance, created, **kwargs):
     if created:
         DonationProgress.objects.create(donation=instance)
+
+
+def campaign_pre_save_receiver(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = unique_slug_generator(instance)
+
+
+pre_save.connect(campaign_pre_save_receiver, sender=Campaign)

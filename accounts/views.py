@@ -80,10 +80,20 @@ class ProfileUpdateView(UpdateView):
         return None
 
     def form_valid(self, form):
+        self.object = self.get_object()
         contact = form.instance.contact
         # print(f"XXX___{contact}")
         contactFake = self.request.POST.get("contact_fake")
+        # print(self.request.POST.get("first_name"))
         # Save the form
+        # if not self.request.POST.get("first_name") == "" and not self.request.POST.get("last_name") == "":
+        #     form.instance.name = self.request.POST.get("first_name") + " " + self.request.POST.get("last_name")
+        # elif not self.request.POST.get("first_name") == "" and self.request.POST.get("last_name") == "":
+        #     form.instance.name = self.request.POST.get("first_name")
+        # elif self.request.POST.get("first_name") == "" and not self.request.POST.get("last_name") == "":
+        #     form.instance.name = self.request.POST.get("last_name")
+        # else:
+        #     form.instance.name = self.object.user.username
         if contact is not "":
             form.instance.contact = contactFake + contact
         messages.add_message(self.request, messages.SUCCESS,

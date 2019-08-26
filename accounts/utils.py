@@ -28,8 +28,23 @@ def upload_image_path(instance, filename):
     name, ext = get_filename_ext(filename)
     final_filename = '{new_filename}{ext}'.format(
         new_filename=new_filename, ext=ext)
-    return "{user}/Profile-Picture/{final_filename}".format(
+    return "Accounts/{user}/Profile-Picture/{final_filename}".format(
         user=instance.user,
+        final_filename=final_filename
+    )
+
+
+def upload_campaign_image_path(instance, filename):
+    new_filename = "{campaign}_{datetime}".format(
+        campaign=instance.title[:20],
+        datetime=time.strftime("%Y%m%d-%H%M%S")
+    )
+    name, ext = get_filename_ext(filename)
+    final_filename = '{new_filename}{ext}'.format(
+        new_filename=new_filename, ext=ext)
+    return "Banks/{bank}/Campaigns/{campaign}/{final_filename}".format(
+        bank=instance.bank.institute,
+        campaign=instance.title,
         final_filename=final_filename
     )
 

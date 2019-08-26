@@ -70,6 +70,24 @@ class DonationQuerySet(models.query.QuerySet):
     def is_normal(self):
         return self.filter(priority=0)
 
+    def dynamic_order(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        if request.user.is_authenticated and not request.user.profile.country == None:
+            from django_countries import countries
+            user_country = request.user.profile.country.name
+            countries_dict = dict(countries)
+            order_field = list(countries_dict.values())
+            order_field.remove(user_country)
+            order_field.insert(0, user_country)
+            # print(order_field)
+            # pre_qs = self.filter(country=order_field)
+            qs = sorted(self.filter().order_by('-created_at'),
+                        key=lambda p: order_field.index(p.country.name))
+        else:
+            qs = self.filter().order_by('-created_at')
+        return qs
+
     def latest(self):
         return self.filter().order_by('-created_at')
 
@@ -99,7 +117,7 @@ class DonationQuerySet(models.query.QuerySet):
                    Q(location__icontains=query) |
                    Q(city__icontains=query) |
                    Q(state__icontains=query) |
-                   Q(country__name__icontains=query) |
+                   Q(country__icontains=query) |
                    Q(hospital__icontains=query) |
                    Q(preferred_date__icontains=query) |
                    Q(preferred_date_from__icontains=query) |
@@ -262,7 +280,7 @@ class Donation(models.Model):
     category = models.PositiveSmallIntegerField(
         choices=DONATION_CATEGORY_CHOICES, verbose_name='category')
     type = models.PositiveSmallIntegerField(
-        choices=DONATION_CHOICES, verbose_name='donation type')
+        choices=DONATION_CHOICES, default=0, verbose_name='donation type')
     blood_group = models.CharField(
         max_length=20, choices=BLOOD_GROUP_CHOICES, null=True, blank=True, verbose_name='blood group')
     blood_bag = models.CharField(
@@ -441,14 +459,14 @@ class DonationProgress(models.Model):
     MANAGED_ON_SITE = 0
     MANAGED_OUTSIDE = 1
     DONATION_MANAGEMENT_CHOICES = (
-        (MANAGED_ON_SITE, 'Managed on site'),
-        (MANAGED_OUTSIDE, 'Managed on somewhere else'),
+        (MANAGED_ON_SITE, 'BDonar'),
+        (MANAGED_OUTSIDE, 'Somewhere else'),
     )
     donation = models.OneToOneField(Donation, on_delete=models.CASCADE,
                                     unique=True, related_name='donation_progress', verbose_name='donation')
     progress_status = models.PositiveSmallIntegerField(
         choices=DONATION_PROGRESS_CHOICES, default=0, verbose_name='progress status')
-    respondent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True,
+    respondent = models.ForeignKey(DonationRespond, on_delete=models.CASCADE, blank=True, null=True,
                                    related_name='donation_progress_respondent', verbose_name='respondent')
     completion_date = models.DateField(
         blank=True, null=True, verbose_name='completion date')

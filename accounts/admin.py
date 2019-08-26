@@ -7,7 +7,7 @@ UserAdmin.list_display += ('is_active',)
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'slug', 'account_type', 'gender',
-                    'dob', 'blood_group', 'is_volunteer', 'created_at', 'updated_at']
+                    'dob', 'blood_group', 'created_at', 'updated_at']
 
     class Meta:
         model = UserProfile

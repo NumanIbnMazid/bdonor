@@ -6,39 +6,28 @@
 Home Page
 {% endblock %}{% endblock %}{% endblock %}
 
+{% block extra_css %}
+<!-- Jquery-Swiper css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-swiper/swiper.min.css' %}" type="text/css" />
+{% endblock %}
+
 {% block content %}
 
-<div class="row mt--2">
-    <div class="col-md-6">
-        <a href="{% url 'donations:request_donation' %}" class="text-deco-none">
-            <div class="card full-height">
-                <div class="card-body text-center hover-effect">
-                    <div class="card-title">
-                        I need Donor
-                        <span class="ml-2">
-                            <img src="{% static 'images/raw/help.png' %}" alt="i need donation"
-                                class="avatar-img rounded-circle avatar-sm">
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="col-md-6">
-        <a href="{% url 'donations:offer_donation' %}" class="text-deco-none">
-            <div class="card full-height">
-                <div class="card-body text-center hover-effect">
-                    <div class="card-title">
-                        I want to Donate
-                        <span class="ml-2">
-                            <img src="{% static 'images/raw/heart.png' %}" alt="i want to donate"
-                                class="avatar-img rounded-circle avatar-sm">
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
+<div class="row justify-content-center align-items-center mb-4">
+    {% include 'pages/snippets/donate-btn.html' %}
+</div>
+<div class="row justify-content-center align-items-center mb-4">
+    <h4 class="page-title font-bold font-17">Campaigns</h4>
+    {% include 'pages/snippets/campaigns.html' %}
+    <a href="{% url 'donation_bank:bank_campaign_list_public' %}" class="text-deco-none btn btn-primary btn-sm m-3">
+        View All Campaigns
+    </a>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<!-- Jquery-Swiper JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-swiper/swiper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-swiper/swiper-config.js' %}"></script>
 {% endblock %}

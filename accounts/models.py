@@ -47,6 +47,7 @@ class UserProfile(models.Model):
     )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, unique=True, related_name='profile', verbose_name='user')
+    # name = models.CharField(max_length=250, blank=True, null=True, verbose_name='name')
     slug = models.SlugField(unique=True, verbose_name='slug')
     account_type = models.PositiveSmallIntegerField(
         default=0, choices=ACCOUNT_TYPE_CHOICES, verbose_name='account type')
@@ -74,8 +75,6 @@ class UserProfile(models.Model):
         max_length=300, blank=True, null=True, verbose_name='website')
     image = models.ImageField(
         upload_to=upload_image_path, null=True, blank=True, verbose_name='image')
-    is_volunteer = models.BooleanField(
-        default=False, verbose_name='is volunteer')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')

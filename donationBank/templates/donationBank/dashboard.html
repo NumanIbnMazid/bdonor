@@ -19,7 +19,7 @@ Bank Dashboard
       </div>
       <div class="col-md-10">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-8 mx-auto">
             <p>
               Far far away, behind the word mountains, far from the countries
               Vokalia and Consonantia, there live the blind texts. Separated
@@ -27,9 +27,11 @@ Bank Dashboard
               large language ocean.
             </p>
           </div>
+          {% if request.user.user_bank_member.bank.institute == object.institute and request.user.user_bank_member.role == 0 %}
           <div class="col-md-4 text-center">
             {% include 'donationBank/snippets/member-requests.html' %}
           </div>
+          {% endif %}
         </div>
       </div>
     </div>

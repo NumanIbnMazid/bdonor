@@ -1,0 +1,176 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+All Campaigns
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12 mx-auto">
+        {% if not request.user.user_bank_member.role == "" %}
+        <div class="text-center m-2">
+            {% url 'donationBank:bank_add_campaign' as bank_add_campaign_url %}
+            <a href="{{ bank_add_campaign_url }}" class="btn btn-default btn-md text-deco-none bg-sky-black m-1">
+                <i class="flaticon-add mr-1 font-bold font-15"></i>
+                Add Campaign
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="table-responsive">
+            <table id="campaignBankDataTable" class="cell-border hover table-bordered table-hover text-center"
+                style="width:100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Held Date</th>
+                        <th>End Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in campaign_list %}
+                    <tr class="text-dark">
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>
+                            <b>
+                                {{ campaign.title }}
+                            </b>
+                        </td>
+                        <td>
+                            {{campaign.held_date}}
+                            {% if not campaign.get_held_date_remaining >= 0 %}
+                            <div class="avatar avatar-sm">
+                                <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                            {% else %}
+                            <span
+                                class="{% if campaign.get_held_date_remaining < 4 %}text-danger{% else %}text-success{% endif %} font-bold">
+                                [
+                                {% if campaign.get_held_date_remaining == 0 %}
+                                Today
+                                {% else %}
+                                in
+                                {{campaign.get_held_date_remaining}}
+                                day{{ campaign.get_held_date_remaining|pluralize:"s" }}
+                                {% endif %}
+                                ]
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{campaign.end_date}}
+                            {% if not campaign.get_end_date_remaining >= 0 %}
+                            <div class="avatar avatar-sm">
+                                <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                            {% else %}
+                            <span
+                                class="{% if campaign.get_end_date_remaining < 4 %}text-danger{% else %}text-success{% endif %} font-bold">
+                                [
+                                {% if campaign.get_end_date_remaining == 0 %}
+                                Today
+                                {% else %}
+                                in
+                                {{campaign.get_end_date_remaining}}
+                                day{{ campaign.get_end_date_remaining|pluralize:"s" }}
+                                {% endif %}
+                                ]
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'donation_bank:bank_campaign_details' slug=campaign.slug %}"
+                                class="btn btn-secondary btn-xs text-deco-none">
+                                <span class="">
+                                    <!-- <i class="flaticon-medical"></i> -->
+                                    View
+                                </span>
+                            </a>
+                            {% if request.user.user_bank_member.bank.slug == campaign.bank.slug %}
+                            <a href="{% url 'donation_bank:bank_campaign_update' slug=campaign.slug %}"
+                                class="btn btn-primary btn-xs text-deco-none">
+                                <span class="">
+                                    <!-- <i class="flaticon-pencil"></i> -->
+                                    Edit
+                                </span>
+                            </a>
+                            <button type="button"
+                                class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_bank_campaign"
+                                value="{{campaign.slug}}" data-toggle="modal" data-target="#modal-delete-bank_campaign">
+                                <!-- <i class="flaticon-interface-5"></i> -->
+                                Delete
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <div class="alert alert-warning">
+                                No item found!
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Held Date</th>
+                        <th>End Date</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+<input type="hidden" id="total_records_count" value="{{campaign_list.count}}">
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#campaignBankDataTable').DataTable({
+            destroy: true,
+            //"retrieve": true,
+            //"order": [[ 1, 'desc' ]],
+            "ordering": false,
+            //"searching": false,
+            //"paging": false,
+            //"scrollY": 400,
+            //"scrollX": 400,
+            //"scrollY": '62vh',
+            //"scrollX": '50vh',
+            "scrollCollapse": true,
+            "stateSave": true,
+            "pagingType": "full_numbers",
+            "language": {
+                "lengthMenu": "Display _MENU_ records per page. <span class='ml-4 text-primary'>Total Records: <span class='font-13 font-bold'>" +
+                    $("#total_records_count").val() + "</span></span>",
+                "zeroRecords": "Nothing found - sorry",
+                "info": "Showing page _PAGE_ of _PAGES_",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+        });
+    });
+</script>
+{% endblock %}

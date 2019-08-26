@@ -82,19 +82,20 @@
             <span class="c-text-highlight-green">({{object.get_respondents.count}})</span>
         </button>
 
+        {% endif %}
+
         <h4 class="mt-3">Social Share</h4>
         {% post_to_facebook object_or_url "Share on Facebook!" %}
         {% post_to_twitter "{{object.title}}. Check it out!" object_or_url "Share on Twitter" %}
-        {% post_to_gplus object_or_url "Share on Google+!" %}
         {% post_to_linkedin object.title object_or_url "Share on LinkedIn" %}
         {% send_email object.title "{{object.title}}. Check it out!" object_or_url "Share via email" %}
 
         {% comment %}
+        {% post_to_gplus object_or_url "Share on Google+!" %}
         {% post_to_reddit "{{object.title}}" object_or_url "Share on Reddit" %}
         {% post_to_telegram "{{object.title}}" object_or_url "Share on Telegram" %}
         {% endcomment %}
-
-        {% endif %}
+        
     </div>
 </div>
 

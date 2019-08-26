@@ -1,0 +1,63 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Manage Progress Status
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<!-- date-time picker CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            <div class="col-md-10">
+                <form method="POST" id="donation_progress_form" data-toggle="validator">
+                    {% csrf_token %}
+                    <div class="card-header">
+                        <div class="card-title text-center">
+                            Manage Progress Status
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                {% include 'donationBank/snippets/donation-progress-form.html' %}
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action text-center form-group">
+                        <button type="submit" class="btn btn-success m-2" id="submitBtn">
+                            Update Progress Status
+                        </button>
+                        <button class="btn btn-danger" id="go_back">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- date-time picker JS -->
+<script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/form-validator/bank-manage-progress-form.js' %}"></script>
+{% endblock %}

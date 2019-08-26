@@ -462,12 +462,12 @@ class DonationOffersCardListView(AjaxListView):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            qs = Donation.objects.all().offers().latest().is_published()
+            qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().offers().latest().is_published().living_donates()
-        if qs.exists():
-            return qs
-        return None
+            qs = Donation.objects.all().offers().is_published().living_donates().dynamic_order()
+        # if qs.exists():
+        #     return qs
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(DonationOffersCardListView,
@@ -491,12 +491,12 @@ class DonationOffersListView(ListView):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            qs = Donation.objects.all().offers().latest().is_published()
+            qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().offers().latest().is_published().living_donates()
-        if qs.exists():
-            return qs
-        return None
+            qs = Donation.objects.all().offers().is_published().living_donates().dynamic_order()
+        # if qs.exists():
+        #     return qs
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(DonationOffersListView,
@@ -944,12 +944,12 @@ class DonationRequestsCardListView(AjaxListView):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            qs = Donation.objects.all().requests().latest().is_published()
+            qs = Donation.objects.all().requests().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().requests().latest().is_published().living_donates()
-        if qs.exists():
-            return qs
-        return None
+            qs = Donation.objects.all().requests().is_published().living_donates().dynamic_order()
+        # if qs.exists():
+        #     return qs
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(DonationRequestsCardListView,
@@ -973,12 +973,12 @@ class DonationRequestsListView(ListView):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            qs = Donation.objects.all().requests().latest().is_published()
+            qs = Donation.objects.all().requests().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().requests().latest().is_published().living_donates()
-        if qs.exists():
-            return qs
-        return None
+            qs = Donation.objects.all().requests().is_published().living_donates().dynamic_order()
+        # if qs.exists():
+        #     return qs
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(DonationRequestsListView,

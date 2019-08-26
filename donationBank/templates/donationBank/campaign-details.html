@@ -1,0 +1,205 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% load social_share %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Donation Details
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    {% if request.user.user_bank_member.bank.institute == campaign.bank.institute %}
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    {% endif %}
+    <div class="card-body">
+        <div class="row">
+            {% if request.user.user_bank_member.bank.institute == campaign.bank.institute %}
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            {% endif %}
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-2 text-center">
+                            <span class="font-17 font-bold text-muted">Campaign Details</span>
+                            {% if not campaign.get_end_date_remaining >= 0 %}
+                            <div class="avatar avatar-sm">
+                                <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                            {% endif %}
+                            {% if request.user.user_bank_member.bank.institute == campaign.bank.institute %}
+                            <div class="pull-right">
+                                <a href="{% url 'donation_bank:bank_campaign_update' slug=campaign.slug %}"
+                                    class="btn btn-primary btn-xs text-deco-none">
+                                    <span class="">
+                                        <i class="flaticon-pencil"></i>
+                                        Edit
+                                    </span>
+                                </a>
+                                <button type="button"
+                                    class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_bank_campaign"
+                                    value="{{campaign.slug}}" data-toggle="modal"
+                                    data-target="#modal-delete-bank_campaign">
+                                    <i class="flaticon-interface-5"></i>
+                                    Delete
+                                </button>
+                            </div>
+                            {% endif %}
+                            <br>
+                        </div>
+
+                        <hr>
+
+                        <div class="card card-post card-round">
+                            {% if not campaign.image == "" %}
+                            <img class="card-img-top" src="{{ campaign.image.url }}"
+                                alt="{{campaign.title}}" style="height:300px;width:100%;">
+                            {% else %}
+                            <img class="card-img-top" src="{% static 'images/raw/campaign.png' %}" alt="{{campaign.title}}"
+                                style="height:300px;width:100%;">
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <div class="info-post ml-2">
+                                        <h3 class="card-title">{{campaign.title}}</h3>
+                                        <p class="date text-muted">
+                                            Held Date: 
+                                            <span class="text-secondary">{{ campaign.held_date }}</span>
+                                        </p>
+                                        <p class="date text-muted">
+                                            End Date: 
+                                            <span class="text-secondary">{{ campaign.end_date }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="separator-solid"></div>
+                                <p class="card-text">
+                                    <div>
+                                        {% if not request.user.user_bank_member.bank.institute == campaign.bank.institute %}
+                                        <h5>
+                                            <span class="text-secondary">
+                                                Bank:
+                                            </span>
+                                            <span class="ml-2 font-bold">
+                                                {{ campaign.bank.institute }}
+                                            </span>
+                                        </h5>
+                                        {% endif %}
+                                        {% if campaign.contact %}
+                                        <h5>
+                                            <span class="text-secondary">
+                                                Contact no. :
+                                            </span>
+                                            <span class="ml-2">
+                                                <a href="#">
+                                                    {{ campaign.contact }}
+                                                </a>
+                                            </span>
+                                        </h5>
+                                        {% endif %}
+
+                                        {% if campaign.email %}
+                                        <h5>
+                                            <span class="text-secondary">
+                                                Email:
+                                            </span>
+                                            <span class="text-primary ml-2">
+                                                {{ campaign.email }}
+                                            </span>
+                                        </h5>
+                                        {% endif %}
+
+                                        {% if campaign.address %}
+                                        <h5>
+                                            <span class="text-secondary">
+                                                Address:
+                                            </span>
+                                            <span class="ml-2">
+                                                {{ campaign.address }}
+                                            </span>
+                                        </h5>
+                                        {% endif %}
+
+                                        {% if campaign.city %}
+                                        <h5>
+                                            <span class="text-secondary">
+                                                City:
+                                            </span>
+                                            <span class="ml-2">
+                                                {{ campaign.city }}
+                                            </span>
+                                        </h5>
+                                        {% endif %}
+
+                                        {% if campaign.state %}
+                                        <h5>
+                                            <span class="text-secondary">
+                                                State:
+                                            </span>
+                                            <span class="ml-2">
+                                                {{ campaign.state }}
+                                            </span>
+                                        </h5>
+                                        {% endif %}
+
+                                        {% if campaign.country %}
+                                        <h5>
+                                            <span class="text-secondary">
+                                                Country:
+                                            </span>
+                                            <span class="ml-2">
+                                                {{ campaign.country.name }}
+                                            </span>
+                                        </h5>
+                                        {% endif %}
+
+                                        {% if campaign.details %}
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="text-center text-dark">
+                                                    Details/Rules-Regulations
+                                                </h5>
+                                            </div>
+                                            <div class="card-body ml-4 mr-4">
+                                                {{ campaign.details|safe|linebreaks }}
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                        <h4 class="mt-3">Social Share</h4>
+                        {% post_to_facebook object_or_url "Share on Facebook!" %}
+                        {% post_to_twitter "{{campaign.title}}. Check it out!" object_or_url "Share on Twitter" %}
+                        {% post_to_linkedin campaign.title object_or_url "Share on LinkedIn" %}
+                        {% send_email campaign.title "{{campaign.title}}. Check it out!" object_or_url "Share via email" %}
+
+                        {% comment %}
+                        {% post_to_gplus object_or_url "Share on Google+!" %}
+                        {% post_to_reddit "{{campaign.title}}" object_or_url "Share on Reddit" %}
+                        {% post_to_telegram "{{campaign.title}}" object_or_url "Share on Telegram" %}
+                        {% endcomment %}
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if request.user.user_bank_member.bank.institute == campaign.bank.institute %}
+{% include 'donationBank/snippets/footer.html' %}
+{% endif %}
+
+{% endblock %}

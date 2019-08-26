@@ -1,10 +1,11 @@
 from django.urls import path
 from .views import (
     DonationBankCreateView, BankDashboardView, DonationBankDetailView, DonationBankUpdateView,
-    DonationBankListView, donationBank_delete, member_request_create, DonationBankSettingUpdateView,
+    DonationBankListView, donationBank_delete, ManageProgressStatus, member_request_create, DonationBankSettingUpdateView,
     member_request_delete, member_request_accept, member_request_reject, BankMembersListView,
     membership_remove, DonationCreateView, DonationListView, DonationDetailView, DonationUpdateView,
-    donation_delete,
+    donation_delete, CampaignCreateView, CampaignListView, CampaignDetailView, CampaignUpdateView, 
+    campaign_delete, CampaignPublicListView,
 )
 
 urlpatterns = [
@@ -28,4 +29,15 @@ urlpatterns = [
     path('donation/<slug>/info/', DonationDetailView.as_view(), name='bank_donation_details'),
     path('donation/<slug>/update/', DonationUpdateView.as_view(), name='bank_donation_update'),
     path('donation/delete/', donation_delete, name='bank_donation_delete'),
+    path('donation/<slug>/progress/', ManageProgressStatus.as_view(), name='bank_manage_progress_status'),
+    # Campaign URLs
+    path('campaign/add/', CampaignCreateView.as_view(), name='bank_add_campaign'),
+    path('campaign/list/', CampaignListView.as_view(), name='bank_campaign_list'),
+    path('campaign/list/public/', CampaignPublicListView.as_view(),
+         name='bank_campaign_list_public'),
+    path('campaign/<slug>/info/', CampaignDetailView.as_view(),
+         name='bank_campaign_details'),
+    path('campaign/<slug>/update/', CampaignUpdateView.as_view(),
+         name='bank_campaign_update'),
+    path('campaign/delete/', campaign_delete, name='bank_campaign_delete'),
 ]

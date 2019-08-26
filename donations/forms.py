@@ -280,6 +280,7 @@ class DonationForm(forms.ModelForm):
         today = datetime.datetime.now()
         if not preferred_date == None:
             if not self.object == None and not self.object.preferred_date == None and self.object.preferred_date == preferred_date:
+            # if self.object == None or self.object.preferred_date == None and not preferred_date == self.object.preferred_date:
                 return preferred_date
             else:
                 if self.date_with_time_val == 'true':
@@ -304,6 +305,7 @@ class DonationForm(forms.ModelForm):
         today = datetime.datetime.now()
         if not preferred_date_from == None:
             if not self.object == None and not self.object.preferred_date_from == None and preferred_date_from == self.object.preferred_date_from:
+            # if self.object == None or self.object.preferred_date_from == None and not preferred_date_from == self.object.preferred_date_from:
                 return preferred_date_from
             else:
                 if self.date_with_time_val == 'true':
@@ -341,6 +343,7 @@ class DonationForm(forms.ModelForm):
                 raise forms.ValidationError(
                     'You cannot select preferred date to as same as preferred date from! Choose deffrent date from preferred date from.')
             if not self.object == None and not self.object.preferred_date_to == None and preferred_date_to == self.object.preferred_date_to:
+            # if self.object == None or self.object.preferred_date_to == None and not preferred_date_to == self.object.preferred_date_to:
                 return preferred_date_to
             else:
                 if self.date_with_time_val == 'true':
@@ -459,6 +462,16 @@ class DonationProgressForm(forms.ModelForm):
             'id': 'donation_progress_status_input',
             # 'placeholder': 'Type contact number...',
         })
+        # if not self.object == None:
+        respond_qs = DonationRespond.objects.filter(donation=self.object.donation)
+        RESPONDENT_QUERYSET = respond_qs.values_list(
+            'respondent__username', flat=True)
+        if respond_qs.exists() and respond_qs.count() >= 1:
+            self.fields['respondent'] = forms.ModelChoiceField(
+                queryset=RESPONDENT_QUERYSET, required=False)
+        else:
+            self.fields['respondent'] = forms.ModelChoiceField(
+                queryset=RESPONDENT_QUERYSET, empty_label="--- No Respondent Found ---", required=False)
         self.fields['respondent'].help_text = "Select respondent..."
         self.fields['respondent'].widget.attrs.update({
             'id': 'donation_respondent_input',
