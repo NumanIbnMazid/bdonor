@@ -34,7 +34,7 @@
 {% endif %}
 
 {% for field in form.visible_fields %}
-<div class="form-group {% if field.errors %}border-danger-1 error-group{% endif %} {% if field.name == 'tissue_name' or field.name == 'blood_group' or field.name == 'blood_bag' or field.name == 'organ_name' or field.name == 'quantity' or field.name == 'hospital' or field.name == 'details_fake' or field.name == 'contact2' or field.name == 'contact3' or field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'priority' or field.name == 'publication_status' %}hidden invisible-input-group{% endif %} {% if field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'priority' or field.name == 'publication_status' %}special-input-group{% endif %}"
+<div class="form-group {% if field.errors %}border-danger-1 error-group{% endif %} {% if field.name == 'tissue_name' or field.name == 'blood_group' or field.name == 'blood_bag' or field.name == 'organ_name' or field.name == 'quantity' or field.name == 'hospital' or field.name == 'details_fake' or field.name == 'contact2' or field.name == 'contact3' or field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'priority' or field.name == 'publication_status' %}hidden invisible-input-group{% endif %} {% if field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' or field.name == 'priority' or field.name == 'publication_status' %}special-input-group{% endif %} {% if field.name == 'preferred_date' or field.name == 'preferred_date_from' or field.name == 'preferred_date_to' %}date-input-group{% endif %}"
     id="{{ field.id_for_label }}-group">
 
     <div class="form">
@@ -243,6 +243,17 @@
                 {% if field.name == 'preferred_date' %}
                 <input type="hidden" name="datetime" id="datetime" value="false">
                 <div class="row">
+                    <div class="col-md-12 mx-auto">
+                        <h6 id="date_with_time" class="pointer text-info mt-2">
+                            <i class="flaticon-time"></i>
+                            <span class="ml-1">With time</span>
+                        </h6>
+                        <h6 id="date_without_time" class="pointer text-info mt-2 hidden">
+                            <i class="flaticon-time"></i>
+                            <span class="ml-1">Without time</span>
+                        </h6>
+                    </div>
+                    {% comment %}
                     <div class="col-md-7">
                         <h6 id="set_date_between" class="pointer text-info mt-2">
                             <i class="flaticon-calendar"></i>
@@ -253,24 +264,17 @@
                             <span class="ml-1">Remove date between</span>
                         </h6> -->
                     </div>
-                    <div class="col-md-5">
-                        <h6 id="date_with_time" class="pointer text-info mt-2">
-                            <i class="flaticon-time"></i>
-                            <span class="ml-1">With time</span>
-                        </h6>
-                        <h6 id="date_without_time" class="pointer text-info mt-2 hidden">
-                            <i class="flaticon-time"></i>
-                            <span class="ml-1">Without time</span>
-                        </h6>
-                    </div>
+                    {% endcomment %}
                 </div>
                 {% endif %}
 
                 {% if field.name == 'preferred_date_to' %}
+                {% comment %}
                 <h6 id="hide_set_date_between" class="pointer text-info mt-2 hidden">
                     <i class="flaticon-calendar"></i>
                     <span class="ml-1">Remove date between</span>
                 </h6>
+                {% endcomment %}
                 {% endif %}
 
                 {% if field.name == 'location' %}

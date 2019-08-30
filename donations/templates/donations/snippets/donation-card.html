@@ -38,6 +38,13 @@
                         </a>
                     </span>
                 </div>
+                <div>
+                    {% if request.user.is_superuser %}
+                    <span class="{% if object.is_verified == True %}text-success{% else %}text-warning{% endif %}">
+                        {{ object.get_verification_status }}
+                    </span>
+                    {% endif %}
+                </div>
             </div>
             <div class="col-4 pl-0 text-right">
                 <!-- <a class="text-deco-none" href="{{ object.user.get_absolute_url }}">

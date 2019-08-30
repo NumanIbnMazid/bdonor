@@ -14,7 +14,7 @@ Respond to Donation
 {% block content %}
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-7 mx-auto">
         <div class="card p-3">
             {% if respondant_exists == False %}
             <form method="POST" id="donation_respond_form" data-toggle="validator">
@@ -54,6 +54,7 @@ Respond to Donation
             {% endif %}
         </div>
     </div>
+    {% comment %}
     <div class="col-md-5">
         <div class="card p-3">
             <span class="stamp stamp-md bg-secondary">
@@ -61,6 +62,7 @@ Respond to Donation
             </span>
         </div>
     </div>
+    {% endcomment %}
 
 </div>
 

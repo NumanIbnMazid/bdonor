@@ -7,8 +7,9 @@
 
 {% for object in object_list %}
 
-<a href="{% url 'utils:notification_details' slug=object.slug %}" class="text-deco-none">
-    <li class="feed-item feed-item-secondary">
+<a href="{% url 'utils:notification_details' slug=object.slug %}"
+    class="text-deco-none">
+    <li class="feed-item feed-item-secondary {% if object.is_seen == False %}font-bold bg-c-ash m-2{% endif %}">
         <time class="date" datetime="9-25">
             {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
             {{ object.created_at|timesince }} ago

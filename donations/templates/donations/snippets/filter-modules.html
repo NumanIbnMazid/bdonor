@@ -111,6 +111,34 @@
                 </div>
             </div>
 
+            <div class="{% if not user.is_superuser %}hidden{% endif %}">
+                <hr>
+                <div>
+                    <label class="text-info">Verification</label><br>
+                    <label
+                        class="form-radio-label {% if query_is_verified == '' or query_is_verified == None %}border-bottom border-info p-1 font-italic{% endif %}">
+                        <input class="form-radio-input" type="radio" name="donation-filter-is_verified"
+                            id="filter_is_verified_all" value=""
+                            {% if query_is_verified == '' or query_is_verified == None %}checked="" {% endif %}>
+                        <span class="form-radio-sign">All</span>
+                    </label>
+                    <label
+                        class="form-radio-label {% if query_is_verified == 'True' %}border-bottom border-info p-1 font-italic{% endif %}">
+                        <input class="form-radio-input" type="radio" name="donation-filter-is_verified"
+                            id="filter_is_verified_true" value="True" {% if query_is_verified == 'True' %}checked=""
+                            {% endif %}>
+                        <span class="form-radio-sign">Verified</span>
+                    </label>
+                    <label
+                        class="form-radio-label ml-3 {% if query_is_verified == 'False' %}border-bottom border-info p-1 font-italic{% endif %}">
+                        <input class="form-radio-input" type="radio" name="donation-filter-is_verified"
+                            id="filter_is_verified_false" value="False" {% if query_is_verified == 'False' %}checked=""
+                            {% endif %}>
+                        <span class="form-radio-sign">Not Verified</span>
+                    </label>
+                </div>
+            </div>
+
         </div>
 
         <div class="input-icon-addon">

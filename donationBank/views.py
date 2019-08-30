@@ -1244,12 +1244,14 @@ class CampaignDetailView(DetailView):
         # )
         # if qs.exists() and self.request.user.profile.account_type == 1:
         if self.request.user.is_authenticated:
-            if self.object.bank.institute == request.user.user_bank_member.bank.institute:
+            # if self.object.bank.institute == request.user.user_bank_member.bank.institute:
+            #     return True
+            # elif not self.object.bank.institute == request.user.user_bank_member.bank.institute and self.object.bank.bank_setting.privacy == 0:
+            #     return True
+            # else:
+            #     return False
+            if self.object.bank.bank_setting.privacy == 0:
                 return True
-            elif not self.object.bank.institute == request.user.user_bank_member.bank.institute and self.object.bank.bank_setting.privacy == 0:
-                return True
-            else:
-                return False
         return False
 
     def dispatch(self, request, *args, **kwargs):

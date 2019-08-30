@@ -1,3 +1,27 @@
+{% if request.user.is_superuser and not instance.user.user == request.user %}
+
+{% if instance.category == 0 %}
+<a href="{% url 'donations:donation_update' slug=instance.slug %}"
+    class="btn btn-primary btn-sm text-deco-none bg-c-info">
+    <span class="btn-label">
+        <i class="flaticon-pencil"></i>
+        edit
+    </span>
+</a>
+{% endif %}
+
+{% if instance.category == 1 %}
+<a href="{% url 'donations:donation_request_update' slug=instance.slug %}"
+    class="btn btn-primary btn-sm text-deco-none bg-c-info">
+    <span class="btn-label">
+        <i class="flaticon-pencil"></i>
+        edit
+    </span>
+</a>
+{% endif %}
+
+{% endif %}
+
 
 {% comment %}
 {% if instance.user.user == request.user and instance.has_response == False %}
@@ -43,7 +67,7 @@
 {% endif %}
 {% endcomment %}
 
-{% if instance.user.user == request.user %}
+{% if instance.user.user == request.user or request.user.is_superuser %}
 <a href="{% url 'donations:donation_progress' slug=instance.slug %}"
     class="btn btn-primary btn-sm text-deco-none bg-c-info">
     <span class="btn-label">

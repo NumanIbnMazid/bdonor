@@ -77,8 +77,16 @@
                     </span>
                 </td>
                 <td>
+                    {% if request.user.is_superuser %}
+                    <span class="{% if object.is_verified == True %}c-text-success{% else %}c-text-danger{% endif %} font-bold">
+                        {{ object.get_verification_status }}
+                    </span>
+                    <br>
+                    {% endif %}
                     <span
-                        class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success font-bold{% endif %}">
+                        class="ml-2
+                        {% if object.donation_progress.progress_status == 1 %}c-text-success{% else %}c-text-warning{% endif %}
+                        font-bold">
                         {{ object.donation_progress.get_progress_status }}
                         <span class="text-dark">
                             (<i class="flaticon-medical"></i>
@@ -92,14 +100,17 @@
                             View
                         </span>
                     </a>
+
                     {% if object.get_user_is_responded == True %}
 
-                    <a href="#" class="btn btn-secondary btn-xs text-deco-none m-1">
+                    <p class="btn btn-default btn-xs text-deco-none m-1">
                         <span class="">
-                            View my response
+                            responded
                         </span>
-                    </a>
+                    </p>
+
                     {% else %}
+
                     {% if not object.user.user == request.user %}
                     {% if not object.donation_progress.progress_status == 1 %}
                     <a href="{% url 'donations:donation_respond_create' slug=object.slug %}"
@@ -148,6 +159,26 @@
                         delete
                     </button>
 
+                    {% endif %}
+
+                    {% if request.user.is_superuser and not object.user.user == request.user %}
+                    {% if page_type == "OFFER" %}
+                    <a href="{% url 'donations:donation_update' slug=object.slug %}"
+                        class="btn btn-info btn-xs text-deco-none bg-c-info m-1">
+                        <span class="btn-label">
+                            edit
+                        </span>
+                    </a>
+                    {% endif %}
+
+                    {% if page_type == "REQUEST" %}
+                    <a href="{% url 'donations:donation_request_update' slug=object.slug %}"
+                        class="btn btn-info btn-xs text-deco-none bg-c-info m-1">
+                        <span class="btn-label">
+                            edit
+                        </span>
+                    </a>
+                    {% endif %}
                     {% endif %}
 
                 </td>

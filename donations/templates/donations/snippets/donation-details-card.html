@@ -7,10 +7,20 @@
         <hr>
         <h5>
             <span class="text-secondary">
+                Verification Status:
+            </span>
+            <span class="ml-2 {% if object.is_verified == True %}text-success{% else %}text-danger{% endif %} font-700">
+                {{ object.get_verification_status }}
+            </span>
+        </h5>
+        <h5>
+            <span class="text-secondary">
                 Progress Status:
             </span>
             <span
-                class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success font-700{% endif %}">
+                class="ml-2
+                {% if object.donation_progress.progress_status == 1 %}text-success{% else %}text-warning{% endif %}
+                font-700">
                 {{ object.donation_progress.get_progress_status }}
             </span>
         </h5>
@@ -102,13 +112,23 @@
                     </span>
                     <br>
                     {% if not object.user.user == request.user %}
-                    <span class="text-secondary">
-                        Progress Status:
-                    </span>
-                    <span
-                            class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success font-700{% endif %}">
-                        {{ object.donation_progress.get_progress_status }}
-                    </span>
+                    <h5>
+                        <span class="text-secondary">
+                            Verification Status:
+                        </span>
+                        <span
+                            class="ml-2 {% if object.is_verified == True %}text-success{% else %}text-danger{% endif %} font-700">
+                            {{ object.get_verification_status }}
+                        </span>
+                    </h5>
+                    <h5>
+                        <span class="text-secondary">
+                            Progress Status:
+                        </span>
+                        <span class="ml-2 {% if object.donation_progress.progress_status == 1 %}text-success{% else %}text-warning{% endif %} font-700">
+                            {{ object.donation_progress.get_progress_status }}
+                        </span>
+                    </h5>
                     {% endif %}
                 </p>
             </div>
@@ -129,6 +149,9 @@
                 {% endif %} -->
             </h3>
         </div>
+
+        <hr>
+
         <div>
             <h5>
                 <span class="text-secondary">
@@ -339,11 +362,6 @@
             </div>
             {% endif %}
 
-        </div>
-
-        <div class="d-flex justify-content-between mt-2">
-            <p class="text-muted mb-0">Comment</p>
-            <p class="text-muted mb-0">Like</p>
         </div>
     </div>
 </div>

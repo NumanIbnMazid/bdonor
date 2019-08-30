@@ -42,6 +42,7 @@
 
                             {% include 'donations/snippets/donation-form.html' %}
 
+                            {% if not request.user.is_superuser %}
                             <h5 class="font-15 text-primary pointer mt-1" id="advanced">
                                 <i class="flaticon-interface-4"></i>
                                 <span class="ml-2">Advanced options</span>
@@ -50,11 +51,14 @@
                                 <i class="flaticon-line-1"></i>
                                 <span class="ml-2">Hide Advanced options</span>
                             </h5>
+                            {% endif %}
+                            
                             <p class="hidden" id="message_holder"></p>
                         </div>
                     </div>
                 </div>
                 <div class="card-action text-center form-group">
+                    {% if not request.user.is_superuser %}
                     <div class="form-check" id="termsConditionsDiv">
                         <label class="form-check-label">
                             <input class="form-check-input" type="checkbox" value="" id="termsConditions_input">
@@ -70,6 +74,7 @@
                             You must read and agree to the terms & conditions. Please ensure that terms & conditions checkbox is checked.
                         </p>
                     </div>
+                    {% endif %}
                     <button type="submit" class="btn btn-success m-2" id="submitBtn">
                         {{ page_title }}
                     </button>

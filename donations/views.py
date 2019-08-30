@@ -191,6 +191,10 @@ class OfferDonationCreateView(CreateView):
                     form.instance.details = details_fake
                 form.instance.user = profile
                 form.instance.category = category
+                if form.instance.donate_type == 1:
+                    form.instance.preferred_date = None
+                    form.instance.preferred_date_from = None
+                    form.instance.preferred_date_to = None
                 messages.add_message(self.request, messages.SUCCESS,
                                      "Your donation offer has been created successfully!")
                 return super().form_valid(form)
@@ -279,12 +283,19 @@ class OfferDonationUpdateView(UpdateView):
         blood_bag = form.instance.blood_bag
         # organ_name = form.instance.organ_name
         details = form.instance.details
-        details_fake = form.cleaned_data['details_fake']
+        # if form.cleaned_data['details_fake'] != "":
+        # if self.request.POST.get("details_fake") != "":
+            # details_fake = form.cleaned_data['details_fake']
+        details_fake = self.request.POST.get("details_fake")
         contact = form.instance.contact
         contact2 = form.instance.contact2
         contact3 = form.instance.contact3
         contact_privacy = self.request.POST.get("contact_privacy")
+        if contact_privacy == None or contact_privacy == "":
+            contact_privacy = 0
         donate_type = self.request.POST.get("donate-type")
+        if donate_type == None or donate_type == "":
+            donate_type = 0
         form.instance.donate_type = donate_type
         # print(contact_privacy)
         form.instance.contact_privacy = contact_privacy
@@ -386,18 +397,22 @@ class OfferDonationUpdateView(UpdateView):
                 )
             else:
                 # Save the form
-                if contact is not None:
+                if contact is not None and not contactFake == None:
                     form.instance.contact = contactFake + contact
-                if contact2 is not None:
+                if contact2 is not None and not contact2Fake == None:
                     form.instance.contact2 = contact2Fake + contact2
-                if contact3 is not None:
+                if contact3 is not None and not contact3Fake == None:
                     form.instance.contact3 = contact3Fake + contact3
                 if details_fake != "":
                     form.instance.details = details_fake
                 form.instance.user = profile
                 # form.instance.category = category
+                if form.instance.donate_type == 1:
+                    form.instance.preferred_date = None
+                    form.instance.preferred_date_from = None
+                    form.instance.preferred_date_to = None
                 messages.add_message(self.request, messages.SUCCESS,
-                                     "Your donation offer has been updated successfully!")
+                                     "Donation offer has been updated successfully!")
                 return super().form_valid(form)
         return super().form_invalid(form)
 
@@ -414,6 +429,10 @@ class OfferDonationUpdateView(UpdateView):
             if self.object.user.user == request.user:
                 if self.object.donation_progress.progress_status == 0 and self.object.has_response() == False:
                     return True
+            elif self.request.user.is_superuser:
+                return True
+            else:
+                return False
         return False
 
     def dispatch(self, request, *args, **kwargs):
@@ -423,6 +442,8 @@ class OfferDonationUpdateView(UpdateView):
         return super(OfferDonationUpdateView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
+        if self.request.user.is_superuser:
+            return reverse('donations:donation_offers_list')
         return reverse('donations:my_donation_offers')
 
     def get_context_data(self, **kwargs):
@@ -464,7 +485,7 @@ class DonationOffersCardListView(AjaxListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().offers().is_published().living_donates().dynamic_order()
+            qs = Donation.objects.all().offers().is_published().living_donates().is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -493,7 +514,8 @@ class DonationOffersListView(ListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().offers().is_published().living_donates().dynamic_order()
+            qs = Donation.objects.all().offers().is_published(
+            ).living_donates().is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -686,6 +708,10 @@ class DonationRequestCreateView(CreateView):
                     form.instance.details = details_fake
                 form.instance.user = profile
                 form.instance.category = category
+                if form.instance.donate_type == 1:
+                    form.instance.preferred_date = None
+                    form.instance.preferred_date_from = None
+                    form.instance.preferred_date_to = None
                 messages.add_message(self.request, messages.SUCCESS,
                                      "Your donation request has been created successfully!")
                 return super().form_valid(form)
@@ -773,12 +799,16 @@ class DonationRequestUpdateView(UpdateView):
         blood_bag = form.instance.blood_bag
         # organ_name = form.instance.organ_name
         details = form.instance.details
-        details_fake = form.cleaned_data['details_fake']
+        details_fake = self.request.POST.get("details_fake")
         contact = form.instance.contact
         contact2 = form.instance.contact2
         contact3 = form.instance.contact3
         contact_privacy = self.request.POST.get("contact_privacy")
+        if contact_privacy == None or contact_privacy == "":
+            contact_privacy = 0
         donate_type = self.request.POST.get("donate-type")
+        if donate_type == None or donate_type == "":
+            donate_type = 0
         form.instance.donate_type = donate_type
         # print(contact_privacy)
         form.instance.contact_privacy = contact_privacy
@@ -867,18 +897,22 @@ class DonationRequestUpdateView(UpdateView):
                 )
             else:
                 # Save the form
-                if contact is not None:
+                if contact is not None and not contactFake == None:
                     form.instance.contact = contactFake + contact
-                if contact2 is not None:
+                if contact2 is not None and not contact2Fake == None:
                     form.instance.contact2 = contact2Fake + contact2
-                if contact3 is not None:
+                if contact3 is not None and not contact3Fake == None:
                     form.instance.contact3 = contact3Fake + contact3
                 if details_fake != "":
                     form.instance.details = details_fake
                 form.instance.user = profile
                 # form.instance.category = category
+                if form.instance.donate_type == 1:
+                    form.instance.preferred_date = None
+                    form.instance.preferred_date_from = None
+                    form.instance.preferred_date_to = None
                 messages.add_message(self.request, messages.SUCCESS,
-                                     "Your donation request has been updated successfully!")
+                                     "Donation request has been updated successfully!")
                 return super().form_valid(form)
         return super().form_invalid(form)
 
@@ -895,6 +929,10 @@ class DonationRequestUpdateView(UpdateView):
             if self.object.user.user == request.user:
                 if self.object.donation_progress.progress_status == 0 and self.object.has_response() == False:
                     return True
+            elif self.request.user.is_superuser:
+                return True
+            else:
+                return False
         return False
 
     def dispatch(self, request, *args, **kwargs):
@@ -904,6 +942,8 @@ class DonationRequestUpdateView(UpdateView):
         return super(DonationRequestUpdateView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
+        if self.request.user.is_superuser:
+            return reverse('donations:donation_requests_list')
         return reverse('donations:my_donation_requests')
 
     def get_context_data(self, **kwargs):
@@ -946,7 +986,8 @@ class DonationRequestsCardListView(AjaxListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().requests().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().requests().is_published().living_donates().dynamic_order()
+            qs = Donation.objects.all().requests().is_published(
+            ).living_donates().is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -975,7 +1016,8 @@ class DonationRequestsListView(ListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().requests().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().requests().is_published().living_donates().dynamic_order()
+            qs = Donation.objects.all().requests().is_published(
+            ).living_donates().is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -1231,9 +1273,6 @@ def donation_delete(request):
 class DonationFilteredListView(ListView):
     template_name = "donations/search-result.html"
 
-    # def get(self, request, *args, **kwargs):
-    #     return render(request, "donations/search-result.html")
-
     def get_context_data(self, *args, **kwargs):
         context = super(DonationFilteredListView,
                         self).get_context_data(*args, **kwargs)
@@ -1249,12 +1288,14 @@ class DonationFilteredListView(ListView):
         query_priority = self.request.GET.get('donation-filter-priority')
         query_status = self.request.GET.get('donation-filter-status')
         query_donate_type = self.request.GET.get('donation-filter-donate_type')
+        query_is_verified = self.request.GET.get('donation-filter-is_verified')
         result_counter = self.object_list.count()
         context['query'] = query
         context['query_type'] = query_type
         context['query_priority'] = query_priority
         context['query_status'] = query_status
         context['query_donate_type'] = query_donate_type
+        context['query_is_verified'] = query_is_verified
         context['count'] = result_counter
         context['page_type'] = self.request.GET.get('page-type', None)
         context['can_filter'] = True
@@ -1270,95 +1311,179 @@ class DonationFilteredListView(ListView):
         status_filtered = method_dict.get('donation-filter-status', None)
         donate_type_filtered = method_dict.get(
             'donation-filter-donate_type', None)
-        # print(type_filtered)
+        is_verified_filtered = method_dict.get(
+            'donation-filter-is_verified', None)
         if page_type == "OFFER":
             cat = 0
         else:
             cat = 1
-        # if type_filtered == "":
-        #     type_filtered = None
-        # if priority_filtered == "":
-        #     priority_filtered = None
-        # if status_filtered == "":
-        #     status_filtered = None
-        # if query is not None:
-        #     if type_filtered == "tissue":
-        #         return Donation.objects.search(query).filter(category=cat).tissue_type()
-        #     elif type_filtered == "organ":
-        #         return Donation.objects.search(query).filter(category=cat).organ_type()
-        #     elif type_filtered == "blood":
-        #         return Donation.objects.search(query).filter(category=cat).blood_type()
-        #     else:
-        #         return Donation.objects.search(query).filter(category=cat)
-        # if query == None:
-        #     if type_filtered == "tissue":
-        #         return Donation.objects.filter(category=cat).tissue_type()
-        #     elif type_filtered == "organ":
-        #         return Donation.objects.filter(category=cat).organ_type()
-        #     elif type_filtered == "blood":
-        #         return Donation.objects.filter(category=cat).blood_type()
-        #     else:
-        #         return Donation.objects.all().filter(category=cat)
         qs = Donation.objects.all().filter(category=cat)
-        if not type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "":
-            filter_dict = {'type': type_filtered, 'priority': priority_filtered, 'donate_type': donate_type_filtered,
-                           'donation_progress__progress_status': status_filtered}
-        elif not type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "":
-            filter_dict = {'type': type_filtered,
-                           'priority': priority_filtered}
-        elif not type_filtered == "" and priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "":
-            filter_dict = {'type': type_filtered,
-                           'donation_progress__progress_status': status_filtered}
-        elif type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "":
-            filter_dict = {'priority': priority_filtered,
-                           'donation_progress__progress_status': status_filtered}
-        elif not type_filtered == "" and priority_filtered == "" and status_filtered == "" and donate_type_filtered == "":
-            filter_dict = {'type': type_filtered}
-        elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "":
-            filter_dict = {'priority': priority_filtered}
-        elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "":
-            filter_dict = {
-                'donation_progress__progress_status': status_filtered}
-        #
-        elif not type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "":
-            filter_dict = {'type': type_filtered, 'priority': priority_filtered,
-                           'donation_progress__progress_status': status_filtered}
-        elif not type_filtered == "" and not priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "":
-            filter_dict = {'type': type_filtered, 'donate_type': donate_type_filtered,
-                           'priority': priority_filtered}
-        elif not type_filtered == "" and priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "":
-            filter_dict = {'type': type_filtered, 'donate_type': donate_type_filtered,
-                           'donation_progress__progress_status': status_filtered}
-        elif type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "":
-            filter_dict = {'priority': priority_filtered, 'donate_type': donate_type_filtered,
-                           'donation_progress__progress_status': status_filtered}
-        elif not type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "":
-            filter_dict = {'type': type_filtered,
-                           'donate_type': donate_type_filtered}
-        elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "":
-            filter_dict = {'priority': priority_filtered,
-                           'donate_type': donate_type_filtered}
-        elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "":
-            filter_dict = {'donate_type': donate_type_filtered,
-                           'donation_progress__progress_status': status_filtered}
-        elif type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "":
-            filter_dict = {'donate_type': donate_type_filtered}
+
+        filter_modules_dict = {'type': type_filtered, 'priority': priority_filtered, 
+                               'donation_progress__progress_status': status_filtered,
+                               'donate_type': donate_type_filtered, 
+                               'is_verified': is_verified_filtered}
+        if not type_filtered == "" or not priority_filtered == "" or not status_filtered == "" or not donate_type_filtered == "" or not is_verified_filtered == "":
+            #  ------------------------- Magic Starts -------------------------
+            from collections import OrderedDict
+            ordered_dict = OrderedDict(filter_modules_dict)
+
+            list_pre = []
+            for key, value in ordered_dict.items():
+                if value:
+                    list_pre.append(f"{key}- {value}")
+            list_to_dict_like_string = ", ".join(list_pre)
+            string_to_dict = dict((x.strip(), y.strip()) for x, y in (
+                element.split('-') for element in list_to_dict_like_string.split(', ')))
+
+            filter_dict = string_to_dict
+        #  ------------------------- Magic Ends -------------------------
         else:
             filter_dict = {'publication_status': 0}
+
+        # if not type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered, 'priority': priority_filtered, 'donate_type': donate_type_filtered, 'is_verified': is_verified_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        # else:
+        #     filter_dict = {'publication_status': 0}
+
+        # All
+        # if not type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered, 'priority': priority_filtered, 'donate_type': donate_type_filtered, 'is_verified': is_verified_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        
+        # # Solo
+        # elif not type_filtered == "" and priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered}
+        # elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'priority': priority_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'donation_progress__progress_status': status_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {
+        #         'donate_type': donate_type_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {
+        #         'is_verified': iis_verified_filtereds_verified_filtered}
+
+        # # Type 
+        # elif not type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered, 'priority': priority_filtered}
+        # elif not type_filtered == "" and priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        # elif not type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered,
+        #                    'donate_type': donate_type_filtered}
+        # elif not type_filtered == "" and priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered,
+        #                    'is_verified': is_verified_filtered}
+
+        # # Priority
+        # # elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        # #     filter_dict = {'type': type_filtered,
+        # #                    'priority': priority_filtered}
+        # elif type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'priority': priority_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        # elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'priority': priority_filtered,
+        #                    'donate_type': donate_type_filtered}
+        # elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'priority': priority_filtered,
+        #                    'is_verified': is_verified_filtered}
+
+        # # Status
+        # elif type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'donation_progress__progress_status': status_filtered,
+        #                    'priority': priority_filtered}
+        # # elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        # #     filter_dict = {'type': type_filtered,
+        # #                    'donation_progress__progress_status': status_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'donation_progress__progress_status': status_filtered,
+        #                    'donate_type': donate_type_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'donation_progress__progress_status': status_filtered,
+        #                    'is_verified': is_verified_filtered}
+
+        # # Donate Type
+        # elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'donate_type': donate_type_filtered,
+        #                    'priority': priority_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'donate_type': donate_type_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        # # elif not type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and is_verified_filtered == "":
+        # #     filter_dict = {'type': type_filtered,
+        # #                    'donate_type': donate_type_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'donate_type': donate_type_filtered,
+        #                    'is_verified': is_verified_filtered}
+        
+        # # Is Verified
+        # elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'is_verified': is_verified_filtered,
+        #                    'priority': priority_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'is_verified': is_verified_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'is_verified': is_verified_filtered,
+        #                    'donate_type': donate_type_filtered}
+
+        # ## More Than Two Chain
+        # elif not type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered,
+        #                    'priority': priority_filtered, 'donation_progress__progress_status': status_filtered}
+        # elif not type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered,
+        #                    'priority': priority_filtered, 'donation_progress__progress_status': status_filtered,
+        #                    'donate_type': donate_type_filtered}
+        # elif not type_filtered == "" and priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered,
+        #                    'is_verified': is_verified_filtered, 'donation_progress__progress_status': status_filtered,
+        #                    'donate_type': donate_type_filtered}
+        # #
+        # elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'is_verified': is_verified_filtered, 'donation_progress__progress_status': status_filtered,
+        #                    'donate_type': donate_type_filtered}
+        # elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'priority': priority_filtered,
+        #                    'is_verified': is_verified_filtered, 'donate_type': donate_type_filtered}
+        # elif not type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered,
+        #                    'is_verified': is_verified_filtered, 'donate_type': donate_type_filtered}
+        # elif type_filtered == "" and priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'donation_progress__progress_status': status_filtered,
+        #                    'is_verified': is_verified_filtered, 'donate_type': donate_type_filtered}
+        # # 4 Chain
+        # if type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'priority': priority_filtered, 'donate_type': donate_type_filtered, 'is_verified': is_verified_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        # if not type_filtered == "" and priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered, 'donate_type': donate_type_filtered, 'is_verified': is_verified_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        # # 5 Chain
+        # if not type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
+        #     filter_dict = {'type': type_filtered, 'priority': priority_filtered, 'donate_type': donate_type_filtered, 'is_verified': is_verified_filtered,
+        #                    'donation_progress__progress_status': status_filtered}
+        # else:
+        #     filter_dict = {'publication_status': 0}
         if query is not None:
             if request.user.is_superuser:
                 qs = Donation.objects.search(
                     query).filter(**filter_dict).filter(category=cat)
             else:
                 qs = Donation.objects.search(
-                    query).filter(**filter_dict).filter(category=cat).living_donates()
+                    query).filter(**filter_dict).filter(category=cat).living_donates().is_verified()
         else:
             if request.user.is_superuser:
                 qs = Donation.objects.filter(
                     **filter_dict).filter(category=cat)
             else:
                 qs = Donation.objects.filter(
-                    **filter_dict).filter(category=cat).living_donates()
+                    **filter_dict).filter(category=cat).living_donates().is_verified()
         # filter_dict = {'subcat__id__in': [1, 3, 5]}
         # print(filter_dict.get('priority'))
         # for key, value in filter_dict.items():
@@ -1398,9 +1523,15 @@ class ManageProgressStatus(UpdateView):
     def get_success_url(self):
         self.object = self.get_object()
         if self.object.donation.category == 0:
-            return reverse('donations:my_donation_offers')
+            if self.request.user.is_superuser:
+                return reverse('donations:donation_offers_list')
+            else:
+                return reverse('donations:my_donation_offers')
         else:
-            return reverse('donations:my_donation_requests')
+            if self.request.user.is_superuser:
+                return reverse('donations:donation_requests_list')
+            else:
+                return reverse('donations:my_donation_requests')
         return reverse('home')
 
     def get_form_kwargs(self):
@@ -1413,7 +1544,7 @@ class ManageProgressStatus(UpdateView):
     def user_passes_test(self, request):
         if request.user.is_authenticated:
             self.object = self.get_object()
-            if self.object.donation.user.user == request.user:
+            if self.object.donation.user.user == request.user or request.user.is_superuser:
                 return True
         return False
 

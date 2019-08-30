@@ -56,8 +56,8 @@ var inputStyle = contact_input.attr("style");
 var contactFake = $("#contactFake");
 var contact2Fake = $("#contact2Fake");
 var contact3Fake = $("#contact3Fake");
-var set_date_between = $("#set_date_between");
-var hide_set_date_between = $("#hide_set_date_between");
+// var set_date_between = $("#set_date_between");
+// var hide_set_date_between = $("#hide_set_date_between");
 var datetime = $("#datetime");
 var date_with_time = $("#date_with_time");
 var date_without_time = $("#date_without_time");
@@ -363,19 +363,27 @@ $(document).ready(function () {
     advanced_editing.removeClass("hidden");
     basic_editing.addClass("hidden");
   });
+  // console.log($("#donate_type").val());
   advanced.click(function () {
     special_input_group.removeClass("hidden");
-    preferred_date_from_group.addClass("hidden");
-    preferred_date_to_group.addClass("hidden");
     advanced.addClass("hidden");
-    if (set_date_between.hasClass("hidden")) {
-      set_date_between.removeClass("hidden");
-    } else {
-      set_date_between.addClass("hidden");
-      preferred_date_from_group.removeClass("hidden");
-      preferred_date_to_group.removeClass("hidden");
-    }
     hide_advanced.removeClass("hidden");
+    // console.log($("#donate_type").val());
+    if ($("#donate_type").val() == 1) {
+      $(".date-input-group").addClass("hidden");
+    }
+    else{
+      $(".date-input-group").removeClass("hidden");
+    }
+    // preferred_date_from_group.addClass("hidden");
+    // preferred_date_to_group.addClass("hidden");
+    // if (set_date_between.hasClass("hidden")) {
+    //   set_date_between.removeClass("hidden");
+    // } else {
+    //   set_date_between.addClass("hidden");
+    //   preferred_date_from_group.removeClass("hidden");
+    //   preferred_date_to_group.removeClass("hidden");
+    // }
     if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
       $("#donation_priority_input-group").addClass("hidden");
     }
@@ -383,11 +391,11 @@ $(document).ready(function () {
   hide_advanced.click(function () {
     special_input_group.addClass("hidden");
     advanced.removeClass("hidden");
-    if (set_date_between.hasClass("hidden")) {
-      preferred_date_from_group.addClass("hidden");
-      preferred_date_to_group.addClass("hidden");
-    }
     hide_advanced.addClass("hidden");
+    // if (set_date_between.hasClass("hidden")) {
+    //   preferred_date_from_group.addClass("hidden");
+    //   preferred_date_to_group.addClass("hidden");
+    // }
   });
   hide_contact2.click(function () {
     contact3_group.addClass("hidden");
@@ -442,27 +450,27 @@ $(document).ready(function () {
   //   set_date_between.addClass('hidden');
   //   hide_set_date_between.removeClass('hidden');
   // }
-  if (preferred_date_from_group.hasClass("hidden") == true) {
-    set_date_between.removeClass("hidden");
-    hide_set_date_between.addClass("hidden");
-  } else {
-    set_date_between.addClass("hidden");
-    hide_set_date_between.removeClass("hidden");
-  }
-  set_date_between.click(function () {
-    preferred_date_from_group.removeClass("hidden");
-    preferred_date_to_group.removeClass("hidden");
-    set_date_between.addClass("hidden");
-    hide_set_date_between.removeClass("hidden");
-  });
-  hide_set_date_between.click(function () {
-    preferred_date_from_group.addClass("hidden");
-    preferred_date_to_group.addClass("hidden");
-    preferred_date_from_input.val("");
-    preferred_date_to_input.val("");
-    hide_set_date_between.addClass("hidden");
-    set_date_between.removeClass("hidden");
-  });
+  // if (preferred_date_from_group.hasClass("hidden") == true) {
+  //   set_date_between.removeClass("hidden");
+  //   hide_set_date_between.addClass("hidden");
+  // } else {
+  //   set_date_between.addClass("hidden");
+  //   hide_set_date_between.removeClass("hidden");
+  // }
+  // set_date_between.click(function () {
+  //   preferred_date_from_group.removeClass("hidden");
+  //   preferred_date_to_group.removeClass("hidden");
+  //   set_date_between.addClass("hidden");
+  //   hide_set_date_between.removeClass("hidden");
+  // });
+  // hide_set_date_between.click(function () {
+  //   preferred_date_from_group.addClass("hidden");
+  //   preferred_date_to_group.addClass("hidden");
+  //   preferred_date_from_input.val("");
+  //   preferred_date_to_input.val("");
+  //   hide_set_date_between.addClass("hidden");
+  //   set_date_between.removeClass("hidden");
+  // });
   // Date Time
   if (preferred_date_input.val() != "") {
     preferred_date_moment = moment(preferred_date_input.val()).format(
@@ -682,6 +690,9 @@ function typeFunction() {
     $("#contact2_extra_info").html("");
     $("#organ_name_extra_info").html("");
     $("#contact2InfoModalBtn").addClass("hidden");
+    advanced.removeClass("hidden");
+    hide_advanced.addClass("hidden");
+    special_input_group.addClass("hidden");
   } 
   else if (type_input.val() == 1) {
     $("#donation_blood_group_input option[value='Any Blood Group']").each(function () {
@@ -722,6 +733,9 @@ function typeFunction() {
     $("#contact2_extra_info").html("");
     $("#organ_name_extra_info").html("");
     $("#contact2InfoModalBtn").addClass("hidden");
+    advanced.removeClass("hidden");
+    hide_advanced.addClass("hidden");
+    special_input_group.addClass("hidden");
   } 
   else if (type_input.val() == 2) {
     $("#donation_blood_group_input option[value='Any Blood Group']").each(function () {
@@ -753,7 +767,7 @@ function typeFunction() {
     $("#blood_group_priority").addClass("text-info");
     blood_group_input.attr("required", true);
     blood_group_group.removeClass("hidden");
-    $("#donate_type").val(0);
+    $("#donate_type").val(1);
     $("#contact2_priority").html("(optional)");
     $("#contact2_priority").addClass("text-muted");
     contact2_input.attr("required", false);
@@ -762,6 +776,9 @@ function typeFunction() {
     $("#contact2_extra_info").html("");
     $("#organ_name_extra_info").html("");
     $("#contact2InfoModalBtn").addClass("hidden");
+    advanced.removeClass("hidden");
+    hide_advanced.addClass("hidden");
+    special_input_group.addClass("hidden");
   } else {
     tissue_name_group.addClass("hidden");
     organ_name_group.addClass("hidden");
@@ -788,6 +805,9 @@ function typeFunction() {
     $("#contact2_extra_info").html("");
     $("#organ_name_extra_info").html("");
     $("#contact2InfoModalBtn").addClass("hidden");
+    advanced.removeClass("hidden");
+    hide_advanced.addClass("hidden");
+    special_input_group.addClass("hidden");
   }
 }
 
@@ -1055,6 +1075,9 @@ $(document).ready(function () {
 
 function organFunction() {
   resetMessage();
+  advanced.removeClass("hidden");
+  hide_advanced.addClass("hidden");
+  special_input_group.addClass("hidden");
   // Deceased Donations
   if (organ_name_input.val() == "Heart") {
     quantity_input.val(1);
@@ -1172,6 +1195,9 @@ function organFunction() {
 
 function tissueFunction() {
   resetMessage();
+  advanced.removeClass("hidden");
+  hide_advanced.addClass("hidden");
+  special_input_group.addClass("hidden");
   // Deceased Donations
   if (tissue_name_input.val() == "Corneas") {
     // if ((page_title.val() == "Create donation offer") || page_title.val() == "Update donation offer") {
@@ -1355,6 +1381,9 @@ function quantityFunction() {
       $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
       $("#organ_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
       $("#contact2InfoModalBtn").removeClass("hidden");
+      advanced.removeClass("hidden");
+      hide_advanced.addClass("hidden");
+      special_input_group.addClass("hidden");
     // }
   }
   else if ((organ_name_input.val() == "Kidney") && (input_value > 1)) {
@@ -1369,6 +1398,9 @@ function quantityFunction() {
       $("#contact2_extra_info").html("Please provide a contact number of your family member/close friend.");
       $("#organ_name_extra_info").html("This donation is Deceased type (Donation process occurs after confirming donors death).");
       $("#contact2InfoModalBtn").removeClass("hidden");
+      advanced.removeClass("hidden");
+      hide_advanced.addClass("hidden");
+      special_input_group.addClass("hidden");
     // }
   }
   else{
@@ -1381,6 +1413,9 @@ function quantityFunction() {
       $("#contact2_extra_info").html("");
       $("#organ_name_extra_info").html("");
       $("#contact2InfoModalBtn").addClass("hidden");
+      advanced.removeClass("hidden");
+      hide_advanced.addClass("hidden");
+      special_input_group.addClass("hidden");
     // }
   }
 }
@@ -1720,12 +1755,12 @@ $(document).ready(function () {
     // if ($("#donation_" + error_input_id + "_input").hasClass("special-input")) {
     //   special_input_group.removeClass("hidden");
     // }
-    if (
-      error_input_id == "preferred_date_from" ||
-      error_input_id == "preferred_date_to"
-    ) {
-      set_date_between.addClass("hidden");
-    }
+    // if (
+    //   error_input_id == "preferred_date_from" ||
+    //   error_input_id == "preferred_date_to"
+    // ) {
+    //   set_date_between.addClass("hidden");
+    // }
     // $("#donation_" + error_input_id + "-group").removeClass("hidden");
     $("#donation_" + error_input_id + "_input").focus();
   });

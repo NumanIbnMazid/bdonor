@@ -383,6 +383,14 @@ class Donation(models.Model):
             response = True
         return response
 
+    def get_verification_status(self):
+        status = "Undefined"
+        if self.is_verified == True:
+            status = "Verified"
+        if self.is_verified == False:
+            status = "Not Verified"
+        return status
+
     def is_virtually_verified(self):
         virtual_verified = True
         if self.donate_type == 0:

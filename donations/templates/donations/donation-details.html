@@ -40,12 +40,12 @@
         {% endif %}
         {% endcomment %}
         
-        <a href="#" class="btn btn-secondary btn-xs m-2 text-deco-none">
+        <p class="btn btn-default btn-xs m-2 text-deco-none">
             <span class="font-13 font-bold">
-                <i class="flaticon-medical"></i>
-                View my response
+                <i class="flaticon-check"></i>
+                Responded
             </span>
-        </a>
+        </p>
         {% else %}
         {% if not object.user.user == request.user %}
         {% if not object.donation_progress.progress_status == 1 %}
@@ -64,9 +64,9 @@
 
         {% include 'snippets/modules/chat-module.html' with instance=object.user class="btn btn-primary btn-sm text-deco-none" text="chat" %}
 
-        {% if object.user.user == request.user %}
-
         {% include 'snippets/modules/donation-modify-module.html' with instance=object %}
+
+        {% if object.user.user == request.user %}
 
         <button type="button" class="btn btn-info btn-sm text-deco-none m-1" id="see_viewers" data-toggle="modal"
             data-target="#modal-see-viewers">

@@ -16,200 +16,235 @@ class DonationForm(forms.ModelForm):
         super(DonationForm, self).__init__(*args, **kwargs)
         user_profile_filter = UserProfile.objects.filter(
             user=self.request.user)
-        # self.fields['title'].help_text = "Maximum 50 characters allowed. Keep it short. Only '_A-z0-9+-.,' these characters and spaces are allowed."
-        # self.fields['title'].widget.attrs.update({
-        #     'placeholder': 'I need . . .',
-        #     'id': 'donation_title_input',
-        #     'maxlength': 50,
-        #     'pattern': "^[_A-z0-9 +-.,]{1,}$"
-        # })
-        self.fields['type'].help_text = "Select donation type."
-        self.fields['type'].widget.attrs.update({
-            'id': 'donation_type_input',
-            'onchange': "typeFunction()",
-        })
-        # self.fields['custom_type'].help_text = "Maximum 30 characters allowed. Only '_A-z-' these characters and spaces are allowed."
-        # self.fields['custom_type'].widget.attrs.update({
-        #     'id': 'donation_custom_type_input',
-        #     'placeholder': 'Enter donation type name...',
-        #     'maxlength': 30,
-        #     'pattern': "^[_A-z -]{1,}$",
-        #     'onkeyup': "resetMessage()"
-        # })
-        # if user_profile_filter.exists() and not user_profile_filter.first().blood_group == "":
-        #     self.initial['blood_group'] = user_profile_filter.first().blood_group
-        self.fields['blood_group'].help_text = "Select blood group."
-        self.fields['blood_group'].widget.attrs.update({
-            'id': 'donation_blood_group_input',
-            'onchange': "resetMessage()"
-        })
-        if user_profile_filter.exists() and not user_profile_filter.first().blood_group == "" and self.object == None:
-            self.initial['blood_group'] = user_profile_filter.first().blood_group
-        self.fields['blood_bag'].help_text = "Enter quantity."
-        self.fields['blood_bag'].widget.attrs.update({
-            'id': 'donation_blood_bag_input',
-            'placeholder': 'Enter blood bag quantity...',
-            'onchange': "resetMessage()"
-        })
-        self.fields['organ_name'].help_text = "Select organ."
-        self.fields['organ_name'].widget.attrs.update({
-            'id': 'donation_organ_name_input',
-            'onchange': "resetMessage(), organFunction()"
-        })
-        self.fields['tissue_name'].help_text = "Select tissue."
-        self.fields['tissue_name'].widget.attrs.update({
-            'id': 'donation_tissue_name_input',
-            'onchange': "resetMessage(), tissueFunction()"
-        })
-        self.fields['quantity'].help_text = "Enter quantity."
-        self.fields['quantity'].widget.attrs.update({
-            'id': 'donation_quantity_input',
-            'placeholder': 'Enter quantity...',
-            'onkeyup': "resetMessage(), quantityFunction()"
-        })
-        # self.fields['organ_name'].help_text = "Maximum 30 characters, '_A-z -' and spaces allowed."
-        # self.fields['organ_name'].widget.attrs.update({
-        #     'id': 'donation_organ_name_input',
-        #     'placeholder': 'Type organ name...',
-        #     'maxlength': 30,
-        #     'onkeyup': "resetMessage()",
-        #     'pattern': "^[_A-z -]{1,}$"
-        # })
-        self.fields['details'].help_text = "Maximum 400 characters allowed."
-        self.fields['details'].widget.attrs.update({
-            'id': 'donation_details_input',
-            'placeholder': 'Type details...',
-            'maxlength': 400,
-            'rows': 2,
-            'cols': 2
-        })
-        # self.fields['details'].help_text = "Enter details information..."
-        self.fields['details_fake'].label = "Details"
-        self.fields['details_fake'].widget.attrs.update({
-            'id': 'donation_details_fake_input',
-            # 'placeholder': 'Type details...',
-            # 'maxlength': 400,
-            # 'rows': 2,
-            # 'cols': 2
-        })
-        self.fields['contact'].help_text = "Type contact number..."
-        self.fields['contact'].widget.attrs.update({
-            'id': 'donation_contact_input',
-            # 'placeholder': 'Type contact number...',
-            'maxlength': 20,
-            'minlength': 5,
-        })
-        if user_profile_filter.exists() and not user_profile_filter.first().contact == "" and self.object == None:
-            self.initial['contact'] = user_profile_filter.first().contact
-        self.fields['contact2'].help_text = "Type second contact number..."
-        self.fields['contact2'].widget.attrs.update({
-            'id': 'donation_contact2_input',
-            # 'placeholder': 'Type second contact number...',
-            'maxlength': 20,
-            'minlength': 5,
-        })
-        self.fields['contact3'].help_text = "Type third contact number..."
-        self.fields['contact3'].widget.attrs.update({
-            'id': 'donation_contact3_input',
-            # 'placeholder': 'Type third contact number...',
-            'maxlength': 20,
-            'minlength': 5,
-        })
+        if self.request.user.is_superuser == True:
+            self.fields.pop("type")
+            self.fields.pop("organ_name")
+            self.fields.pop("tissue_name")
+            self.fields.pop("quantity")
+            self.fields.pop("blood_group")
+            self.fields.pop("blood_bag")
+            self.fields.pop("contact")
+            self.fields.pop("contact2")
+            self.fields.pop("contact3")
+            self.fields.pop("location")
+            self.fields.pop("city")
+            self.fields.pop("state")
+            self.fields.pop("country")
+            self.fields.pop("hospital")
+            self.fields.pop("details")
+            self.fields.pop("details_fake")
+            self.fields.pop("preferred_date")
+            self.fields.pop("preferred_date_from")
+            self.fields.pop("preferred_date_to")
+            self.fields.pop("priority")
+            self.fields.pop("publication_status")
+            self.fields['is_verified'].help_text = "Select verification status."
+            self.fields['is_verified'].label = "Verification Status"
+            VERIFICATION_OPTIONS = (
+                (True, "Verified"),
+                (False, "Not Verified"),
+            )
+            self.fields['is_verified'] = forms.ChoiceField(
+                required=True, choices=VERIFICATION_OPTIONS)
+            self.fields['is_verified'].widget.attrs.update({
+                'id': 'donation_is_verified_input',
+            })
+        else:
+            self.fields.pop("is_verified")
+            # self.fields['title'].help_text = "Maximum 50 characters allowed. Keep it short. Only '_A-z0-9+-.,' these characters and spaces are allowed."
+            # self.fields['title'].widget.attrs.update({
+            #     'placeholder': 'I need . . .',
+            #     'id': 'donation_title_input',
+            #     'maxlength': 50,
+            #     'pattern': "^[_A-z0-9 +-.,]{1,}$"
+            # })
+            self.fields['type'].help_text = "Select donation type."
+            self.fields['type'].widget.attrs.update({
+                'id': 'donation_type_input',
+                'onchange': "typeFunction()",
+            })
+            # self.fields['custom_type'].help_text = "Maximum 30 characters allowed. Only '_A-z-' these characters and spaces are allowed."
+            # self.fields['custom_type'].widget.attrs.update({
+            #     'id': 'donation_custom_type_input',
+            #     'placeholder': 'Enter donation type name...',
+            #     'maxlength': 30,
+            #     'pattern': "^[_A-z -]{1,}$",
+            #     'onkeyup': "resetMessage()"
+            # })
+            # if user_profile_filter.exists() and not user_profile_filter.first().blood_group == "":
+            #     self.initial['blood_group'] = user_profile_filter.first().blood_group
+            self.fields['blood_group'].help_text = "Select blood group."
+            self.fields['blood_group'].widget.attrs.update({
+                'id': 'donation_blood_group_input',
+                'onchange': "resetMessage()"
+            })
+            if user_profile_filter.exists() and not user_profile_filter.first().blood_group == "" and self.object == None:
+                self.initial['blood_group'] = user_profile_filter.first().blood_group
+            self.fields['blood_bag'].help_text = "Enter quantity."
+            self.fields['blood_bag'].widget.attrs.update({
+                'id': 'donation_blood_bag_input',
+                'placeholder': 'Enter blood bag quantity...',
+                'onchange': "resetMessage()"
+            })
+            self.fields['organ_name'].help_text = "Select organ."
+            self.fields['organ_name'].widget.attrs.update({
+                'id': 'donation_organ_name_input',
+                'onchange': "resetMessage(), organFunction()"
+            })
+            self.fields['tissue_name'].help_text = "Select tissue."
+            self.fields['tissue_name'].widget.attrs.update({
+                'id': 'donation_tissue_name_input',
+                'onchange': "resetMessage(), tissueFunction()"
+            })
+            self.fields['quantity'].help_text = "Enter quantity."
+            self.fields['quantity'].widget.attrs.update({
+                'id': 'donation_quantity_input',
+                'placeholder': 'Enter quantity...',
+                'onkeyup': "resetMessage(), quantityFunction()"
+            })
+            # self.fields['organ_name'].help_text = "Maximum 30 characters, '_A-z -' and spaces allowed."
+            # self.fields['organ_name'].widget.attrs.update({
+            #     'id': 'donation_organ_name_input',
+            #     'placeholder': 'Type organ name...',
+            #     'maxlength': 30,
+            #     'onkeyup': "resetMessage()",
+            #     'pattern': "^[_A-z -]{1,}$"
+            # })
+            self.fields['details'].help_text = "Maximum 400 characters allowed."
+            self.fields['details'].widget.attrs.update({
+                'id': 'donation_details_input',
+                'placeholder': 'Type details...',
+                'maxlength': 400,
+                'rows': 2,
+                'cols': 2
+            })
+            # self.fields['details'].help_text = "Enter details information..."
+            self.fields['details_fake'].label = "Details"
+            self.fields['details_fake'].widget.attrs.update({
+                'id': 'donation_details_fake_input',
+                # 'placeholder': 'Type details...',
+                # 'maxlength': 400,
+                # 'rows': 2,
+                # 'cols': 2
+            })
+            self.fields['contact'].help_text = "Type contact number..."
+            self.fields['contact'].widget.attrs.update({
+                'id': 'donation_contact_input',
+                # 'placeholder': 'Type contact number...',
+                'maxlength': 20,
+                'minlength': 5,
+            })
+            if user_profile_filter.exists() and not user_profile_filter.first().contact == "" and self.object == None:
+                self.initial['contact'] = user_profile_filter.first().contact
+            self.fields['contact2'].help_text = "Type second contact number..."
+            self.fields['contact2'].widget.attrs.update({
+                'id': 'donation_contact2_input',
+                # 'placeholder': 'Type second contact number...',
+                'maxlength': 20,
+                'minlength': 5,
+            })
+            self.fields['contact3'].help_text = "Type third contact number..."
+            self.fields['contact3'].widget.attrs.update({
+                'id': 'donation_contact3_input',
+                # 'placeholder': 'Type third contact number...',
+                'maxlength': 20,
+                'minlength': 5,
+            })
 
-        self.fields['preferred_date'].help_text = "Select date that you prefer to manage donation."
-        self.fields['preferred_date'].widget.attrs.update({
-            'id': 'donation_preferred_date_input',
-            'placeholder': 'Select your preferred date...',
-        })
-        if not self.object == None and self.object.preferred_date is not None:
-            if self.object.preferred_date.strftime("%H:%M:%S") == "00:00:00":
-                self.initial['preferred_date'] = self.object.preferred_date.strftime(
-                    "%Y-%m-%d")
-            else:
-                self.initial['preferred_date'] = self.object.preferred_date.strftime(
-                    "%Y-%m-%d %H:%M")
+            self.fields['preferred_date'].help_text = "Select date that you prefer to manage donation."
+            self.fields['preferred_date'].widget.attrs.update({
+                'id': 'donation_preferred_date_input',
+                'placeholder': 'Select your preferred date...',
+            })
+            if not self.object == None and self.object.preferred_date is not None:
+                if self.object.preferred_date.strftime("%H:%M:%S") == "00:00:00":
+                    self.initial['preferred_date'] = self.object.preferred_date.strftime(
+                        "%Y-%m-%d")
+                else:
+                    self.initial['preferred_date'] = self.object.preferred_date.strftime(
+                        "%Y-%m-%d %H:%M")
 
-        self.fields['preferred_date_from'].help_text = "Select date from that you prefer to manage donation."
-        self.fields['preferred_date_from'].widget.attrs.update({
-            'id': 'donation_preferred_date_from_input',
-            'placeholder': 'Preferred date starts from...',
-        })
-        if not self.object == None and self.object.preferred_date_from is not None:
-            if self.object.preferred_date_from.strftime("%H:%M:%S") == "00:00:00":
-                self.initial['preferred_date_from'] = self.object.preferred_date_from.strftime(
-                    "%Y-%m-%d")
-            else:
-                self.initial['preferred_date_from'] = self.object.preferred_date_from.strftime(
-                    "%Y-%m-%d %H:%M")
+            self.fields['preferred_date_from'].help_text = "Select date from that you prefer to manage donation."
+            self.fields['preferred_date_from'].widget.attrs.update({
+                'id': 'donation_preferred_date_from_input',
+                'placeholder': 'Preferred date starts from...',
+            })
+            if not self.object == None and self.object.preferred_date_from is not None:
+                if self.object.preferred_date_from.strftime("%H:%M:%S") == "00:00:00":
+                    self.initial['preferred_date_from'] = self.object.preferred_date_from.strftime(
+                        "%Y-%m-%d")
+                else:
+                    self.initial['preferred_date_from'] = self.object.preferred_date_from.strftime(
+                        "%Y-%m-%d %H:%M")
 
-        self.fields['preferred_date_to'].help_text = "Select date to that you prefer to manage donation."
-        self.fields['preferred_date_to'].widget.attrs.update({
-            'id': 'donation_preferred_date_to_input',
-            'placeholder': 'Preferred date ends at...',
-        })
-        if not self.object == None and self.object.preferred_date_to is not None:
-            if self.object.preferred_date_to.strftime("%H:%M:%S") == "00:00:00":
-                self.initial['preferred_date_to'] = self.object.preferred_date_to.strftime(
-                    "%Y-%m-%d")
-            else:
-                self.initial['preferred_date_to'] = self.object.preferred_date_to.strftime(
-                    "%Y-%m-%d %H:%M")
+            self.fields['preferred_date_to'].help_text = "Select date to that you prefer to manage donation."
+            self.fields['preferred_date_to'].widget.attrs.update({
+                'id': 'donation_preferred_date_to_input',
+                'placeholder': 'Preferred date ends at...',
+            })
+            if not self.object == None and self.object.preferred_date_to is not None:
+                if self.object.preferred_date_to.strftime("%H:%M:%S") == "00:00:00":
+                    self.initial['preferred_date_to'] = self.object.preferred_date_to.strftime(
+                        "%Y-%m-%d")
+                else:
+                    self.initial['preferred_date_to'] = self.object.preferred_date_to.strftime(
+                        "%Y-%m-%d %H:%M")
 
-        self.fields['location'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
-        self.fields['location'].widget.attrs.update({
-            'id': 'donation_location_input',
-            'placeholder': 'Type preferred location...',
-            'maxlength': 180,
-            'pattern': "^[_A-z0-9 +-.,#/]{1,}$",
-        })
-        self.fields['city'].help_text = 'Enter your City.'
-        self.fields['city'].widget.attrs.update({
-            'id': 'donation_city_input',
-            'placeholder': 'Enter city...',
-            'maxlength': 25,
-        })
-        if user_profile_filter.exists() and not user_profile_filter.first().city == "" and self.object == None:
-            self.initial['city'] = user_profile_filter.first().city
-        self.fields['state'].help_text = 'Enter your State.'
-        self.fields['state'].widget.attrs.update({
-            'id': 'donation_state_input',
-            'placeholder': 'Enter state...',
-            'maxlength': 25,
-        })
-        if user_profile_filter.exists() and not user_profile_filter.first().state == "" and self.object == None:
-            self.initial['state'] = user_profile_filter.first().state
-        self.fields['country'].help_text = 'Select your Country.'
-        self.fields['country'].widget.attrs.update({
-            'id': 'donation_country_input',
-            'placeholder': 'Select country...',
-            'maxlength': 25,
-        })
-        if user_profile_filter.exists() and not user_profile_filter.first().country == "" and self.object == None:
-            self.initial['country'] = user_profile_filter.first().country
-        self.fields['hospital'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
-        self.fields['hospital'].widget.attrs.update({
-            'id': 'donation_hospital_input',
-            'placeholder': 'Type preferred hospital...',
-            'maxlength': 180,
-            'pattern': "^[_A-z0-9 +-.,#/]{1,}$"
-        })
-        self.fields['priority'].help_text = "Selecting priority as important helps to draw attention of viewers."
-        self.fields['priority'].widget.attrs.update({
-            'id': 'donation_priority_input',
-        })
-        self.fields[
-            'publication_status'].help_text = "Selecting publication status as unpublished will save your post as draft."
-        self.fields['publication_status'].widget.attrs.update({
-            'id': 'donation_publication_status_input',
-        })
+            self.fields['location'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
+            self.fields['location'].widget.attrs.update({
+                'id': 'donation_location_input',
+                'placeholder': 'Type preferred location...',
+                'maxlength': 180,
+                'pattern': "^[_A-z0-9 +-.,#/]{1,}$",
+            })
+            self.fields['city'].help_text = 'Enter your City.'
+            self.fields['city'].widget.attrs.update({
+                'id': 'donation_city_input',
+                'placeholder': 'Enter city...',
+                'maxlength': 25,
+            })
+            if user_profile_filter.exists() and not user_profile_filter.first().city == "" and self.object == None:
+                self.initial['city'] = user_profile_filter.first().city
+            self.fields['state'].help_text = 'Enter your State.'
+            self.fields['state'].widget.attrs.update({
+                'id': 'donation_state_input',
+                'placeholder': 'Enter state...',
+                'maxlength': 25,
+            })
+            if user_profile_filter.exists() and not user_profile_filter.first().state == "" and self.object == None:
+                self.initial['state'] = user_profile_filter.first().state
+            self.fields['country'].help_text = 'Select your Country.'
+            self.fields['country'].widget.attrs.update({
+                'id': 'donation_country_input',
+                'placeholder': 'Select country...',
+                'maxlength': 25,
+            })
+            if user_profile_filter.exists() and not user_profile_filter.first().country == "" and self.object == None:
+                self.initial['country'] = user_profile_filter.first().country
+            self.fields['hospital'].help_text = "Maximum 180 characters, only '_A-z0-9+-.#,/' these characters and spaces are allowed."
+            self.fields['hospital'].widget.attrs.update({
+                'id': 'donation_hospital_input',
+                'placeholder': 'Type preferred hospital...',
+                'maxlength': 180,
+                'pattern': "^[_A-z0-9 +-.,#/]{1,}$"
+            })
+            self.fields['priority'].help_text = "Selecting priority as important helps to draw attention of viewers."
+            self.fields['priority'].widget.attrs.update({
+                'id': 'donation_priority_input',
+            })
+            self.fields[
+                'publication_status'].help_text = "Selecting publication status as unpublished will save your post as draft."
+            self.fields['publication_status'].widget.attrs.update({
+                'id': 'donation_publication_status_input',
+            })
 
     class Meta:
         model = Donation
         fields = ['type', 'organ_name', 'tissue_name', 'quantity', 'blood_group', 'blood_bag', 'contact', 'contact2',
                   'contact3', 'location', 'city', 'state', 'country', 'hospital', 'details', 'details_fake',
-                  'preferred_date', 'preferred_date_from', 'preferred_date_to', 'priority', 'publication_status']
+                  'preferred_date', 'preferred_date_from', 'preferred_date_to', 'priority', 'publication_status', 'is_verified']
         exclude = ['user', 'slug', 'category',
-                   'donate_type', 'is_verified', 'created_at', 'updated_at']
+                   'donate_type', 'created_at', 'updated_at']
 
     # def clean_title(self):
     #     title = self.cleaned_data.get('title')

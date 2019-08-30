@@ -1,34 +1,34 @@
-<div class="col-md-12">
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            {% for campaign in campaigns %}
-            <div class="carousel-item">
-                {% if not campaign.image == "" %}
-                <img class="d-block w-100" src="{{ campaign.image.url }}" alt="{{campaign.title}}"
-                    style="height:150px;width:100px;">
-                {% else %}
-                <img class="d-block w-100" src="{% static 'images/raw/campaign.png' %}" alt="{{campaign.title}}"
-                    style="height:150px;width:100px;">
-                {% endif %}
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>{{campaign.title}}</h5>
-                    <p>Held Date: {{ campaign.held_date }}</p>
-                    <p>End Date: {{ campaign.end_date }}</p>
-                </div>
-            </div>
-            {% empty %}
-            <div class="alert alert-warning">
-                No campaigns found!
-            </div>
-            {% endfor %}
-        </div>
-        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
-</div>
+# Type
+        - type + priority_filtered          (priority)
+        - type + status_filtered            (donation_progress__progress_status)
+        - type + donate_type_filtered       (donate_type)
+        - type + is_verified_filtered       (is_verified)
+
+# Priority
+        - priority + type_filtered              (type)
+        - priority + status_filtered            (donation_progress__progress_status)
+        - priority + donate_type_filtered       (donate_type)
+        - priority + is_verified_filtered       (is_verified)
+
+# Status
+        - status + type_filtered              (type)
+        - status + priority_filtered          (priority)
+        - status + donate_type_filtered       (donate_type)
+        - status + is_verified_filtered       (is_verified)
+
+# Donate Type
+        - donate_type + type_filtered               (type)
+        - donate_type + priority_filtered           (priority)
+        - donate_type + status_filtered             (donation_progress__progress_status)
+        - donate_type + is_verified_filtered        (is_verified)
+
+# Is Verified
+    - is_verified + type_filtered               (type)
+    - is_verified + priority_filtered           (priority)
+    - is_verified + status_filtered             (donation_progress__progress_status)
+    - is_verified + donate_type_filtered        (donate_type)
+
+
+
+###
+ is_verified + donate_type + status + priority
