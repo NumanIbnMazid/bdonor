@@ -147,7 +147,7 @@ def create_or_update_utils_module_from_donations(sender, instance, **kwargs):
 
 def notification_slug_pre_save_receiver(sender, instance, *args, **kwargs):
     if not instance.slug:
-        slug_bind = instance.sender.username + "-" + instance.receiver.username + "_" + time_str_mix_slug()
+        slug_bind = instance.sender.username[:5] + "-" + instance.receiver.username[:5] + "_" + time_str_mix_slug()
         instance.slug = slug_bind
 
 

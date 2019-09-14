@@ -67,6 +67,7 @@ var detect_location = $("#detect_location");
 var form_error = $(".form-error");
 var special_input = $(".special-input");
 var error_group = $(".error-group");
+var donate_module_type = $("#donate_module_type");
 
 // countryCode
 var selectedDialCodeInitial = $(".selected-dial-code");
@@ -228,6 +229,7 @@ $(document).ready(function () {
     $(this).remove();
   });
   // contact2_group.removeClass("hidden");
+  
   if (type_input.val() == 0){
     $("#blood_group_priority").addClass("text-info");
     $("#blood_group_priority").html("(required)");
@@ -2238,6 +2240,19 @@ $(document).ready(function () {
     $(this).attr("autocomplete", "off");
   });
 });
+
+$(document).ready(function (event) {
+  // console.log($("#donate_module_type").val());
+  if ($("#donate_module_type").val() != "") {
+    if ($("#donate_module_type").val() == 1) {
+      contact2_group.removeClass('hidden');
+      $("#contact2_priority").addClass("text-info");
+      $("#contact2_priority").html("(required)");
+      contact2_input.attr("required", true);
+    }
+  }
+});
+
 
 // Map Detect User Current Location
 (function ($, google) {

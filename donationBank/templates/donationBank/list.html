@@ -22,12 +22,17 @@ Donation Bank List
             <tr>
                 <th>#</th>
                 <th>Institute</th>
+                {% if not request.user.is_superuser %}
                 <th>Address</th>
+                {% endif %}
                 <th>City</th>
                 <th>State</th>
                 <th>Country</th>
                 <th>Contact</th>
-                <th>Email</th>
+                <th width='10%'>Email</th>
+                {% if request.user.is_superuser %}
+                <th>Status</th>
+                {% endif %}
                 <th>Action</th>
             </tr>
         </thead>
@@ -40,6 +45,7 @@ Donation Bank List
                         {{ object.institute }}
                     </b>
                 </td>
+                {% if not request.user.is_superuser %}
                 <td>
                     {% if not object.address == None %}
                     {{ object.address }}
@@ -47,6 +53,7 @@ Donation Bank List
                     -
                     {% endif %}
                 </td>
+                {% endif %}
                 <td>
                     {% if not object.city == None %}
                     {{ object.city }}
@@ -84,8 +91,22 @@ Donation Bank List
                     -
                     {% endif %}
                 </td>
+                {% if request.user.is_superuser %}
                 <td>
-                    <a href="/donation-bank/{{object.slug}}/details/" class="btn btn-secondary btn-xs text-deco-none">
+                    <span class="{% if object.is_verified == True %}text-success{%else%}text-danger{%endif%}">
+                        {{object.get_verification_status}}
+                    </span>
+                    <br>
+                    <a href="{% url 'donation_bank:bank_update' slug=object.slug %}" class="btn btn-primary btn-xs text-deco-none">
+                        <span class="">
+                            Change
+                        </span>
+                    </a>
+                </td>
+                {% endif %}
+                <td>
+                    <a href="{% url 'donation_bank:bank_details' slug=object.slug %}"
+                        class="btn btn-secondary btn-xs text-deco-none">
                         <span class="">
                             View
                         </span>
@@ -106,12 +127,17 @@ Donation Bank List
             <tr class="text-center">
                 <th>#</th>
                 <th>Institute</th>
+                {% if not request.user.is_superuser %}
                 <th>Address</th>
+                {% endif %}
                 <th>City</th>
                 <th>State</th>
                 <th>Country</th>
                 <th>Contact</th>
                 <th>Email</th>
+                {% if request.user.is_superuser %}
+                <th>Status</th>
+                {% endif %}
                 <th>Action</th>
             </tr>
         </tfoot>

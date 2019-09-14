@@ -73,19 +73,75 @@ class DonationQuerySet(models.query.QuerySet):
     def dynamic_order(self):
         request = RequestMiddleware(get_response=None)
         request = request.thread_local.current_request
-        if request.user.is_authenticated and not request.user.profile.country == None:
-            from django_countries import countries
-            user_country = request.user.profile.country.name
-            countries_dict = dict(countries)
-            order_field = list(countries_dict.values())
-            order_field.remove(user_country)
-            order_field.insert(0, user_country)
-            # print(order_field)
-            # pre_qs = self.filter(country=order_field)
-            qs = sorted(self.filter().order_by('-created_at'),
-                        key=lambda p: order_field.index(p.country.name))
+        # if request.user.is_authenticated and not request.user.profile.country == None and not request.user.profile.blood_group == None:
+        #     from django_countries import countries
+        #     user_country = request.user.profile.country.name
+        #     countries_dict = dict(countries)
+        #     order_field = list(countries_dict.values())
+        #     order_field.remove(user_country)
+        #     order_field.insert(0, user_country)
+        #     # print(order_field)
+        #     # pre_qs = self.filter(country=order_field)
+
+        #     # Blood Group order
+        #     blood_groups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+        #     user_blood_group = request.user.profile.blood_group
+        #     blood_groups.remove(user_blood_group)
+        #     blood_groups.insert(0, user_blood_group)
+        #     # print(blood_groups)
+            
+        #     qs = sorted(self.filter().order_by('-created_at'),
+        #                 key=lambda p: (order_field.index(p.country.name),
+        #                                blood_groups.index(p.blood_group)))
+        # elif request.user.is_authenticated and request.user.profile.country == None and not request.user.profile.blood_group == None and not request.user.profile.blood_group == "":
+        #     # Blood Group order
+        #     blood_groups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+        #     user_blood_group = request.user.profile.blood_group
+        #     blood_groups.remove(user_blood_group)
+        #     blood_groups.insert(0, user_blood_group)
+        #     # print(blood_groups)
+
+        #     qs = sorted(self.filter().order_by('-created_at'),
+        #                 key=lambda p: (blood_groups.index(p.blood_group)))
+        # else:
+        #     qs = self.filter().order_by('-created_at')
+
+        qs = self.filter().order_by('-created_at')
+        if not request.user.is_superuser:
+            # Country QS
+            if request.user.is_authenticated and not request.user.profile.country == None and not request.user.profile.country == "":
+                user_country = request.user.profile.country.code
+                country_donation_qs = self.filter().order_by('-created_at')
+                if country_donation_qs.exists():
+                    countries_bind = country_donation_qs.values_list(
+                        'country', flat=True)
+                    order_field = list(countries_bind)
+                    if user_country in order_field:
+                        order_field.remove(user_country)
+                    order_field.insert(0, user_country)
+            # Blood QS
+            if request.user.is_authenticated and not request.user.profile.blood_group == None and not request.user.profile.blood_group == "":
+                    # Blood Group order
+                    blood_groups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+                    user_blood_group = request.user.profile.blood_group
+                    if user_blood_group in blood_groups:
+                        blood_groups.remove(user_blood_group)
+                    blood_groups.insert(0, user_blood_group)
+            # Dynamic Filter
+            if request.user.is_authenticated and not request.user.profile.country == "" and not request.user.profile.blood_group == "":
+                qs = sorted(self.filter().order_by('-created_at'),
+                            key=lambda p: (order_field.index(p.country),
+                                            blood_groups.index(p.blood_group)))
+            elif request.user.is_authenticated and request.user.profile.country == "" and not request.user.profile.blood_group == "":
+                qs = sorted(self.filter().order_by('-created_at'),
+                            key=lambda p: (blood_groups.index(p.blood_group)))
+            elif request.user.is_authenticated and not request.user.profile.country == "" and request.user.profile.blood_group == "":
+                qs = sorted(self.filter().order_by('-created_at'),
+                            key=lambda p: (order_field.index(p.country)))
+            else:
+                qs = self.filter().order_by('is_verified', '-created_at')
         else:
-            qs = self.filter().order_by('-created_at')
+            qs = self.filter().order_by('is_verified', '-created_at')
         return qs
 
     def latest(self):
@@ -293,7 +349,7 @@ class Donation(models.Model):
         blank=True, null=True, max_length=4, verbose_name='quantity')
     donate_type = models.PositiveSmallIntegerField(
         choices=DONATE_TYPE_CHOICES, default=0, verbose_name='donate type')
-    is_verified = models.BooleanField(default=True, verbose_name='is verified')
+    is_verified = models.BooleanField(default=True, verbose_name='verification')
     details = models.TextField(blank=True,
                                null=True, verbose_name='details')
     # contact = models.CharField(

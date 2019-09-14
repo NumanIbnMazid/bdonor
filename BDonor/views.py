@@ -18,10 +18,12 @@ class HomeView(TemplateView):
         else:
             base_template = 'base.html'
         # Ends Base Template Context
-        campaigns = Campaign.objects.all().bank_is_public().dynamic_order()
+        campaigns = Campaign.objects.all().bank_is_public(
+        ).bank_is_verified().end_date_not_expired().dynamic_order()
         context = {
             'base_template': base_template,
             'campaigns': campaigns,
+            'campaigns_count': len(campaigns),
         }
         if user.is_superuser:
             return render(request, "admin-site/pages/home.html", context=context)

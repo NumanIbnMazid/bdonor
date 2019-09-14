@@ -54,15 +54,11 @@ Respond to Donation
             {% endif %}
         </div>
     </div>
-    {% comment %}
     <div class="col-md-5">
-        <div class="card p-3">
-            <span class="stamp stamp-md bg-secondary">
-                Providing contact number helps to reach more quickly.
-            </span>
-        </div>
+        {% if not object == None %}
+        {% include 'donations/snippets/donation-details-card.html' with object=object %}
+        {% endif %}
     </div>
-    {% endcomment %}
 
 </div>
 

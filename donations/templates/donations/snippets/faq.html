@@ -1,4 +1,4 @@
-<div id="faq" class="mb-4">
+<div id="faq" class="mb-4 {% if request.user.is_superuser %}hidden{% endif %}">
     <div class="text-center">
         <h3>Frequently Asked Questions</h3>
 

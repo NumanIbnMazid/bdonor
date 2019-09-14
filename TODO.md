@@ -103,6 +103,16 @@ Campaign:
 33. Manage if donated blood between 90 days in donation respond.
 34. Showing error if location auto detect detects location as bangla font.
 
+35. Show the donation list based on the request user's blood group, if no blood group then redirect to profile update
+36. Personal card where users can make a list of important contacts, blood group and other info
+37. Must match blood group on respond modules
+38. Motivating slides in home to praise users to donate/ Social Awarness
+39. Search for transplantation able hospitals by location
+40. How many are in awaiting list?
+41. Search for nearest blood/organ/tissue bank, hospital
+42. Update Bank Info (Provide Services for- Blood/Organ/Tissue)
+43. Add rating for banks to make more trusted. Or add any certification.
+
 
 
 

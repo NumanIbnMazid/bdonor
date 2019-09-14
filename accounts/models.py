@@ -154,8 +154,8 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
 
 def stripeCallback(sender, request, user, **kwargs):
     user_stripe_account, created = UserStripe.objects.get_or_create(user=user)
-    if created:
-        print('Created for %s' % (user.username))
+    # if created:
+        # print('Created for %s' % (user.username))
     if user_stripe_account.stripe_id is None or user_stripe_account.stripe_id == '':
         new_stripe_id = stripe.Customer.create(email=user.email)
         user_stripe_account.stripe_id = new_stripe_id['id']

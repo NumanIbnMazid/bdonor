@@ -6,7 +6,7 @@ from .models import (DonationBank, DonationBankSetting, BankMember, MemberReques
 
 class DonationBankAdmin(admin.ModelAdmin):
     list_display = ['institute', 'city',
-                    'state', 'country', 'contact', 'email']
+                    'state', 'country', 'contact', 'email', 'is_verified']
 
     class Meta:
         model = DonationBank

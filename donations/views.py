@@ -201,6 +201,17 @@ class OfferDonationCreateView(CreateView):
             # print(donate_type)
         return super().form_invalid(form)
 
+    def user_passes_test(self, request):
+        if not request.user.is_superuser:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(OfferDonationCreateView, self).dispatch(request, *args, **kwargs)
+
     def get_form_kwargs(self):
         kwargs = super(OfferDonationCreateView, self).get_form_kwargs()
         if self.form_class:
@@ -214,7 +225,7 @@ class OfferDonationCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(OfferDonationCreateView,
                         self).get_context_data(**kwargs)
-        # Starts Base Template Context 
+        # Starts Base Template Context
         if self.request.user.is_superuser:
             base_template = 'admin-site/base.html'
         else:
@@ -230,7 +241,8 @@ class OfferDonationCreateView(CreateView):
         can_donate_blood = True
         if last_blood_donated_filter.exists():
             if not last_blood_donated_filter.last().completion_date == None:
-                day_difference = datetime.date.today() - last_blood_donated_filter.last().completion_date
+                day_difference = datetime.date.today(
+                ) - last_blood_donated_filter.last().completion_date
                 if day_difference.days < 90:
                     can_donate_blood = False
                     context['last_donated_ago'] = day_difference.days
@@ -285,7 +297,7 @@ class OfferDonationUpdateView(UpdateView):
         details = form.instance.details
         # if form.cleaned_data['details_fake'] != "":
         # if self.request.POST.get("details_fake") != "":
-            # details_fake = form.cleaned_data['details_fake']
+        # details_fake = form.cleaned_data['details_fake']
         details_fake = self.request.POST.get("details_fake")
         contact = form.instance.contact
         contact2 = form.instance.contact2
@@ -465,7 +477,8 @@ class OfferDonationUpdateView(UpdateView):
         can_donate_blood = True
         if last_blood_donated_filter.exists():
             if not last_blood_donated_filter.last().completion_date == None:
-                day_difference = datetime.date.today() - last_blood_donated_filter.last().completion_date
+                day_difference = datetime.date.today(
+                ) - last_blood_donated_filter.last().completion_date
                 if day_difference.days < 90:
                     can_donate_blood = False
                     context['last_donated_ago'] = day_difference.days
@@ -485,7 +498,8 @@ class DonationOffersCardListView(AjaxListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().offers().is_published().living_donates().is_verified().dynamic_order()
+            qs = Donation.objects.all().offers().is_published(
+            ).living_donates().is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -514,8 +528,7 @@ class DonationOffersListView(ListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().offers().is_published(
-            ).living_donates().is_verified().dynamic_order()
+            qs = Donation.objects.all().offers().is_published().living_donates().is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -1089,6 +1102,7 @@ class DonationDetailView(DetailView):
         return context
 
 
+@method_decorator(login_required, name='dispatch')
 class DonationRespondCreateView(CreateView):
     template_name = 'donations/respond.html'
     form_class = DonationRespondForm
@@ -1096,6 +1110,24 @@ class DonationRespondCreateView(CreateView):
     # def get_object(self, *args, **kwargs):
     #     slug = self.kwargs.get('slug')
     #     return Donation.objects.get_by_slug(slug, self.request)
+
+    def get(self, request, *args, **kwargs):
+        response = super(DonationRespondCreateView, self).get(
+            request, *args, **kwargs)
+        if not self.request.user.profile.blood_group == None:
+            slug = self.kwargs.get('slug')
+            donation = Donation.objects.get_by_slug(slug, self.request)
+            if not donation.blood_group == self.request.user.profile.blood_group:
+                object_instance = "Undefined"
+                if donation.category == 0:
+                    object_instance = "Donor"
+                if donation.category == 1:
+                    object_instance = "Donation seeker"
+                messages.add_message(self.request, messages.WARNING,
+                                     f"Blood group don't matched! Blood group needs to be matched for transplantation. Please be carefull. Your blood group is '{request.user.profile.blood_group}' and {object_instance}'s blood group is '{donation.blood_group}' !")
+                if donation.category == 1:
+                    return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', '/'))
+        return response
 
     def form_valid(self, form):
         slug = self.kwargs.get('slug')
@@ -1203,6 +1235,7 @@ class DonationRespondCreateView(CreateView):
         # Ends Base Template Context
         slug = self.kwargs.get('slug')
         donation = Donation.objects.get_by_slug(slug, self.request)
+        context['object'] = donation
         donation_respond_filter = DonationRespond.objects.filter(
             donation=donation, respondent=self.request.user)
         if donation_respond_filter.exists():
@@ -1216,7 +1249,8 @@ class DonationRespondCreateView(CreateView):
         can_donate_blood = True
         if last_blood_donated_filter.exists():
             if not last_blood_donated_filter.last().completion_date == None:
-                day_difference = datetime.date.today() - last_blood_donated_filter.last().completion_date
+                day_difference = datetime.date.today(
+                ) - last_blood_donated_filter.last().completion_date
                 if day_difference.days < 90:
                     can_donate_blood = False
                     context['last_donated_ago'] = day_difference.days
@@ -1225,6 +1259,23 @@ class DonationRespondCreateView(CreateView):
                     context['last_donated_object'] = last_blood_donated_filter.last()
         context['can_donate_blood'] = can_donate_blood
         return context
+
+    def user_passes_test(self, request):
+        if request.user.is_authenticated:
+            if not request.user.profile.blood_group == None and request.user.profile.blood_group != "":
+                return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            # block_suspicious_user(request)
+            messages.add_message(self.request, messages.INFO,
+                                 "Please select your blood group by updating your profile!")
+            return HttpResponseRedirect(
+                reverse('profile_update', kwargs={
+                        'slug': request.user.profile.slug})
+            )
+        return super(DonationRespondCreateView, self).dispatch(request, *args, **kwargs)
 
 
 @csrf_exempt
@@ -1319,9 +1370,9 @@ class DonationFilteredListView(ListView):
             cat = 1
         qs = Donation.objects.all().filter(category=cat)
 
-        filter_modules_dict = {'type': type_filtered, 'priority': priority_filtered, 
+        filter_modules_dict = {'type': type_filtered, 'priority': priority_filtered,
                                'donation_progress__progress_status': status_filtered,
-                               'donate_type': donate_type_filtered, 
+                               'donate_type': donate_type_filtered,
                                'is_verified': is_verified_filtered}
         if not type_filtered == "" or not priority_filtered == "" or not status_filtered == "" or not donate_type_filtered == "" or not is_verified_filtered == "":
             #  ------------------------- Magic Starts -------------------------
@@ -1351,7 +1402,7 @@ class DonationFilteredListView(ListView):
         # if not type_filtered == "" and not priority_filtered == "" and not status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
         #     filter_dict = {'type': type_filtered, 'priority': priority_filtered, 'donate_type': donate_type_filtered, 'is_verified': is_verified_filtered,
         #                    'donation_progress__progress_status': status_filtered}
-        
+
         # # Solo
         # elif not type_filtered == "" and priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
         #     filter_dict = {'type': type_filtered}
@@ -1366,7 +1417,7 @@ class DonationFilteredListView(ListView):
         #     filter_dict = {
         #         'is_verified': iis_verified_filtereds_verified_filtered}
 
-        # # Type 
+        # # Type
         # elif not type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
         #     filter_dict = {'type': type_filtered, 'priority': priority_filtered}
         # elif not type_filtered == "" and priority_filtered == "" and not status_filtered == "" and donate_type_filtered == "" and is_verified_filtered == "":
@@ -1420,7 +1471,7 @@ class DonationFilteredListView(ListView):
         # elif type_filtered == "" and priority_filtered == "" and status_filtered == "" and not donate_type_filtered == "" and not is_verified_filtered == "":
         #     filter_dict = {'donate_type': donate_type_filtered,
         #                    'is_verified': is_verified_filtered}
-        
+
         # # Is Verified
         # elif type_filtered == "" and not priority_filtered == "" and status_filtered == "" and donate_type_filtered == "" and not is_verified_filtered == "":
         #     filter_dict = {'is_verified': is_verified_filtered,

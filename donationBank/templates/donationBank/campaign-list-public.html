@@ -143,7 +143,7 @@ All Campaigns
 {% endblock %}
 
 {% block extra_js %}
-<input type="hidden" id="total_records_count" value="{{campaign_list.count}}">
+<input type="hidden" id="total_records_count" value="{{campaigns_count}}">
 <!-- Datatable JS -->
 <script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
 <script>

@@ -54,6 +54,13 @@
                             {% endif %}
                             
                             <p class="hidden" id="message_holder"></p>
+
+                            {% if not object == None and not object == "" %}
+                            <input type="hidden" name="donate_module_type" id="donate_module_type" value="{{object.donate_type}}">
+                            {% else %}
+                            <input type="hidden" name="donate_module_type" id="donate_module_type" value="">
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

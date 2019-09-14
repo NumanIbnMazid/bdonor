@@ -39,6 +39,28 @@
                                         class="btn btn-sm btn-secondary text-deco-none m-2">
                                         View Details
                                     </a>
+
+                                    <hr>
+
+                                    {% if not campaign.get_end_date_remaining >= 0 %}
+                                    <div class="avatar avatar-sm">
+                                        <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                            class="avatar-img rounded-circle">
+                                    </div>
+                                    {% else %}
+                                    <span
+                                        class="{% if campaign.get_end_date_remaining < 4 %}text-danger{% else %}text-success{% endif %} font-bold">
+                                        [ends
+                                        {% if campaign.get_end_date_remaining == 0 %}
+                                        Today
+                                        {% else %}
+                                        in
+                                        {{campaign.get_end_date_remaining}}
+                                        day{{ campaign.get_end_date_remaining|pluralize:"s" }}
+                                        {% endif %}
+                                        ]
+                                    </span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

@@ -17,7 +17,9 @@ Home Page
     {% include 'pages/snippets/donate-btn.html' %}
 </div>
 <div class="row justify-content-center align-items-center mb-4">
-    <h4 class="page-title font-bold font-17">Campaigns</h4>
+    <h4 class="page-title font-bold font-17">
+        Campaigns ({{campaigns_count}})
+    </h4>
     {% include 'pages/snippets/campaigns.html' %}
     <a href="{% url 'donation_bank:bank_campaign_list_public' %}" class="text-deco-none btn btn-primary btn-sm m-3">
         View All Campaigns

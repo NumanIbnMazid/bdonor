@@ -15,6 +15,7 @@
 {% url 'donations:donation_requests_list_card' as donation_requests_list_card_url %}
 {% url 'donation_bank:bank_create' as bank_create_url %}
 {% url 'donation_bank:bank_dashboard' as bank_dashboard_url %}
+{% url 'donation_bank:bank_campaign_list_public' as bank_campaign_list_public_url %}
 {% endif %}
 
 <div class="sidebar sidebar-style-2"
@@ -110,6 +111,18 @@
                 </li>
 
                 {% if request.user.is_authenticated %}
+
+                <li class="nav-item {% if request.path == bank_campaign_list_public_url %}active{% endif %}">
+                    <a href="{{ bank_campaign_list_public_url }}">
+                        <i>
+                            <div class="avatar avatar-xs">
+                                <img src="{% static 'images/raw/camp_icon.png' %}" alt="donation bank"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                        </i>
+                        <p>Campaigns</p>
+                    </a>
+                </li>
                 
                 <li
                     class="nav-item {% if request.path == my_donation_offers_url or request.path == my_donation_requests_url %}active submenu{% endif %}">
@@ -208,7 +221,8 @@
         $("#dynamic_li").addClass("active");
     }
     if((pathname.match("^/donation-bank/")) && !(pathname.match("/details/$")) &&
-    !(pathname.match("/donation-bank/list/$"))) {
+    !(pathname.match("/donation-bank/list/$")) &&
+    !(pathname.match("/campaign/list/public/$"))) {
         $("#dynamic_li").addClass("active");
     }
     //else {

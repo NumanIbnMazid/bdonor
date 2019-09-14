@@ -12,6 +12,7 @@
 {% url 'donations:my_donation_requests' as my_donation_requests_url %}
 {% url 'donations:donation_requests_list' as donation_requests_list_url %}
 {% url 'donations:donation_requests_list_card' as donation_requests_list_card_url %}
+{% url 'donationBank:bank_list' as bank_list_url %}
 {% url 'priceplan:plan_create' as plan_create_url %}
 {% endif %}
 
@@ -106,6 +107,17 @@
                             </div>
                         </i>
                         <p>Donation Requests</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if request.path == bank_list_url %}active{% endif %}">
+                    <a href="{{ bank_list_url }}">
+                        <i>
+                            <div class="avatar avatar-xs">
+                                <img src="{% static 'images/raw/banks.png' %}" alt="donation bank"
+                                    class="avatar-img rounded-circle">
+                            </div>
+                        </i>
+                        <p>Donation Banks</p>
                     </a>
                 </li>
                 {% endif %}

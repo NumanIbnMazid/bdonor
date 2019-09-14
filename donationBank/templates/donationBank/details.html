@@ -21,6 +21,13 @@ Donation Bank- Overview
                 <div class="table-responsive">
                     <table class="table table-bordered text-muted">
                         <tbody>
+                            <tr>
+                                <td class="font-bold">Verification Status</td>
+                                <td
+                                    class="font-bold {% if object.is_verified == True %}text-success{%else%}text-danger{%endif%}">
+                                    {{ object.get_verification_status }}
+                                </td>
+                            </tr>
                             {% if request.user.user_bank_member.bank.institute == object.institute %}
                                 {% if not object.bank_setting.privacy == None %}
                                 <tr>

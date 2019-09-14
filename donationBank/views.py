@@ -20,6 +20,8 @@ from accounts.utils import time_str_mix_slug
 from accounts.models import UserProfile
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Count, F, Sum
+from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 
 
 @method_decorator(login_required, name='dispatch')
@@ -34,7 +36,7 @@ class DonationBankCreateView(CreateView):
         if qs.exists():
             form.add_error(
                 'institute', forms.ValidationError(
-                    "This Institute is alreay exists!"
+                    "This Institute is already exists!"
                 )
             )
             return super().form_invalid(form)
@@ -42,6 +44,58 @@ class DonationBankCreateView(CreateView):
             messages.add_message(self.request, messages.SUCCESS,
                                  "Donation Bank has been created successfully!")
         return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        response = super(DonationBankCreateView, self).post(
+            request, *args, **kwargs)
+        institute = self.object.institute
+        super_user_qs = User.objects.filter(is_superuser=True)
+        sender_qs = User.objects.filter(username=self.request.user.username)
+        # print(super_user_qs)
+        # print(sender_qs)
+        if super_user_qs.exists() and sender_qs.exists():
+            sender = sender_qs.first()
+            # URL Prefix
+            domain = self.request.META['HTTP_HOST']
+            if self.request.is_secure():
+                scheme = "https://"
+            else:
+                scheme = "http://"
+            donation_url = reverse('donation_bank:bank_details',
+                                    kwargs={'slug': self.object.slug})
+            redirect_url = f"{scheme}{domain}{donation_url}"
+            # End URL Prefix
+            for receiver in super_user_qs:
+                # print(receiver)
+                # Create Notification to Superusers
+                category = 'donationBank_Create'
+                identifier = sender.username[:5] + "-" + receiver.username[:5] + "_BankCreate"
+                subject = f"{sender.profile.get_username()} has created a bank."
+                message = f"Hello {receiver.profile.get_username()} ! <br> {sender.profile.get_username()} has created a bank named {institute} and is waiting for verification approval. <br> click <a href='{redirect_url}' target='_blank'>here</a> to view bank details."
+                create_notification(
+                    request=self.request, sender=sender, receiver=receiver, category=category, identifier=identifier, subject=subject, message=message
+                )
+                # Sending Email
+                mail_msg = f"Hello {receiver.profile.get_username()} ! <br> {sender.profile.get_username()} has created a bank named {institute} and is waiting for verification approval. <br> click <a href='{redirect_url}' target='_blank'>here</a> to view bank details. <br> Have a good day. <br>Thanks for being with us."
+                mail_subject = f'{sender.profile.get_username()} has created a bank.'
+                mail_from = 'admin@bdonor.com'
+                mail_text = 'Please do not Reply'
+                subject = mail_subject
+                from_email = mail_from
+                to = [receiver.email]
+                text_content = mail_text
+                html_content = mail_msg
+                msg = EmailMultiAlternatives(
+                    subject, text_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+        return response
+    
+    def get_form_kwargs(self):
+        kwargs = super(DonationBankCreateView, self).get_form_kwargs()
+        if self.form_class:
+            kwargs.update({'request': self.request})
+        return kwargs
 
     def get_success_url(self):
         return reverse('donation_bank:bank_dashboard')
@@ -65,8 +119,8 @@ class DonationBankCreateView(CreateView):
         qs = BankMember.objects.filter(user=self.request.user)
         member_request_qs = MemberRequest.objects.filter(
             user=self.request.user)
-        if not qs.exists() and not member_request_qs.exists():
-            if request.user.profile.account_type == 1 or request.user.is_superuser:
+        if not qs.exists() and not member_request_qs.exists() and not request.user.is_superuser:
+            if request.user.profile.account_type == 1:
                 return True
         return False
 
@@ -216,6 +270,12 @@ class DonationBankUpdateView(UpdateView):
                              "Donation Bank has been updated successfully!")
         return super().form_valid(form)
 
+    def get_form_kwargs(self):
+        kwargs = super(DonationBankUpdateView, self).get_form_kwargs()
+        if self.form_class:
+            kwargs.update({'request': self.request})
+        return kwargs
+
     def get_success_url(self):
         self.object = self.get_object()
         return reverse('donation_bank:bank_details', kwargs={'slug': self.object.slug})
@@ -243,6 +303,8 @@ class DonationBankUpdateView(UpdateView):
         if qs.exists() and self.request.user.profile.account_type == 1:
             if not member_request_qs.exists() and self.request.user.user_bank_member.role == 0:
                 return True
+        elif request.user.is_superuser:
+            return True
         return False
 
     def dispatch(self, request, *args, **kwargs):
@@ -257,7 +319,10 @@ class DonationBankListView(ListView):
     template_name = 'donationBank/list.html'
 
     def get_queryset(self):
-        qs = DonationBank.objects.all().is_public().dynamic_order()
+        if self.request.user.is_superuser == True:
+            qs = DonationBank.objects.all().dynamic_order()
+        else:
+            qs = DonationBank.objects.all().is_public().is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -789,7 +854,7 @@ class DonationCreateView(CreateView):
         return context
 
     def user_passes_test(self, request):
-        qs = DonationBank.objects.filter(bank_member__user=request.user)
+        qs = DonationBank.objects.filter(bank_member__user=request.user, is_verified=True)
         if qs.exists() and self.request.user.profile.account_type == 1:
             return True
         return False
@@ -833,7 +898,7 @@ class DonationListView(ListView):
         return context
 
     def user_passes_test(self, request):
-        qs = DonationBank.objects.filter(bank_member__user=request.user)
+        qs = DonationBank.objects.filter(bank_member__user=request.user, is_verified=True)
         if qs.exists() and self.request.user.profile.account_type == 1:
             return True
         return False
@@ -873,7 +938,7 @@ class DonationDetailView(DetailView):
     def user_passes_test(self, request):
         self.object = self.get_object()
         qs = DonationBank.objects.filter(
-            slug=self.object.bank.slug, bank_member__user=request.user
+            slug=self.object.bank.slug, bank_member__user=request.user, is_verified=True
         )
         if qs.exists() and self.request.user.profile.account_type == 1:
             return True
@@ -968,7 +1033,7 @@ class DonationUpdateView(UpdateView):
     def user_passes_test(self, request):
         self.object = self.get_object()
         qs = DonationBank.objects.filter(
-            slug=self.object.bank.slug, bank_member__user=request.user
+            slug=self.object.bank.slug, bank_member__user=request.user, is_verified=True
         )
         if qs.exists() and self.request.user.profile.account_type == 1:
             return True
@@ -1033,7 +1098,7 @@ class ManageProgressStatus(UpdateView):
     def user_passes_test(self, request):
         self.object = self.get_object()
         qs = DonationBank.objects.filter(
-            slug=self.object.donation.bank.slug, bank_member__user=request.user
+            slug=self.object.donation.bank.slug, bank_member__user=request.user, is_verified=True
         )
         if qs.exists() and self.request.user.profile.account_type == 1:
             return True
@@ -1117,7 +1182,8 @@ class CampaignCreateView(CreateView):
         return context
 
     def user_passes_test(self, request):
-        qs = DonationBank.objects.filter(bank_member__user=request.user)
+        qs = DonationBank.objects.filter(
+            bank_member__user=request.user, is_verified=True)
         if qs.exists() and self.request.user.profile.account_type == 1:
             return True
         return False
@@ -1136,7 +1202,8 @@ class CampaignListView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        bank_qs = DonationBank.objects.filter(bank_member__user=user)
+        bank_qs = DonationBank.objects.filter(
+            bank_member__user=user, is_verified=True)
         if bank_qs.exists():
             bank = bank_qs.first()
             qs = Campaign.objects.filter(bank__slug=bank.slug)
@@ -1162,7 +1229,8 @@ class CampaignListView(ListView):
         return context
 
     def user_passes_test(self, request):
-        qs = DonationBank.objects.filter(bank_member__user=request.user)
+        qs = DonationBank.objects.filter(
+            bank_member__user=request.user, is_verified=True)
         if qs.exists() and self.request.user.profile.account_type == 1:
             return True
         return False
@@ -1180,10 +1248,8 @@ class CampaignPublicListView(ListView):
     context_object_name = 'campaign_list'
 
     def get_queryset(self):
-        qs = Campaign.objects.all().bank_is_public()
-        if qs.exists():
-            return qs
-        return None
+        qs = Campaign.objects.all().bank_is_public().bank_is_verified().dynamic_order()
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(CampaignPublicListView,
@@ -1194,6 +1260,9 @@ class CampaignPublicListView(ListView):
         else:
             base_template = 'base.html'
         context['base_template'] = base_template
+        campaigns = Campaign.objects.all().bank_is_public(
+        ).bank_is_verified().dynamic_order()
+        context['campaigns_count'] = len(campaigns)
         # Ends Base Template Context
         return context
 

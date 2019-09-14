@@ -25,23 +25,40 @@ class DonationBankQuerySet(models.query.QuerySet):
     def dynamic_order(self):
         request = RequestMiddleware(get_response=None)
         request = request.thread_local.current_request
-        if request.user.is_authenticated and not request.user.profile.country == None:
-            from django_countries import countries
-            user_country = request.user.profile.country.name
-            countries_dict = dict(countries)
-            order_field = list(countries_dict.values())
-            order_field.remove(user_country)
-            order_field.insert(0, user_country)
-            # print(order_field)
-            # pre_qs = self.filter(country=order_field)
-            qs = sorted(self.filter().order_by('-created_at'),
-                        key=lambda p: order_field.index(p.country.name))
+        qs = self.filter().order_by('-created_at')
+        if not request.user.is_superuser:
+            if request.user.is_authenticated and not request.user.profile.country == None:
+                # from django_countries import countries
+                user_country = request.user.profile.country.code
+                country_bank_qs = self.filter().order_by('-created_at')
+                if country_bank_qs.exists():
+                    # countries_dict = dict(countries)
+                    # order_field = list(countries_dict.values())
+                    # order_field.remove(user_country)
+                    # order_field.insert(0, user_country)
+                    countries_bind = country_bank_qs.values_list(
+                        'country', flat=True)
+                    order_field = list(countries_bind)
+                    # print(order_field)
+                    if user_country in order_field:
+                        order_field.remove(user_country)
+                    order_field.insert(0, user_country)
+                    # print(order_field)
+                    # pre_qs = self.filter(country=order_field)
+                    qs = sorted(self.filter().order_by('-created_at'),
+                                key=lambda p: order_field.index(p.country))
         else:
-            qs = self.filter().order_by('-created_at')
+            qs = self.filter().order_by('-is_verified', '-created_at')
         return qs
 
     def latest(self):
         return self.filter().order_by('-created_at')
+
+    def is_verified(self):
+        return self.filter(is_verified=True)
+    
+    def is_not_verified(self):
+        return self.filter(is_verified=False)
 
     def banks_current_year(self):
         today = datetime.datetime.now()
@@ -118,6 +135,7 @@ class DonationBank(models.Model):
     email = models.EmailField(blank=True, null=True, verbose_name='email')
     description = models.TextField(
         max_length=1000, blank=True, null=True, verbose_name='description')
+    is_verified = models.BooleanField(default=False, verbose_name='is verified')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
@@ -131,6 +149,14 @@ class DonationBank(models.Model):
 
     def __str__(self):
         return self.institute
+
+    def get_verification_status(self):
+        status = "Undefined"
+        if self.is_verified == True:
+            status = "Verified"
+        if self.is_verified == False:
+            status = "Not Verified"
+        return status
 
 
 class DonationBankSetting(models.Model):
@@ -273,17 +299,38 @@ class CampaignQuerySet(models.query.QuerySet):
     def dynamic_order(self):
         request = RequestMiddleware(get_response=None)
         request = request.thread_local.current_request
-        if request.user.is_authenticated and not request.user.profile.country == None:
-            from django_countries import countries
-            user_country = request.user.profile.country.name
-            countries_dict = dict(countries)
-            order_field = list(countries_dict.values())
-            order_field.remove(user_country)
-            order_field.insert(0, user_country)
-            # print(order_field)
-            # pre_qs = self.filter(country=order_field)
-            qs = sorted(self.filter().order_by('-created_at'),
-                        key=lambda p: order_field.index(p.country.name))
+        # if request.user.is_authenticated and not request.user.profile.country == None:
+        #     from django_countries import countries
+        #     user_country = request.user.profile.country.name
+        #     countries_dict = dict(countries)
+        #     order_field = list(countries_dict.values())
+        #     order_field.remove(user_country)
+        #     order_field.insert(0, user_country)
+        #     # print(order_field)
+        #     # pre_qs = self.filter(country=order_field)
+        #     qs = sorted(self.filter().order_by('-created_at'),
+        #                 key=lambda p: order_field.index(p.country.name))
+        # else:
+        #     qs = self.filter().order_by('-created_at')
+
+        qs = self.filter().order_by('-end_date', '-created_at')
+        if not request.user.is_superuser:
+            if request.user.is_authenticated and not request.user.profile.country == None:
+                user_country = request.user.profile.country.code
+                user_campaign_country_qs = self.filter(
+                    country=request.user.profile.country, end_date__gte=datetime.datetime.now())
+                if user_campaign_country_qs.exists():
+                    country_campaign_qs = self.filter().order_by('-created_at')
+                    if country_campaign_qs.exists():
+                        countries_bind = country_campaign_qs.values_list(
+                            'country', flat=True)
+                        order_field = list(countries_bind)
+                        if user_country in order_field:
+                            order_field.remove(user_country)
+                        order_field.insert(0, user_country)
+                        qs = sorted(self.filter().order_by('-end_date', '-created_at'),
+                                    key=lambda p: order_field.index(p.country))
+                        # print(qs)
         else:
             qs = self.filter().order_by('-created_at')
         return qs
@@ -304,6 +351,12 @@ class CampaignQuerySet(models.query.QuerySet):
     
     def bank_is_private(self):
         return self.filter(bank__bank_setting__privacy=1)
+
+    def bank_is_verified(self):
+        return self.filter(bank__is_verified=True)
+    
+    def bank_is_not_verified(self):
+        return self.filter(bank__is_verified=False)
 
     def search(self, query):
         lookups = (Q(bank__institute__icontains=query) |

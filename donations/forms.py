@@ -38,8 +38,6 @@ class DonationForm(forms.ModelForm):
             self.fields.pop("preferred_date_to")
             self.fields.pop("priority")
             self.fields.pop("publication_status")
-            self.fields['is_verified'].help_text = "Select verification status."
-            self.fields['is_verified'].label = "Verification Status"
             VERIFICATION_OPTIONS = (
                 (True, "Verified"),
                 (False, "Not Verified"),
@@ -49,6 +47,8 @@ class DonationForm(forms.ModelForm):
             self.fields['is_verified'].widget.attrs.update({
                 'id': 'donation_is_verified_input',
             })
+            self.fields['is_verified'].help_text = "Select verification status."
+            self.fields['is_verified'].label = "Verification Status"
         else:
             self.fields.pop("is_verified")
             # self.fields['title'].help_text = "Maximum 50 characters allowed. Keep it short. Only '_A-z0-9+-.,' these characters and spaces are allowed."
