@@ -498,7 +498,7 @@ class DonationRespond(models.Model):
         ordering = ["-updated_at"]
 
     def __str__(self):
-        return self.donation.title
+        return self.respondent.profile.get_smallname()
 
     def get_contact(self):
         contact = "Not Provided"
@@ -530,7 +530,7 @@ class DonationProgress(models.Model):
                                     unique=True, related_name='donation_progress', verbose_name='donation')
     progress_status = models.PositiveSmallIntegerField(
         choices=DONATION_PROGRESS_CHOICES, default=0, verbose_name='progress status')
-    respondent = models.ForeignKey(DonationRespond, on_delete=models.CASCADE, blank=True, null=True,
+    respondent = models.ManyToManyField(DonationRespond, blank=True,
                                    related_name='donation_progress_respondent', verbose_name='respondent')
     completion_date = models.DateField(
         blank=True, null=True, verbose_name='completion date')
@@ -549,6 +549,9 @@ class DonationProgress(models.Model):
 
     def __str__(self):
         return self.donation.title
+    
+    def get_respondents(self):
+        return "\n, ".join([r.respondent.username for r in self.respondent.all()])
 
     def get_donation_user(self):
         return self.donation.user

@@ -237,6 +237,11 @@ $(document).ready(function () {
     $("#blood_bag_priority").addClass("text-info");
     $("#blood_bag_priority").html("(required)");
     blood_bag_input.attr("required", true);
+    blood_group_group.removeClass("hidden");
+    blood_bag_group.removeClass("hidden");
+    organ_name_group.addClass("hidden");
+    tissue_name_group.addClass("hidden");
+    quantity_group.addClass("hidden");
   }
   if (type_input.val() == 1){
     $("#organ_name_priority").addClass("text-info");
@@ -245,6 +250,11 @@ $(document).ready(function () {
     $("#quantity_priority").addClass("text-info");
     $("#quantity_priority").html("(required)");
     quantity_input.attr("required", true);
+    blood_group_group.addClass("hidden");
+    blood_bag_group.addClass("hidden");
+    organ_name_group.removeClass("hidden");
+    tissue_name_group.addClass("hidden");
+    quantity_group.removeClass("hidden");
   }
   if (type_input.val() == 2) {
     $("#tissue_name_priority").addClass("text-info");
@@ -253,6 +263,11 @@ $(document).ready(function () {
     // $("#quantity_priority").addClass("text-info");
     // $("#quantity_priority").html("(required)");
     // quantity_input.attr("required", true);
+    blood_group_group.addClass("hidden");
+    blood_bag_group.addClass("hidden");
+    organ_name_group.addClass("hidden");
+    tissue_name_group.removeClass("hidden");
+    quantity_group.removeClass("hidden");
   }
   if (organ_name_input.val() == "Heart") {
     quantity_input.val(1);
@@ -2230,9 +2245,38 @@ $(document).ready(function () {
       $("#donation_type_input option[value=0]").each(function () {
         $(this).remove();
       });
+      $("#donation_type_input").val(1);
+      blood_group_group.addClass("hidden");
+      blood_bag_group.addClass("hidden");
+      organ_name_group.removeClass("hidden");
+      tissue_name_group.addClass("hidden");
+      quantity_group.removeClass("hidden");
     }
   };
 });
+
+// console.log($("#donation_type_input").val());
+// if ($("#donation_type_input").val() == 0) {
+//   blood_group_group.removeClass("hidden");
+//   blood_bag_group.removeClass("hidden");
+//   organ_name_group.addClass("hidden");
+//   tissue_name_group.addClass("hidden");
+//   quantity_group.addClass("hidden");
+// }
+// if ($("#donation_type_input").val() == 1) {
+//   blood_group_group.addClass("hidden");
+//   blood_bag_group.addClass("hidden");
+//   organ_name_group.removeClass("hidden");
+//   tissue_name_group.addClass("hidden");
+//   quantity_group.removeClass("hidden");
+// }
+// if ($("#donation_type_input").val() == 2) {
+//   blood_group_group.addClass("hidden");
+//   blood_bag_group.addClass("hidden");
+//   organ_name_group.addClass("hidden");
+//   tissue_name_group.removeClass("hidden");
+//   quantity_group.removeClass("hidden");
+// }
 
 // preventing form from autocomplete
 $(document).ready(function () {

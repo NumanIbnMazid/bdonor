@@ -1,0 +1,68 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            <div class="col-md-10">
+                {% include 'donationBank/snippets/donation-tab.html' %}
+                <div class="row">
+                    <div class="col-md-10 mx-auto">
+                        <div class="card">
+                            <form method="POST" id="donationBank_donation_request_manage_form" data-toggle="validator">
+                                {% csrf_token %}
+                                <div class="card-header">
+                                    <div class="card-title text-center">
+                                        {{ page_title }}
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {% include 'donationBank/snippets/bank-donation-request-form.html' %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-action text-center form-group">
+                                    <button type="submit" class="btn btn-success m-2" id="submitBtn">
+                                        {{ page_title }}
+                                    </button>
+                                    <button class="btn btn-danger" id="go_back">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';
+</script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+<!-- Donation Request Form JS -->
+<script type="text/javascript" src="{% static 'assets/js/form-validator/bank-donation-request-form.js' %}"></script>
+{% endblock %}

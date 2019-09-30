@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'django_social_share',
     'django_countries',
+    'multiselectfield',
     # --- Local Apps ---
     'accounts',
     'utils',

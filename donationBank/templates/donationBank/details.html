@@ -42,6 +42,16 @@ Donation Bank- Overview
                                 </tr>
                                 {% endif %}
                             {% endif %}
+                            
+                            {% if object.services %}
+                            <tr>
+                                <td class="font-bold">Services</td>
+                                <td
+                                    class="font-bold font-italic">
+                                    {{ object.services }}
+                                </td>
+                            </tr>
+                            {% endif %}
 
                             {% if object.address %}
                             <tr>
@@ -105,7 +115,8 @@ Donation Bank- Overview
             </div>
         </div>
     </div>
-
+    
+    {% comment %}
     {% if not request.user.user_bank_member.bank.institute == object.institute %}
     <div class="card-footer">
         <button class="btn btn-primary btn-block">
@@ -113,6 +124,7 @@ Donation Bank- Overview
         </button>
     </div>
     {% endif %}
+    {% endcomment %}
 
 </div>
 

@@ -56,8 +56,9 @@
 
                 <div class="row">
                     <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
+                        <div class="extra_info" id="{{field.name}}_extra_info"></div>
                         {{ field|add_class:'form-control form-control' }}
-                        <div class="help-block with-errors text-center"></div>
+                        <div class="help-block with-errors text-center" id="{{field.name}}_help_block"></div>
                         <div class="text-center">
                             <span class="input-message text-danger font-13" id="{{field.name}}_msg"></span>
                         </div>

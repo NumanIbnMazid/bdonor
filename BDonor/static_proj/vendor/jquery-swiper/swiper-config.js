@@ -1,8 +1,8 @@
 var mySwiper = new Swiper('.swiper-container', {
-    init: true,
+    // init: true,
     direction: 'horizontal', // or 'vertical'
     touchEventsTarget: 'container',
-    initialSlide: 0,
+    // initialSlide: 0,
     speed: 300,
     preventInteractionOnTransition: false,
 
@@ -105,7 +105,7 @@ var mySwiper = new Swiper('.swiper-container', {
     updateOnImagesReady: true,
 
     // loop
-    loop: true,
+    // loop: true,
     loopAdditionalSlides: 0,
     loopedSlides: null,
     loopFillGroupWithBlank: false,

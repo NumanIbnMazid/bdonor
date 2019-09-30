@@ -2,6 +2,7 @@
 {% block extra_css %}
 <!-- Datatable css -->
 <link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css" type="text/css" />
 {% endblock %}
 
 <input type="hidden" id="total_records_count" value="{{object_list|length}}">
@@ -53,12 +54,21 @@
                 </td>
                 <td>{{ object.blood_group }}</td>
                 <td>
+                    {% if request.user.is_superuser or object.donate_type == 0 or object.user.user == request.user %}
                     <a class="text-deco-none text-dark" href="{{ object.user.get_absolute_url }}">
                         <div class="avatar avatar-xs">
                             {% include 'snippets/chunks/user-image.html' with instance=object.user.user class="avatar-img rounded-circle" %}
                         </div>
                         <h6>{{ object.user.get_dynamic_name }}</h6>
                     </a>
+                    {% else %}
+                    <a class="text-deco-none text-dark" href="{{ superuser.profile.get_absolute_url }}">
+                        <div class="avatar avatar-xs">
+                            {% include 'snippets/chunks/user-image.html' with instance=superuser class="avatar-img rounded-circle" %}
+                        </div>
+                        <h6>{{ superuser.profile.get_dynamic_name }}</h6>
+                    </a>
+                    {% endif %}
                 </td>
 
                 {% comment %}
@@ -124,11 +134,19 @@
                     {% endif %}
 
                     {% if not object.user.user == request.user and not object.user.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
+                    {% if request.user.is_superuser or object.donate_type == 0 %}
                     <a href="/chat/{{object.user.user.username}}/" class="btn btn-primary btn-xs text-deco-none m-1">
                         <span class="btn-label">
                             <span class="">chat</span>
                         </span>
                     </a>
+                    {% else %}
+                    <a href="/chat/{{superuser.username}}/" class="btn btn-primary btn-xs text-deco-none m-1">
+                        <span class="btn-label">
+                            <span class="">chat</span>
+                        </span>
+                    </a>
+                    {% endif %}
                     {% endif %}
 
 
@@ -224,6 +242,9 @@
 {% block extra_js %}
 <!-- Datatable JS -->
 <script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script src='https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js'></script>
+<script src='https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js'></script>
+
 <script>
     $(document).ready(function () {
         $('#donationDataTable').DataTable({
@@ -237,6 +258,9 @@
             //"scrollX": 400,
             //"scrollY": '62vh',
             //"scrollX": '50vh',
+            'dom': 'Bfrtip',
+            'buttons': [
+            'print'],
             "scrollCollapse": true,
             "stateSave": true,
             "pagingType": "full_numbers",

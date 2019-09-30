@@ -17,3 +17,19 @@
     </a>
     {% endif %}
 </div>
+<div class="">
+    {% if object.user == request.user %}
+    <a href="{% url 'account_change_password' %}"
+        class="btn btn-default btn-sm text-deco-none bg-sky-black m-1">
+        <i class="flaticon-pencil mr-1 font-bold font-15"></i>
+        Change Password
+    </a>
+    <br>
+    {% endif %}
+    {% if object.user == request.user %}
+    <a href="{% url 'account_email' %}" class="btn btn-default btn-sm text-deco-none bg-sky-black m-1">
+        <i class="flaticon-pencil mr-1 font-bold font-15"></i>
+        Manage Email
+    </a>
+    {% endif %}
+</div>

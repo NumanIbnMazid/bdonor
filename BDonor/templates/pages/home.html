@@ -20,7 +20,15 @@ Home Page
     <h4 class="page-title font-bold font-17">
         Campaigns ({{campaigns_count}})
     </h4>
+    
     {% include 'pages/snippets/campaigns.html' %}
+    
+    {% comment %}
+    {% for campaign in campaigns %}
+    {{campaign.title}}
+    {% endfor %}
+    {% endcomment %}
+
     <a href="{% url 'donation_bank:bank_campaign_list_public' %}" class="text-deco-none btn btn-primary btn-sm m-3">
         View All Campaigns
     </a>

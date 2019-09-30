@@ -1,6 +1,7 @@
 from django import forms
 import re
-from .models import DonationBank, DonationBankSetting, Donation, DonationProgress, Campaign
+from .models import (DonationBank, DonationBankSetting, Donation, 
+                    DonationRequest, DonationProgress, Campaign)
 import datetime
 from ckeditor.widgets import CKEditorWidget
 from django.template.defaultfilters import filesizeformat
@@ -22,6 +23,7 @@ class DonationBankForm(forms.ModelForm):
             self.fields.pop("country")
             self.fields.pop("contact")
             self.fields.pop("email")
+            self.fields.pop("services")
             self.fields.pop("description")
             VERIFICATION_OPTIONS = (
                 (True, "Verified"),
@@ -80,6 +82,18 @@ class DonationBankForm(forms.ModelForm):
                 'id': 'bank_email_input',
                 'placeholder': 'Enter email address...',
             })
+            # SERVICES_CHOICES = (
+            #     ("Blood", 'Blood'),
+            #     ("Organ", 'Organ'),
+            #     ("Tissue", 'Tissue'),
+            # )
+            # self.fields['services'] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+            #                                                     choices=SERVICES_CHOICES, required=True)
+            self.fields['services'].help_text = "Select services provided by the bank..."
+            self.fields['services'].widget.attrs.update({
+                'id': 'bank_services_input',
+                'placeholder': 'Select services...',
+            })
             self.fields['description'].help_text = "Maximum 400 characters allowed."
             self.fields['description'].widget.attrs.update({
                 'id': 'bank_description_input',
@@ -92,7 +106,7 @@ class DonationBankForm(forms.ModelForm):
     class Meta:
         model = DonationBank
         fields = ['institute', 'address', 'city',
-                  'state', 'country', 'contact', 'email', 'description', 'is_verified']
+                  'state', 'country', 'contact', 'email', 'services', 'description', 'is_verified']
         exclude = ['slug', 'created_at', 'updated_at']
 
     def clean_institute(self):
@@ -478,6 +492,81 @@ class DonationManageForm(forms.ModelForm):
                 #     raise forms.ValidationError(
                 #         'You cannot select previous date!')
         return expiration_date
+
+
+class DonationRequestManageForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.object = kwargs.pop('object', None)
+        super(DonationRequestManageForm, self).__init__(*args, **kwargs)
+        self.fields['donation_type'].help_text = "Select donation type."
+        self.fields['donation_type'].widget.attrs.update({
+            'id': 'donation_request_donation_type_input',
+            'onchange': "donationTypeFunction()",
+        })
+        self.fields['blood_group'].help_text = "Select blood group."
+        self.fields['blood_group'].widget.attrs.update({
+            'id': 'donation_request_blood_group_input',
+        })
+        self.fields['organ_name'].help_text = "Select organ."
+        self.fields['organ_name'].widget.attrs.update({
+            'id': 'donation_request_organ_name_input',
+            'onchange': "resetMessage(), organFunction()"
+        })
+        self.fields['tissue_name'].help_text = "Select tissue."
+        self.fields['tissue_name'].widget.attrs.update({
+            'id': 'donation_request_tissue_name_input',
+            'onchange': "resetMessage()"
+        })
+        self.fields['quantity'].help_text = "Enter quantity."
+        self.fields['quantity'].widget.attrs.update({
+            'id': 'donation_request_quantity_input',
+            'placeholder': 'Enter quantity...',
+            'onkeyup': "resetMessage()"
+        })
+        self.fields['details'].help_text = "Maximum 2000 characters allowed."
+        self.fields['details'].widget.attrs.update({
+            'id': 'donation_request_details_input',
+            'placeholder': 'Type details...',
+            'maxlength': 2000,
+            'rows': 2,
+            'cols': 2
+        })
+        self.fields['publication_status'].help_text = "Select publication status."
+        self.fields['publication_status'].widget.attrs.update({
+            'id': 'donation_request_publication_status_input',
+        })
+
+    class Meta:
+        model = DonationRequest
+        fields = ['donation_type', 'blood_group',
+                  'organ_name', 'tissue_name', 'quantity', 'details', 'publication_status']
+        exclude = ['bank', 'slug', 'created_at', 'updated_at']
+        widgets = {
+            'details': CKEditorWidget(),
+        }
+
+    def clean_quantity(self):
+        quantity = int(self.cleaned_data.get("quantity"))
+        # print(type(quantity))
+        if not quantity == None:
+            allowed_char = re.match(r'^[0-9]+$', str(quantity))
+            if not allowed_char:
+                raise forms.ValidationError(
+                    "Please enter a valid quantity!")
+            if quantity > 100:
+                raise forms.ValidationError(
+                    "Maximum quantity 100 is allowed!")
+        return quantity
+
+    def clean_details(self):
+        details = self.cleaned_data.get('details')
+        if not details == None:
+            length = len(details)
+            if length > 2000:
+                raise forms.ValidationError(
+                    f"Maximum 2000 characters allowed. [currently using: {length}]")
+        return details
 
 
 class DonationProgressForm(forms.ModelForm):

@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load i18n %}
+
 {% block head_title %}{% block page_title %}{% block breadcrumb %}
 {% if object.user == request.user %}
 My Profile
@@ -72,10 +74,32 @@ My Profile
                                         <td class="text-muted">{{ object.user.username }}</td>
                                     </tr>
                                     {% if object.user == request.user %}
+                                    {% if user.emailaddress_set.all %}
                                     <tr>
                                         <td class="text-muted" width='23%'>email</td>
-                                        <td class="text-muted">{{ object.user.email }}</td>
+                                        <!-- <td class="text-muted">
+                                            {{ object.user.email }}
+                                            {% if object.user.email.verified == True %}
+                                            <span class="text-success">[Verified]</span>
+                                            {% else %}
+                                            <span class="text-danger">[Not Verified]</span>
+                                            {% endif %}
+                                        </td> -->
+                                        <td class="text-muted">
+                                            {% for emailaddress in user.emailaddress_set.all %}
+                                            {{ emailaddress.email }}
+                                            {% if emailaddress.verified %}
+                                            <span class="verified text-success">{% trans "[Verified]" %}</span>
+                                            {% else %}
+                                            <span class="unverified text-danger">{% trans "[Not Verified]" %}</span>
+                                            {% endif %}
+                                            {% if emailaddress.primary %}
+                                            <span class="primary text-primary">{% trans "[Primary]" %}</span>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </td>
                                     </tr>
+                                    {% endif %}
                                     {% endif %}
                                     {% if object.user.first_name %}
                                     <tr>

@@ -27,6 +27,9 @@ Manage Progress Status
                     <div class="row">
                         <div class="col-md-12">
 
+                            <input type="hidden" id="respondent_count"
+                                value="{{object.donation.donation_respond.count}}">
+                                
                             {% include 'donations/snippets/donation-progress-form.html' %}
 
                         </div>

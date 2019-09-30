@@ -24,6 +24,7 @@ from django.core.mail import EmailMultiAlternatives
 import zeep
 from zeep import Client
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import User
 # Site.objects.get_current().domain
 # import socket
 
@@ -79,7 +80,17 @@ class OfferDonationCreateView(CreateView):
         contact_privacy = self.request.POST.get("contact_privacy")
         donate_type = self.request.POST.get("donate-type")
         form.instance.donate_type = donate_type
-        if donate_type == "1":
+        living_organs = ["Kidney", "Lungs"]
+        deceased_organs = ["Heart", "Pancreas", "Liver", "Intestines"]
+        if form.instance.type == 2:
+            form.instance.donate_type = 1
+        elif form.instance.type == 1 and form.instance.organ_name in deceased_organs:
+            form.instance.donate_type = 1
+        elif form.instance.type == 1 and form.instance.organ_name in living_organs and form.instance.quantity > 1:
+            form.instance.donate_type = 1
+        else:
+            form.instance.donate_type = 0
+        if donate_type == "1" or donate_type == 1:
             form.instance.is_verified = False
         # print(contact_privacy)
         form.instance.contact_privacy = contact_privacy
@@ -309,6 +320,18 @@ class OfferDonationUpdateView(UpdateView):
         if donate_type == None or donate_type == "":
             donate_type = 0
         form.instance.donate_type = donate_type
+        living_organs = ["Kidney", "Lungs"]
+        deceased_organs = ["Heart", "Pancreas", "Liver", "Intestines"]
+        if form.instance.type == 2:
+            form.instance.donate_type = 1
+        elif form.instance.type == 1 and form.instance.organ_name in deceased_organs:
+            form.instance.donate_type = 1
+        elif form.instance.type == 1 and form.instance.organ_name in living_organs and form.instance.quantity > 1:
+            form.instance.donate_type = 1
+        else:
+            form.instance.donate_type = 0
+        # if donate_type == "1" or donate_type == 1:
+        #     form.instance.is_verified = False
         # print(contact_privacy)
         form.instance.contact_privacy = contact_privacy
         contactFake = self.request.POST.get("contact_fake")
@@ -323,11 +346,12 @@ class OfferDonationUpdateView(UpdateView):
             profile = user_profile.first()
             if donation_qs.exists():
                 donation_qs_url = donation_qs.first().get_absolute_url()
-                form.add_error(
-                    f'{finalized_field_name}', forms.ValidationError(
-                        f"You already have a pending post similar to this. Please update that post if you need any changes. click <a href='{donation_qs_url}'>here</a> to view the post."
+                if not self.request.user.is_superuser:
+                    form.add_error(
+                        f'{finalized_field_name}', forms.ValidationError(
+                            f"You already have a pending post similar to this. Please update that post if you need any changes. click <a href='{donation_qs_url}'>here</a> to view the post."
+                        )
                     )
-                )
             elif blood_group == None:
                 form.add_error(
                     'blood_group', forms.ValidationError(
@@ -417,7 +441,8 @@ class OfferDonationUpdateView(UpdateView):
                     form.instance.contact3 = contact3Fake + contact3
                 if details_fake != "":
                     form.instance.details = details_fake
-                form.instance.user = profile
+                if not self.request.user.is_superuser:
+                    form.instance.user = profile
                 # form.instance.category = category
                 if form.instance.donate_type == 1:
                     form.instance.preferred_date = None
@@ -498,8 +523,10 @@ class DonationOffersCardListView(AjaxListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
+            # qs = Donation.objects.all().offers().is_published(
+            # ).living_donates().is_verified().dynamic_order()
             qs = Donation.objects.all().offers().is_published(
-            ).living_donates().is_verified().dynamic_order()
+            ).is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -528,7 +555,8 @@ class DonationOffersListView(ListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
-            qs = Donation.objects.all().offers().is_published().living_donates().is_verified().dynamic_order()
+            # qs = Donation.objects.all().offers().is_published().living_donates().is_verified().dynamic_order()
+            qs = Donation.objects.all().offers().is_published().is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -622,7 +650,17 @@ class DonationRequestCreateView(CreateView):
         contact_privacy = self.request.POST.get("contact_privacy")
         donate_type = self.request.POST.get("donate-type")
         form.instance.donate_type = donate_type
-        if donate_type == "1":
+        living_organs = ["Kidney", "Lungs"]
+        deceased_organs = ["Heart", "Pancreas", "Liver", "Intestines"]
+        if form.instance.type == 2:
+            form.instance.donate_type = 1
+        elif form.instance.type == 1 and form.instance.organ_name in deceased_organs:
+            form.instance.donate_type = 1
+        elif form.instance.type == 1 and form.instance.organ_name in living_organs and form.instance.quantity > 1:
+            form.instance.donate_type = 1
+        else:
+            form.instance.donate_type = 0
+        if donate_type == "1" or donate_type == 1:
             form.instance.is_verified = False
         # print(contact_privacy)
         form.instance.contact_privacy = contact_privacy
@@ -823,6 +861,18 @@ class DonationRequestUpdateView(UpdateView):
         if donate_type == None or donate_type == "":
             donate_type = 0
         form.instance.donate_type = donate_type
+        living_organs = ["Kidney", "Lungs"]
+        deceased_organs = ["Heart", "Pancreas", "Liver", "Intestines"]
+        if form.instance.type == 2:
+            form.instance.donate_type = 1
+        elif form.instance.type == 1 and form.instance.organ_name in deceased_organs:
+            form.instance.donate_type = 1
+        elif form.instance.type == 1 and form.instance.organ_name in living_organs and form.instance.quantity > 1:
+            form.instance.donate_type = 1
+        else:
+            form.instance.donate_type = 0
+        # if donate_type == "1" or donate_type == 1:
+        #     form.instance.is_verified = False
         # print(contact_privacy)
         form.instance.contact_privacy = contact_privacy
         contactFake = self.request.POST.get("contact_fake")
@@ -837,11 +887,12 @@ class DonationRequestUpdateView(UpdateView):
             profile = user_profile.first()
             if donation_qs.exists():
                 donation_qs_url = donation_qs.first().get_absolute_url()
-                form.add_error(
-                    f'{finalized_field_name}', forms.ValidationError(
-                        f"You already have a pending post similar to this. Please update that post if you need any changes. click <a href='{donation_qs_url}'>here</a> to view the post."
+                if not self.request.user.is_superuser:
+                    form.add_error(
+                        f'{finalized_field_name}', forms.ValidationError(
+                            f"You already have a pending post similar to this. Please update that post if you need any changes. click <a href='{donation_qs_url}'>here</a> to view the post."
+                        )
                     )
-                )
             elif blood_group == None:
                 form.add_error(
                     'blood_group', forms.ValidationError(
@@ -918,7 +969,8 @@ class DonationRequestUpdateView(UpdateView):
                     form.instance.contact3 = contact3Fake + contact3
                 if details_fake != "":
                     form.instance.details = details_fake
-                form.instance.user = profile
+                if not self.request.user.is_superuser:
+                    form.instance.user = profile
                 # form.instance.category = category
                 if form.instance.donate_type == 1:
                     form.instance.preferred_date = None
@@ -999,8 +1051,10 @@ class DonationRequestsCardListView(AjaxListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().requests().is_published().dynamic_order()
         else:
+            # qs = Donation.objects.all().requests().is_published(
+            # ).living_donates().is_verified().dynamic_order()
             qs = Donation.objects.all().requests().is_published(
-            ).living_donates().is_verified().dynamic_order()
+            ).is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -1029,8 +1083,10 @@ class DonationRequestsListView(ListView):
         if self.request.user.is_superuser:
             qs = Donation.objects.all().requests().is_published().dynamic_order()
         else:
+            # qs = Donation.objects.all().requests().is_published(
+            # ).living_donates().is_verified().dynamic_order()
             qs = Donation.objects.all().requests().is_published(
-            ).living_donates().is_verified().dynamic_order()
+            ).is_verified().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -1148,10 +1204,21 @@ class DonationRespondCreateView(CreateView):
             else:
                 message_bind = "Not Provided"
             # Respondent VS Receiver
+            super_user_qs = User.objects.filter(is_superuser=True)
             respondent = self.request.user.profile.get_dynamic_name()
-            respondent_receiver = donation.user.get_dynamic_name()
-            receiver_email = donation.user.user.email
-            receiver_contact = donation.contact
+            if donation.donate_type == 0:
+                receiver = donation.user.user
+                respondent_receiver = donation.user.get_dynamic_name()
+                receiver_email = donation.user.user.email
+                receiver_contact = donation.contact
+            else:
+                receiver = super_user_qs.first()
+                respondent_receiver = super_user_qs.first().profile.get_dynamic_name()
+                receiver_email = super_user_qs.first().email
+                if not super_user_qs.first().profile.contact == None:
+                    receiver_contact = super_user_qs.first().profile.contact
+                else:
+                    receiver_contact = "Not Provided"
             # URL Prefix
             domain = self.request.META['HTTP_HOST']
             if self.request.is_secure():
@@ -1198,7 +1265,7 @@ class DonationRespondCreateView(CreateView):
             # Create Notification
             request = self.request
             sender = self.request.user
-            receiver = donation.user.user
+            receiver = receiver
             category = 'donationRespond_Create'
             identifier = donation.slug
             subject = f"{respondent} has responded to your donation post"
@@ -1564,11 +1631,8 @@ class ManageProgressStatus(UpdateView):
         return None
 
     def form_valid(self, form):
-        # category = 0
-        self.object = self.get_object()
-        # print(form.instance.completion_date)
         messages.add_message(self.request, messages.SUCCESS,
-                             "Donation Progress Status has been updated successfully!")
+                                "Donation Progress Status has been updated successfully!")
         return super().form_valid(form)
 
     def get_success_url(self):

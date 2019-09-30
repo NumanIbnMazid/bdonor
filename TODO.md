@@ -76,26 +76,28 @@ Campaign:
     6. on image click image viewer
     7. Contact country validation form submit bottom of form js file.
     8. Add post view (100 viewers)
-9. Rank Donnars (Rating)
+9. Rank Donors (Rating)
+    ANS - NO
 10. if donated 1 bag out of 4 bag, then remain 3 bag , if empty then show special something
 11. tag ability
-12. Cannot delete if any user respond to that particular donation
+    12. Cannot delete if any user respond to that particular donation
 13. Respond: Email send, Show phone number- on click detail phone number....
-14. Show progress status in donation details
+    14. Show progress status in donation details
     15. Research about any blood group option in create donation offer
     16. blood bag quantity remove from i want to donate
-17. keep latitude and longtitude in database
-18. Profile privacy management, if show phone number
-19. respond- send msg, send mail
-20. i need donar- mandatory, i want to donate- optional
+    17. keep latitude and longtitude in database
+    18. Profile privacy management, if show phone number
+    19. respond- send msg, send mail
+    20. i need donar- mandatory, i want to donate- optional
     21. hospital regex - '#' make valid
-22. form field hint is not working (jquery-ui library is the culprit. conflicting with placing          head or body bottom) -(autocomplete is not a function). (Working if jquery-ui is removed)
-23. Does it make sense if completed post remains with all posts?
+    22. form field hint is not working (jquery-ui library is the culprit. conflicting with placing          head or body bottom) -(autocomplete is not a function). (Working if jquery-ui is removed)
+23. Does it make sense if completed post remains with all posts? 
+    ANS: NO
 24. provide an option to give phone number or email. manage required or optional among them.
 25. Withdraw respond
 26. Create notification after respond create
 27. Respond button in donation details action tab
-28. Blood Bank registration verification.
+    28. Blood Bank registration verification.
 29. Detect if deceased donation. If then redirect to another form page - show some information and keep guardian contact number that has to verified by system administrator.
 30. Check donation ability (Questionnaire promt)
 31. Progress status modal on donation details progress
@@ -107,13 +109,20 @@ Campaign:
 36. Personal card where users can make a list of important contacts, blood group and other info
 37. Must match blood group on respond modules
 38. Motivating slides in home to praise users to donate/ Social Awarness
-39. Search for transplantation able hospitals by location
+39. Search for transplantation able hospitals by location????????
 40. How many are in awaiting list?
-41. Search for nearest blood/organ/tissue bank, hospital
+41. Search for nearest blood/organ/tissue bank, hospital???????
 42. Update Bank Info (Provide Services for- Blood/Organ/Tissue)
 43. Add rating for banks to make more trusted. Or add any certification.
+44. Activity module. Last donated....
+45. Site Help
+46. AB- Will be universal Donor
+48. ***************** ERROR in Manage Progress Status Section ****************************
+    Respondent Module Foreign Key Error Probably.
 
-
+__ Donor Review
+__ Donation Process, Site Process Video Tutorial\
+__ Donation Slider
 
 
 # Suggestions From Other Sources...
@@ -172,6 +181,7 @@ Open street map
 24. After submit auto open modal
 25. Auto focus to issue field
 26. managed on - BDonor, Somewhere else
+27. Completed posts not necessary to view in list
 
 
 01710457751

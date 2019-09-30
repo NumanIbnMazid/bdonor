@@ -11,6 +11,8 @@ import datetime
 from django.urls import reverse
 from django.http import Http404
 from django.db.models import F, Sum
+from multiselectfield import MultiSelectField
+# from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class DonationBankQuerySet(models.query.QuerySet):
@@ -123,6 +125,14 @@ class DonationBankManager(models.Manager):
 
 
 class DonationBank(models.Model):
+    BLOOD = 'Blood'
+    ORGAN = 'Organ'
+    TISSUE = 'Tissue'
+    SERVICES_CHOICES = (
+        (BLOOD, 'Blood'),
+        (ORGAN, 'Organ'),
+        (TISSUE, 'Tissue'),
+    )
     institute = models.CharField(max_length=100, verbose_name='institute name')
     slug = models.SlugField(unique=True, verbose_name='slug')
     address = models.CharField(max_length=250, verbose_name='address')
@@ -133,6 +143,8 @@ class DonationBank(models.Model):
     country = CountryField()
     contact = models.CharField(max_length=100, verbose_name='contact no.')
     email = models.EmailField(blank=True, null=True, verbose_name='email')
+    services = MultiSelectField(
+        max_length=100, max_choices=3, choices=SERVICES_CHOICES, verbose_name='services')
     description = models.TextField(
         max_length=1000, blank=True, null=True, verbose_name='description')
     is_verified = models.BooleanField(default=False, verbose_name='is verified')
@@ -175,7 +187,7 @@ class DonationBankSetting(models.Model):
     bank = models.OneToOneField(
         DonationBank, on_delete=models.CASCADE, related_name='bank_setting', unique=True, verbose_name='bank')
     member_request = models.PositiveSmallIntegerField(
-        choices=MEMBER_REQUEST_STATUS_CHOICES, default=0, verbose_name='member request')
+        choices=MEMBER_REQUEST_STATUS_CHOICES, default=1, verbose_name='member request')
     privacy = models.PositiveSmallIntegerField(
         choices=BANK_PRIVACY_CHOICES, default=0, verbose_name='privacy')
     created_at = models.DateTimeField(
@@ -507,17 +519,30 @@ class DonationQuerySet(models.query.QuerySet):
     def dynamic_order(self):
         request = RequestMiddleware(get_response=None)
         request = request.thread_local.current_request
+        # if request.user.is_authenticated and not request.user.profile.country == None:
+        #     from django_countries import countries
+        #     user_country = request.user.profile.country.name
+        #     countries_dict = dict(countries)
+        #     order_field = list(countries_dict.values())
+        #     order_field.remove(user_country)
+        #     order_field.insert(0, user_country)
+        #     # print(order_field)
+        #     # pre_qs = self.filter(country=order_field)
+        #     qs = sorted(self.filter().order_by('-created_at'),
+        #                 key=lambda p: order_field.index(p.country.name))
+        qs = self.filter().order_by('-created_at')
         if request.user.is_authenticated and not request.user.profile.country == None:
-            from django_countries import countries
-            user_country = request.user.profile.country.name
-            countries_dict = dict(countries)
-            order_field = list(countries_dict.values())
-            order_field.remove(user_country)
-            order_field.insert(0, user_country)
-            # print(order_field)
-            # pre_qs = self.filter(country=order_field)
-            qs = sorted(self.filter().order_by('-created_at'),
-                        key=lambda p: order_field.index(p.country.name))
+            user_country = request.user.profile.country.code
+            country_donation_qs = self.filter().order_by('-created_at')
+            if country_donation_qs.exists():
+                countries_bind = country_donation_qs.values_list(
+                    'country', flat=True)
+                order_field = list(countries_bind)
+                if user_country in order_field:
+                    order_field.remove(user_country)
+                order_field.insert(0, user_country)
+                qs = sorted(self.filter().order_by('-created_at'),
+                            key=lambda p: order_field.index(p.country))
         else:
             qs = self.filter().order_by('-created_at')
         return qs
@@ -532,8 +557,8 @@ class DonationQuerySet(models.query.QuerySet):
     def donations_by_year(self, year_search):
         return self.filter(created_at__year=year_search)
 
-    def donations_by_user(self, user):
-        return self.filter(user=user.profile)
+    def donations_by_bank(self, bank):
+        return self.filter(bank=bank)
 
     def search(self, query):
         lookups = (Q(bank__institute__icontains=query) |
@@ -795,6 +820,245 @@ class Donation(models.Model):
     #     return reverse("donation_bank:bank_donation_details", kwargs={"slug": self.slug})
 
 
+class DonationRequestQuerySet(models.query.QuerySet):
+    def blood_type(self):
+        return self.filter(type=0)
+
+    def organ_type(self):
+        return self.filter(type=1)
+
+    def tissue_type(self):
+        return self.filter(type=2)
+
+    # # Foreign
+    # def is_done(self):
+    #     return self.filter(donation_progress__progress_status=1)
+
+    # def is_pending(self):
+    #     return self.filter(donation_progress__progress_status=0)
+    # # /Foreign
+
+    def dynamic_order(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        qs = self.filter().order_by('-created_at')
+        if request.user.is_authenticated and not request.user.profile.country == None:
+            user_country = request.user.profile.country.code
+            country_donation_qs = self.filter().order_by('-created_at')
+            if country_donation_qs.exists():
+                countries_bind = country_donation_qs.values_list(
+                    'country', flat=True)
+                order_field = list(countries_bind)
+                if user_country in order_field:
+                    order_field.remove(user_country)
+                order_field.insert(0, user_country)
+                qs = sorted(self.filter().order_by('-created_at'),
+                            key=lambda p: order_field.index(p.country))
+        else:
+            qs = self.filter().order_by('-created_at')
+        return qs
+
+    def latest(self):
+        return self.filter().order_by('-created_at')
+
+    def is_published(self):
+        return self.filter(publication_status=0)
+
+    def is_not_published(self):
+        return self.filter(publication_status=1)
+
+    def Donations_current_year(self):
+        today = datetime.datetime.now()
+        return self.filter(created_at__year=today.year)
+
+    def donations_by_year(self, year_search):
+        return self.filter(created_at__year=year_search)
+
+    def donations_by_bank(self, bank):
+        return self.filter(bank=bank)
+
+    def search(self, query):
+        lookups = (Q(bank__institute__icontains=query) |
+                   Q(bank__address__icontains=query) |
+                   Q(bank__city__icontains=query) |
+                   Q(bank__state__icontains=query) |
+                   Q(bank__country__icontains=query) |
+                   Q(bank__contact__icontains=query) |
+                   Q(bank__email__icontains=query) |
+                   Q(bank__description__icontains=query) |
+                   Q(donation_type__icontains=query) |
+                   Q(tissue_name__icontains=query) |
+                   Q(blood_group__icontains=query) |
+                   Q(quantity__icontains=query) |
+                   Q(organ_name__icontains=query) |
+                   Q(details__icontains=query)
+                   )
+        return self.filter(lookups).distinct()
+
+
+class DonationRequestManager(models.Manager):
+    def get_queryset(self):
+        return DonationRequestQuerySet(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset()
+
+    def get_by_id(self, id):
+        try:
+            instance = self.get_queryset().get(id=id)
+        except DonationRequest.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except DonationRequest.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(id=id)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def get_by_slug(self, slug):
+        try:
+            instance = self.get_queryset().get(slug=slug)
+        except DonationRequest.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except DonationRequest.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(slug=slug)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def filter_by_bank_slug(self, slug):
+        try:
+            instance = self.get_queryset().filter(bank__slug=slug)
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def search(self, query):
+        return self.get_queryset().search(query)
+
+class DonationRequest(models.Model):
+    BLOOD = 0
+    ORGAN = 1
+    TISSUE = 2
+    DONATION_CHOICES = (
+        (BLOOD, 'Blood'),
+        (ORGAN, 'Organ'),
+        (TISSUE, 'Tissue'),
+    )
+    ANY = 'Any Blood Group'
+    A_POSITIVE = 'A+'
+    A_NEGATIVE = 'A-'
+    B_POSITIVE = 'B+'
+    B_NEGATIVE = 'B-'
+    O_POSITIVE = 'O+'
+    O_NEGATIVE = 'O-'
+    AB_POSITIVE = 'AB+'
+    AB_NEGATIVE = 'AB-'
+    BLOOD_GROUP_CHOICES = (
+        (A_POSITIVE, 'A+'),
+        (A_NEGATIVE, 'A-'),
+        (B_POSITIVE, 'B+'),
+        (B_NEGATIVE, 'B-'),
+        (O_POSITIVE, 'O+'),
+        (O_NEGATIVE, 'O-'),
+        (AB_POSITIVE, 'AB+'),
+        (AB_NEGATIVE, 'AB-'),
+        (ANY, 'Any Blood Group'),
+    )
+    HEART = 'Heart'
+    KIDNEY = 'Kidney'
+    PANCREAS = 'Pancreas'
+    LUNGS = 'Lungs'
+    LIVER = 'Liver'
+    INTESTINES = 'Intestines'
+    ORGAN_CHOICES = (
+        (HEART, 'Heart'),
+        (KIDNEY, 'Kidney'),
+        (PANCREAS, 'Pancreas'),
+        (LUNGS, 'Lungs'),
+        (LIVER, 'Liver'),
+        (INTESTINES, 'Intestines')
+    )
+    BONES = 'Bones'
+    LIGAMENTS = 'Ligaments'
+    TENDONS = 'Tendons'
+    FASCIA = 'Fascia'
+    VEINS = 'Veins'
+    NERVES = 'Nerves'
+    CORNEAS = 'Corneas'
+    SCLERA = 'Sclera'
+    HEART_VALVES = 'Heart Valves'
+    SKIN = 'Skin'
+    TISSUE_CHOICES = (
+        (BONES, 'Bones'),
+        (LIGAMENTS, 'Ligaments'),
+        (TENDONS, 'Tendons'),
+        (FASCIA, 'Fascia'),
+        (VEINS, 'Veins'),
+        (NERVES, 'Nerves'),
+        (CORNEAS, 'Corneas'),
+        (SCLERA, 'Sclera'),
+        (HEART_VALVES, 'Heart Valves'),
+        (SKIN, 'Skin')
+    )
+    PUBLISHED = 0
+    UNPUBLISHED = 1
+    DONATION_PUBLICATION_CHOICES = (
+        (PUBLISHED, 'Published'),
+        (UNPUBLISHED, 'Unpublished'),
+    )
+    bank = models.ForeignKey(DonationBank, on_delete=models.CASCADE,
+                             related_name='donation_bank_request', verbose_name='bank')
+    slug = models.SlugField(unique=True, verbose_name='slug')
+    donation_type = models.PositiveSmallIntegerField(
+        choices=DONATION_CHOICES, default=0, verbose_name='donation type')
+    blood_group = models.CharField(
+        max_length=20, choices=BLOOD_GROUP_CHOICES, null=True, blank=True, verbose_name='blood group')
+    organ_name = models.CharField(
+        choices=ORGAN_CHOICES, blank=True, max_length=100, null=True, verbose_name='organ name')
+    tissue_name = models.CharField(
+        choices=TISSUE_CHOICES, blank=True, max_length=100, null=True, verbose_name='tissue name')
+    quantity = models.CharField(
+        max_length=3, verbose_name='quantity', default=1)
+    details = models.TextField(blank=True,
+                               null=True, verbose_name='details')
+    publication_status = models.PositiveSmallIntegerField(
+        choices=DONATION_PUBLICATION_CHOICES, default=0, verbose_name='publication status')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='created at')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    objects = DonationRequestManager()
+
+    class Meta:
+        verbose_name = ("Donation Request")
+        verbose_name_plural = ("Donation Requests")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.bank.institute
+
+    def get_donation_type(self):
+        type = "Undefined"
+        if self.type == 0:
+            type = "Blood"
+        if self.type == 1:
+            type = "Organ"
+        if self.type == 2:
+            type = "Tissue"
+        return type
+
+    def get_type_dynamic_short_detail(self):
+        detail = "Undefined"
+        if self.donation_type == 0:
+            detail = f"{self.blood_group} ({self.quantity} bag)"
+        if self.donation_type == 1:
+            detail = f"{self.organ_name} ({self.quantity})"
+        if self.donation_type == 2:
+            detail = f"{self.tissue_name}"
+        return detail
+
 class DonationProgress(models.Model):
     PENDING = 0
     DONE = 1
@@ -916,6 +1180,20 @@ def donation_slug_pre_save_receiver(sender, instance, *args, **kwargs):
 
 
 pre_save.connect(donation_slug_pre_save_receiver, sender=Donation)
+
+
+def donation_request_slug_pre_save_receiver(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        if len(instance.bank.institute) > 10:
+            institute = instance.bank.institute.lower()[:10]
+        else:
+            institute = instance.bank.institute.lower()
+        slug_binding = slugify(institute) + "-" + time_str_mix_slug()
+        # print(slug_binding)
+        instance.slug = slug_binding
+
+
+pre_save.connect(donation_request_slug_pre_save_receiver, sender=DonationRequest)
 
 
 @receiver(post_save, sender=Donation)

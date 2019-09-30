@@ -1,0 +1,26 @@
+<div class="text-center m-2">
+    {% url 'donationBank:bank_add_donation' as bank_add_donation_url %}
+    {% url 'donationBank:bank_add_donation_request' as bank_add_donation_request_url %}
+    {% url 'donationBank:bank_donation_list' as bank_donation_list_url %}
+
+    {% if not request.path == bank_add_donation_url %}
+    <a href="{{ bank_add_donation_url }}" class="btn btn-default btn-sm text-deco-none bg-sky-black m-1">
+        <i class="flaticon-add mr-1 font-bold font-15"></i>
+        Add Donation
+    </a>
+    {% endif %}
+
+    {% if not request.path == bank_add_donation_request_url %}
+    <a href="{{ bank_add_donation_request_url }}" class="btn btn-default btn-sm text-deco-none bg-sky-black m-1">
+        <i class="flaticon-add mr-1 font-bold font-15"></i>
+        Add Donation Request
+    </a>
+    {% endif %}
+
+    {% if not request.path == bank_donation_list_url %}
+    <a href="{{ bank_donation_list_url }}" class="btn btn-default btn-sm text-deco-none bg-sky-black m-1">
+        <i class="flaticon-list mr-1 font-bold font-15"></i>
+        Donations
+    </a>
+    {% endif %}
+</div>

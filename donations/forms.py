@@ -499,15 +499,25 @@ class DonationProgressForm(forms.ModelForm):
         })
         # if not self.object == None:
         respond_qs = DonationRespond.objects.filter(donation=self.object.donation)
-        RESPONDENT_QUERYSET = respond_qs.values_list(
-            'respondent__username', flat=True)
+        RESPONDENT_QUERYSET = respond_qs
         if respond_qs.exists() and respond_qs.count() >= 1:
-            self.fields['respondent'] = forms.ModelChoiceField(
+            # if not self.object.donation.blood_bag == None and int(self.object.donation.blood_bag) > 1:
+            #     self.fields['respondent'] = forms.ModelMultipleChoiceField(
+            #         queryset=RESPONDENT_QUERYSET, required=False)
+            # elif not self.object.donation.quantity == None and int(self.object.donation.quantity) > 1:
+            #     self.fields['respondent'] = forms.ModelMultipleChoiceField(
+            #         queryset=RESPONDENT_QUERYSET, required=False)
+            # else:
+            #     self.fields['respondent'] = forms.ModelChoiceField(
+            #         queryset=RESPONDENT_QUERYSET, required=False)
+            self.fields['respondent'] = forms.ModelMultipleChoiceField(
                 queryset=RESPONDENT_QUERYSET, required=False)
         else:
-            self.fields['respondent'] = forms.ModelChoiceField(
-                queryset=RESPONDENT_QUERYSET, empty_label="--- No Respondent Found ---", required=False)
-        self.fields['respondent'].help_text = "Select respondent..."
+            # self.fields['respondent'] = forms.ModelChoiceField(
+            #     queryset=RESPONDENT_QUERYSET, empty_label="--- No Respondent Found ---", required=False)
+            self.fields['respondent'] = forms.ModelMultipleChoiceField(
+                queryset=RESPONDENT_QUERYSET, required=False)
+        self.fields['respondent'].help_text = "Hold down 'Control', or 'Command' on a Mac, to select more than one"
         self.fields['respondent'].widget.attrs.update({
             'id': 'donation_respondent_input',
             # 'placeholder': 'Type contact number...',

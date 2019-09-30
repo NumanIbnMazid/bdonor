@@ -16,6 +16,7 @@
                 <div class="text-small op-8 mt-2">
                     <span class="mt-2">
                         by <i>
+                            {% if request.user.is_superuser or object.donate_type == 0 or object.user.user == request.user %}
                             <a class="text-deco-none text-white truncate-50" href="{{ object.user.get_absolute_url }}">
                                 {% if not object.user.user == request.user %}
                                 {{ object.user.get_dynamic_name }}
@@ -23,13 +24,26 @@
                                 You
                                 {% endif %}
                             </a>
+                            {% else %}
+                            <a class="text-deco-none text-white truncate-50"
+                                href="{{ superuser.profile.get_absolute_url }}">
+                                {{ superuser.profile.get_dynamic_name }}
+                            </a>
+                            {% endif %}
                         </i>
                     </span>
                     <span class="ml-2">
-                        <a class="text-deco-none" href="{{ object.user.get_absolute_url }}">
+                        <a class="text-deco-none"
+                            href="{% if request.user.is_superuser or object.donate_type == 0 or object.user.user == request.user %}{{ object.user.get_absolute_url }}{% else %}{{ superuser.profile.get_absolute_url }}{% endif %}">
+                            {% if request.user.is_superuser or object.donate_type == 0 or object.user.user == request.user %}
                             <div class="avatar avatar-sm">
                                 {% include 'snippets/chunks/user-image.html' with instance=object.user.user class="avatar-img rounded-circle" %}
                             </div>
+                            {% else %}
+                            <div class="avatar avatar-sm">
+                                {% include 'snippets/chunks/user-image.html' with instance=superuser class="avatar-img rounded-circle" %}
+                            </div>
+                            {% endif %}
                             {% if object.blood_group and not object.type == 0 %}
                             <span class="c-text-highlight-green font-15 font-bold">
                                 {{ object.blood_group }}
@@ -87,7 +101,11 @@
         </a>
         {% endif %} -->
         
-        {% include 'snippets/modules/chat-module.html' with instance=object.user class="btn btn-primary btn-sm text-deco-none" text="chat" %}
+        {% if request.user.is_superuser or object.donate_type == 0 %}
+        {% include 'snippets/modules/chat-module.html' with instance=object.user.user class="btn btn-primary btn-sm text-deco-none" text="chat" %}
+        {% else %}
+        {% include 'snippets/modules/chat-module.html' with instance=superuser class="btn btn-primary btn-sm text-deco-none" text="chat" %}
+        {% endif %}
 
         {% endif %}
 

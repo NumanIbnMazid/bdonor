@@ -4,8 +4,8 @@ from .views import (
     DonationBankListView, donationBank_delete, ManageProgressStatus, member_request_create, DonationBankSettingUpdateView,
     member_request_delete, member_request_accept, member_request_reject, BankMembersListView,
     membership_remove, DonationCreateView, DonationListView, DonationDetailView, DonationUpdateView,
-    donation_delete, CampaignCreateView, CampaignListView, CampaignDetailView, CampaignUpdateView, 
-    campaign_delete, CampaignPublicListView,
+    donation_delete, DonationRequestCreateView, CampaignCreateView, CampaignListView, CampaignDetailView, 
+    CampaignUpdateView, campaign_delete, CampaignPublicListView,
 )
 
 urlpatterns = [
@@ -24,12 +24,15 @@ urlpatterns = [
     path('members/list/', BankMembersListView.as_view(), name='bank_members_list'),
     path('membership/remove/', membership_remove, name='bank_membership_remove'),
     # Donation OF Bank
+#     Donation Store
     path('donation/add/', DonationCreateView.as_view(), name='bank_add_donation'),
     path('donation/list/', DonationListView.as_view(), name='bank_donation_list'),
     path('donation/<slug>/info/', DonationDetailView.as_view(), name='bank_donation_details'),
     path('donation/<slug>/update/', DonationUpdateView.as_view(), name='bank_donation_update'),
     path('donation/delete/', donation_delete, name='bank_donation_delete'),
     path('donation/<slug>/progress/', ManageProgressStatus.as_view(), name='bank_manage_progress_status'),
+#     Donation Request
+    path('donation/add/request/', DonationRequestCreateView.as_view(), name='bank_add_donation_request'),
     # Campaign URLs
     path('campaign/add/', CampaignCreateView.as_view(), name='bank_add_campaign'),
     path('campaign/list/', CampaignListView.as_view(), name='bank_campaign_list'),

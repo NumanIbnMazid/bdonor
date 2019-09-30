@@ -22,6 +22,7 @@ Donation Bank List
             <tr>
                 <th>#</th>
                 <th>Institute</th>
+                <th>Services</th>
                 {% if not request.user.is_superuser %}
                 <th>Address</th>
                 {% endif %}
@@ -44,6 +45,13 @@ Donation Bank List
                     <b>
                         {{ object.institute }}
                     </b>
+                </td>
+                <td class="font-italic">
+                    {% if not object.services == None %}
+                    {{ object.services }}
+                    {% else %}
+                    -
+                    {% endif %}
                 </td>
                 {% if not request.user.is_superuser %}
                 <td>
@@ -115,7 +123,7 @@ Donation Bank List
             </tr>
             {% empty %}
             <tr>
-                <td colspan="8" class="text-center">
+                <td colspan="9" class="text-center">
                     <div class="alert alert-warning">
                         No item found!
                     </div>
@@ -127,6 +135,7 @@ Donation Bank List
             <tr class="text-center">
                 <th>#</th>
                 <th>Institute</th>
+                <th>Services</th>
                 {% if not request.user.is_superuser %}
                 <th>Address</th>
                 {% endif %}

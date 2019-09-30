@@ -24,21 +24,36 @@
                 {{ object.donation_progress.get_progress_status }}
             </span>
         </h5>
+
         {% if not object.donation_progress.respondent == None %}
-        <h5>
-            <span class="text-secondary">
+
+        {% if object.donation_progress.respondent.all.count > 0 %}
+
+        <h5 class="text-center">
+            <span class="text-muted">
                 Respondent:
             </span>
+            {% for respondent in object.donation_progress.respondent.all %}
             <span class="text-primary ml-2">
-                <a class="text-deco-none" href="{{ object.donation_progress.respondent.get_absolute_url }}">
-                    <div class="avatar avatar-sm">
-                        {% include 'snippets/chunks/user-image.html' with instance=object.donation_progress.respondent class="avatar-img rounded-circle" %}
+                <a class="text-deco-none" href="{{ respondent.respondent.profile.get_absolute_url }}">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="avatar avatar-sm">
+                                {% include 'snippets/chunks/user-image.html' with instance=respondent.respondent class="avatar-img rounded-circle" %}
+                            </div>
+                            <h6 class="m-1">
+                                {{ respondent.respondent.get_username }}
+                            </h6>
+                        </div>
                     </div>
-                    <h6>{{ object.donation_progress.respondent.get_dynamic_name }}</h6>
                 </a>
             </span>
+            {% endfor %}
         </h5>
+
         {% endif %}
+        {% endif %}
+
         {% if not object.donation_progress.completion_date == None %}
         <h5>
             <span class="text-secondary">
@@ -133,12 +148,21 @@
                 </p>
             </div>
             <h3 class="text-secondary">
+                {% if request.user.is_superuser or object.donate_type == 0 or object.user.user == request.user %}
                 <a class="text-deco-none" href="{{ object.user.get_absolute_url }}">
                     <div class="avatar avatar-lg">
                         {% include 'snippets/chunks/user-image.html' with instance=object.user.user class="avatar-img rounded-circle" %}
                     </div>
                     <h6>{{ object.user.get_dynamic_name }}</h6>
                 </a>
+                {% else %}
+                <a class="text-deco-none" href="{{ superuser.profile.get_absolute_url }}">
+                    <div class="avatar avatar-lg">
+                        {% include 'snippets/chunks/user-image.html' with instance=superuser class="avatar-img rounded-circle" %}
+                    </div>
+                    <h6>{{ superuser.profile.get_dynamic_name }}</h6>
+                </a>
+                {% endif %}
                 <!-- {% if not object.user.user == request.user and not object.user.user_site_preference.chat_with_others == False and not site_preference.chat_with_others == False %}
                 <a href="/chat/{{object.user.user.username}}/" class="btn btn-sm text-deco-none border-info-1">
                     <span class="btn-label">
@@ -217,8 +241,9 @@
             </h5>
             {% endif %}
 
+            {% if request.user.is_superuser or object.donate_type == 0 or object.user.user == request.user %}
+            
             {% if object.contact_privacy == 0 %}
-
             {% if object.contact %}
             <h5>
                 <span class="text-secondary">
@@ -231,7 +256,27 @@
                 </span>
             </h5>
             {% endif %}
+            {% endif %}
 
+            {% else %}
+
+            {% if superuser.profile.contact != "" %}
+            <h5>
+                <span class="text-secondary">
+                    Contact no. :
+                </span>
+                <span class="ml-2">
+                    <a href="#">
+                        {{ superuser.profile.contact }}
+                    </a>
+                </span>
+            </h5>
+            {% endif %}
+            
+            {% endif %}
+
+            {% if request.user.is_superuser or object.donate_type == 0 or object.user.user == request.user %}
+            
             {% if object.contact2 %}
             <h5>
                 <span class="text-secondary">
@@ -258,8 +303,6 @@
             </h5>
             {% endif %}
 
-            {% endif %}
-
             {% if object.location %}
             <h5>
                 <span class="text-secondary">
@@ -269,6 +312,8 @@
                     {{ object.location }}
                 </span>
             </h5>
+            {% endif %}
+
             {% endif %}
 
             {% if object.city %}
@@ -303,6 +348,8 @@
                 </span>
             </h5>
             {% endif %}
+
+            {% if request.user.is_superuser or object.donate_type == 0 or object.user.user == request.user %}
 
             {% if object.hospital %}
             <h5>
@@ -360,6 +407,8 @@
                     {{ object.details|safe|linebreaks }}
                 </div>
             </div>
+            {% endif %}
+
             {% endif %}
 
         </div>

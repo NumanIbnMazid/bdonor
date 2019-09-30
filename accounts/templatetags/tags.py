@@ -9,10 +9,19 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 
 register = template.Library()
 
+
+@register.simple_tag(takes_context=True)
+def get_superuser(context):
+    super_user_qs = User.objects.filter(is_superuser=True)
+    superuser = None
+    if super_user_qs.exists():
+        superuser = super_user_qs.first()
+    return superuser
 
 @register.simple_tag(takes_context=True)
 def get_site_preference(context):

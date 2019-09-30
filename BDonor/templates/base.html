@@ -1,6 +1,7 @@
 {% load tags %}
 {% load static %}
 
+{% get_superuser as superuser %}
 {% if request.user.is_authenticated %}
 {% get_site_preference as site_preference %}
 {% get_chat_messages as chat_messages %}

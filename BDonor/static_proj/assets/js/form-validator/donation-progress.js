@@ -83,6 +83,18 @@ $(document).ready(function () {
   });
 });
 
+$(document).ready(function () {
+  if ($("#respondent_count").val() < 1) {
+    $("#respondent_extra_info").text("No Respondent Found !!!").addClass("text-danger text-center font-bold font-15 m-2");
+    $("#donation_respondent_input").addClass("hidden");
+  }
+  else{
+    $("#respondent_extra_info").text();
+    $("#donation_respondent_input").removeClass("hidden");
+    $("#respondent_help_block").text("Hold down 'Control', or 'Command' on a Mac, to select more than one");
+  }
+});
+
 
 submitBtn.click(function () {
   event.preventDefault();

@@ -23,14 +23,7 @@ Bank Donation List
                 {% include 'donationBank/snippets/sidebar.html' %}
             </div>
             <div class="col-md-10">
-                <div class="text-center m-2">
-                    {% url 'donationBank:bank_add_donation' as bank_add_donation_url %}
-                    <a href="{{ bank_add_donation_url }}"
-                        class="btn btn-default btn-md text-deco-none bg-sky-black m-1">
-                        <i class="flaticon-add mr-1 font-bold font-15"></i>
-                        Add Donation
-                    </a>
-                </div>
+                {% include 'donationBank/snippets/donation-tab.html' %}
                 <div class="table-responsive">
                     <table id="donationBankDataTable" class="cell-border hover table-bordered table-hover text-center"
                         style="width:100%">
