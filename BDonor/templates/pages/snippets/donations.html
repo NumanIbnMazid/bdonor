@@ -1,0 +1,126 @@
+{% load static %}
+
+<ul
+    id="{% if instance == donation_offers %}donation_offers{% elif instance == donation_requests %}donation_requests{% else %}lightSlider{% endif %}">
+    <!-- Slide-->
+    {% for donation in instance %}
+    <li class="">
+        {% url 'donations:donation_update' slug=donation.slug as donation_update_url %}
+
+        <div
+            class="card card-dark
+            {% if donation.donation_progress.progress_status == 1 %}bg-c-blue-black{% endif %}{% if donation.priority == 1 and not donation.donation_progress.progress_status == 1 %}bg-c-important{% endif %}{% if donation.priority == 0 and not donation.donation_progress.progress_status == 1 %}bg-primary-gradient{% endif %}">
+            <div class="card-body skew-shadow">
+                <span class="py-4 font-15 mb-0 text-dark">
+                    {{ donation.title|truncatechars_html:25 }}
+                </span>
+                <div class="row">
+                    <div class="col-8 pr-0 mt-2">
+                        <h5 class="fw-bold mb-1 c-text-highlight-green font-13">
+                            {{ donation.get_type_dynamic_short_detail|truncatechars_html:23 }}
+                        </h5>
+                        <div class="text-small op-8 mt-2">
+                            <span class="mt-2">
+                                by <i>
+                                    {% if request.user.is_superuser or donation.donate_type == 0 or donation.user.user == request.user %}
+                                    <a class="text-deco-none text-white truncate-50"
+                                        href="{{ donation.user.get_absolute_url }}">
+                                        {% if not donation.user.user == request.user %}
+                                        {{ donation.user.get_dynamic_name }}
+                                        {% else %}
+                                        You
+                                        {% endif %}
+                                    </a>
+                                    {% else %}
+                                    <a class="text-deco-none text-white truncate-50"
+                                        href="{{ superuser.profile.get_absolute_url }}">
+                                        {{ superuser.profile.get_dynamic_name }}
+                                    </a>
+                                    {% endif %}
+                                </i>
+                            </span>
+                            <span class="ml-2">
+                                <a class="text-deco-none"
+                                    href="{% if request.user.is_superuser or donation.donate_type == 0 or donation.user.user == request.user %}{{ donation.user.get_absolute_url }}{% else %}{{ superuser.profile.get_absolute_url }}{% endif %}">
+                                    {% if request.user.is_superuser or donation.donate_type == 0 or donation.user.user == request.user %}
+                                    <div class="avatar avatar-sm">
+                                        {% include 'snippets/chunks/user-image.html' with instance=donation.user.user class="avatar-img rounded-circle" %}
+                                    </div>
+                                    {% else %}
+                                    <div class="avatar avatar-sm">
+                                        {% include 'snippets/chunks/user-image.html' with instance=superuser class="avatar-img rounded-circle" %}
+                                    </div>
+                                    {% endif %}
+                                    {% if donation.blood_group and not donation.type == 0 %}
+                                    <span class="c-text-highlight-green font-15 font-bold">
+                                        {{ donation.blood_group }}
+                                    </span>
+                                    {% endif %}
+                                </a>
+                            </span>
+                        </div>
+                        <div>
+                            {% if request.user.is_superuser %}
+                            <span
+                                class="{% if donation.is_verified == True %}text-success{% else %}text-warning{% endif %}">
+                                {{ donation.get_verification_status }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-4 pl-0 text-right">
+                        <!-- <a class="text-deco-none" href="{{ donation.user.get_absolute_url }}">
+                    <div class="avatar avatar-sm">
+                        {% include 'snippets/chunks/user-image.html' with instance=donation.user.user class="avatar-img rounded-circle" %}
+                    </div>
+                </a> -->
+                        <span class="font-15 font-700 c-text-highlight-green">
+                            {{ donation.get_donation_type }}
+                        </span>
+                        <div
+                            class="text-small text-uppercase fw-bold op-8 mt-1 {% if donation.donation_progress.progress_status == 1 %}text-success{% else %}text-warning{%endif%}">
+                            {{ donation.donation_progress.get_progress_status }}
+                        </div>
+                        <div class="c-text-highlight-green">
+                            <i class="flaticon-medical"></i>
+                            <span class="font-13">{{donation.get_viewers.count}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a href="{{ donation.get_absolute_url }}" class="btn btn-primary btn-sm text-deco-none bg-c-primary">
+                    <span class="btn-label">
+                        <i class="flaticon-medical"></i>
+                        <span class="font-13 font-bold">view</span>
+                    </span>
+                </a>
+
+                {% if not donation.user.user == request.user %}
+
+                {% if request.user.is_authenticated %}
+                {% include 'snippets/modules/respond-module.html' with instance=donation %}
+                {% endif %}
+
+                {% if request.user.is_superuser or donation.donate_type == 0 %}
+                {% include 'snippets/modules/chat-module.html' with instance=donation.user.user class="btn btn-primary btn-sm text-deco-none" text="chat" %}
+                {% else %}
+                {% include 'snippets/modules/chat-module.html' with instance=superuser class="btn btn-primary btn-sm text-deco-none" text="chat" %}
+                {% endif %}
+
+                {% endif %}
+
+                {% include 'snippets/modules/donation-modify-module.html' with instance=donation %}
+
+            </div>
+        </div>
+
+        {% include 'donations/snippets/modals.html' %}
+    </li>
+    {% empty %}
+    <div class="alert alert-warning col-md-12 text-center">
+        No item found!
+    </div>
+    {% endfor %}
+</ul>

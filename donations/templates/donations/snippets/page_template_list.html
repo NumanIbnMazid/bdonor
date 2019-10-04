@@ -6,7 +6,11 @@
 
 {% for object in object_list %}
 <div class="col-md-4">
-    {% include 'donations/snippets/donation-card.html' %}
+    {% if page_type == 'RESPOND' %}
+    {% include 'donations/snippets/donation-card.html' with object=object.donation %}
+    {% else %}
+    {% include 'donations/snippets/donation-card.html' with object=object %}
+    {% endif %}
 </div>
 {% empty %}
 <div class="col-md-12 text-center">

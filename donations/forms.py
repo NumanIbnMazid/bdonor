@@ -488,6 +488,8 @@ class DonationRespondForm(forms.ModelForm):
 
 
 class DonationProgressForm(forms.ModelForm):
+    status_fake = forms.CharField(required=True, label="Status", initial="Mark as Completed", disabled=True)
+    respondent_fake = forms.CharField()
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         self.object = kwargs.pop('object', None)
@@ -498,53 +500,83 @@ class DonationProgressForm(forms.ModelForm):
             # 'placeholder': 'Type contact number...',
         })
         # if not self.object == None:
-        respond_qs = DonationRespond.objects.filter(donation=self.object.donation)
-        RESPONDENT_QUERYSET = respond_qs
-        if respond_qs.exists() and respond_qs.count() >= 1:
-            # if not self.object.donation.blood_bag == None and int(self.object.donation.blood_bag) > 1:
-            #     self.fields['respondent'] = forms.ModelMultipleChoiceField(
-            #         queryset=RESPONDENT_QUERYSET, required=False)
-            # elif not self.object.donation.quantity == None and int(self.object.donation.quantity) > 1:
-            #     self.fields['respondent'] = forms.ModelMultipleChoiceField(
-            #         queryset=RESPONDENT_QUERYSET, required=False)
-            # else:
-            #     self.fields['respondent'] = forms.ModelChoiceField(
-            #         queryset=RESPONDENT_QUERYSET, required=False)
-            self.fields['respondent'] = forms.ModelMultipleChoiceField(
-                queryset=RESPONDENT_QUERYSET, required=False)
-        else:
-            # self.fields['respondent'] = forms.ModelChoiceField(
-            #     queryset=RESPONDENT_QUERYSET, empty_label="--- No Respondent Found ---", required=False)
-            self.fields['respondent'] = forms.ModelMultipleChoiceField(
-                queryset=RESPONDENT_QUERYSET, required=False)
-        self.fields['respondent'].help_text = "Hold down 'Control', or 'Command' on a Mac, to select more than one"
-        self.fields['respondent'].widget.attrs.update({
-            'id': 'donation_respondent_input',
-            # 'placeholder': 'Type contact number...',
-        })
-        self.fields['completion_date'].help_text = "Select completion date..."
-        self.fields['completion_date'].widget.attrs.update({
-            'id': 'donation_completion_date_input',
-            # 'placeholder': 'Type contact number...',
-        })
-        self.fields['management_status'].help_text = "Select management status..."
-        self.fields['management_status'].widget.attrs.update({
-            'id': 'donation_management_status_input',
-            # 'placeholder': 'Type contact number...',
-        })
-        self.fields['details'].help_text = "Maximum 400 characters allowed."
-        self.fields['details'].widget.attrs.update({
-            'id': 'donation_details_input',
-            'placeholder': 'Provide some additional information...',
-            'maxlength': 400,
-            'rows': 2,
-            'cols': 2
-        })
+        respond_qs = None
+        if self.object.donation.category == 0 and not self.object.donation.user.user == self.request.user:
+            self.fields.pop("respondent")
+            self.fields.pop("progress_status")
+            self.fields.pop("completion_date")
+            self.fields.pop("management_status")
+            self.fields.pop("details")
+            respond_qs = DonationRespond.objects.filter(
+                donation=self.object.donation, respondent=self.request.user
+            )
+            # self.fields['respondent_fake'] = forms.CharField(
+            #     label="Respondent", required=True, widget=forms.ModelChoiceField(queryset=respond_qs))
+            self.fields['respondent_fake'] = forms.ModelChoiceField(
+                queryset=respond_qs, label="Respondent", required=True)
+            if respond_qs.exists():
+                self.fields['respondent_fake'].initial = respond_qs.first()
+        if self.request.user.is_superuser or self.object.donation.user.user == self.request.user:
+            if self.object.donation.category == 1 or self.object.donation.category == 0:
+                self.fields.pop("respondent_fake")
+                self.fields.pop("status_fake")
+                if self.request.user.is_superuser:
+                    respond_qs = DonationRespond.objects.filter(
+                        donation=self.object.donation)
+                else:
+                    if self.object.donation.user.user == self.request.user and self.object.donation.category == 1:
+                        respond_qs = DonationRespond.objects.filter(
+                            donation=self.object.donation)
+                    if self.object.donation.user.user == self.request.user and self.object.donation.category == 0:
+                        respond_qs = DonationRespond.objects.filter(
+                            donation=self.object.donation, is_applied_for_selection=True)
+                RESPONDENT_QUERYSET = respond_qs
+                if respond_qs.exists() and respond_qs.count() >= 1:
+                    # if not self.object.donation.blood_bag == None and int(self.object.donation.blood_bag) > 1:
+                    #     self.fields['respondent'] = forms.ModelMultipleChoiceField(
+                    #         queryset=RESPONDENT_QUERYSET, required=False)
+                    # elif not self.object.donation.quantity == None and int(self.object.donation.quantity) > 1:
+                    #     self.fields['respondent'] = forms.ModelMultipleChoiceField(
+                    #         queryset=RESPONDENT_QUERYSET, required=False)
+                    # else:
+                    #     self.fields['respondent'] = forms.ModelChoiceField(
+                    #         queryset=RESPONDENT_QUERYSET, required=False)
+                    self.fields['respondent'] = forms.ModelMultipleChoiceField(
+                        queryset=RESPONDENT_QUERYSET, required=False)
+                else:
+                    # self.fields['respondent'] = forms.ModelChoiceField(
+                    #     queryset=RESPONDENT_QUERYSET, empty_label="--- No Respondent Found ---", required=False)
+                    self.fields['respondent'] = forms.ModelMultipleChoiceField(
+                        queryset=RESPONDENT_QUERYSET, required=False)
+            self.fields['respondent'].help_text = "Hold down 'Control', or 'Command' on a Mac, to select more than one"
+            self.fields['respondent'].widget.attrs.update({
+                'id': 'donation_respondent_input',
+                # 'placeholder': 'Type contact number...',
+            })
+            self.fields['completion_date'].help_text = "Select completion date..."
+            self.fields['completion_date'].widget.attrs.update({
+                'id': 'donation_completion_date_input',
+                # 'placeholder': 'Type contact number...',
+            })
+            self.fields['management_status'].help_text = "Select management status..."
+            self.fields['management_status'].widget.attrs.update({
+                'id': 'donation_management_status_input',
+                # 'placeholder': 'Type contact number...',
+            })
+            self.fields['details'].help_text = "Maximum 400 characters allowed."
+            self.fields['details'].widget.attrs.update({
+                'id': 'donation_details_input',
+                'placeholder': 'Provide some additional information...',
+                'maxlength': 400,
+                'rows': 2,
+                'cols': 2
+            })
 
     class Meta:
         model = DonationProgress
-        fields = ['progress_status', 'respondent', 'completion_date', 'management_status', 'details']
-        exclude = ['donation', 'created_at', 'updated_at']
+        fields = ['progress_status', 'respondent', 'completion_date',
+                  'management_status', 'details', 'status_fake', 'respondent_fake']
+        exclude = ['donation', 'created_at', 'updated_at', 'is_pending']
 
     def clean_completion_date(self):
         completion_date = self.cleaned_data.get('completion_date')

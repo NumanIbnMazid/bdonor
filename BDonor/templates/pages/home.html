@@ -7,37 +7,97 @@ Home Page
 {% endblock %}{% endblock %}{% endblock %}
 
 {% block extra_css %}
-<!-- Jquery-Swiper css -->
-<link rel="stylesheet" href="{% static 'vendor/jquery-swiper/swiper.min.css' %}" type="text/css" />
+<!-- lightslider css -->
+<link rel="stylesheet" href="{% static 'vendor/lightslider/lightslider.css' %}" type="text/css" />
 {% endblock %}
 
 {% block content %}
 
+<div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+    <strong>Site is under development!</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="container-fluid">
+    <div class="colorful-text mt-4 mb-4">
+        Blood, Organ & Tissue Donation Management System
+    </div>
+</div>
+
 <div class="row justify-content-center align-items-center mb-4">
     {% include 'pages/snippets/donate-btn.html' %}
 </div>
-<div class="row justify-content-center align-items-center mb-4">
-    <h4 class="page-title font-bold font-17">
-        Campaigns ({{campaigns_count}})
-    </h4>
-    
-    {% include 'pages/snippets/campaigns.html' %}
-    
-    {% comment %}
-    {% for campaign in campaigns %}
-    {{campaign.title}}
-    {% endfor %}
-    {% endcomment %}
 
+<div class="row m-4 font-17">
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <span class="font-20 text-info">{{blood_requests_awaiting}}</span>
+        users are in awaiting list for blood transfusion.
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <span class="font-20 text-info">{{blood_offers_awaiting}}</span>
+        users are willing to donate blood.
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <span class="font-20 text-info">{{organ_requests_awaiting}}</span>
+        users are in awaiting list for organ transplantation.
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <span class="font-20 text-info">{{organ_offers_awaiting}}</span>
+        users are willing to donate organ.
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <span class="font-20 text-info">{{tissue_requests_awaiting}}</span>
+        users are in awaiting list for tissue transplantation.
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <span class="font-20 text-info">{{tissue_offers_awaiting}}</span>
+        users are willing to donate tissue.
+    </div>
+</div>
+
+<div class="text-center">
+    <h4 class="page-title font-bold font-17 text-primary">
+        Latest Campaigns
+    </h4>
+    {% include 'pages/snippets/campaigns.html' %}
     <a href="{% url 'donation_bank:bank_campaign_list_public' %}" class="text-deco-none btn btn-primary btn-sm m-3">
         View All Campaigns
     </a>
 </div>
 
+<hr>
+
+<div class="text-center">
+    <h4 class="page-title font-bold font-17 text-primary">
+        Latest Donation Requests
+    </h4>
+    {% include 'pages/snippets/donations.html' with instance=donation_requests %}
+    <a href="{% url 'donations:donation_requests_list' %}" class="text-deco-none btn btn-primary btn-sm m-3">
+        View All Donation Requests
+    </a>
+</div>
+
+<hr>
+
+<div class="text-center">
+    <h4 class="page-title font-bold font-17 text-primary">
+        Latest Donation Offers
+    </h4>
+    {% include 'pages/snippets/donations.html' with instance=donation_offers %}
+    <a href="{% url 'donations:donation_offers_list' %}" class="text-deco-none btn btn-primary btn-sm m-3">
+        View All Donation Offers
+    </a>
+</div>
+
+
 {% endblock %}
 
 {% block extra_js %}
-<!-- Jquery-Swiper JS -->
-<script type="text/javascript" src="{% static 'vendor/jquery-swiper/swiper.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'vendor/jquery-swiper/swiper-config.js' %}"></script>
+<!-- lightslider JS -->
+<script type="text/javascript" src="{% static 'vendor/lightslider/lightslider.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/lightslider/lightslider-conf.js' %}"></script>
 {% endblock %}

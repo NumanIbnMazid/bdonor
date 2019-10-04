@@ -5,6 +5,8 @@ from django.contrib.sites.models import Site
 from allauth.socialaccount.models import SocialApp
 from django.conf import settings
 from priceplan.models import Plan
+from django.db.models import Q
+from middlewares.middlewares import RequestMiddleware
 
 # https://eli.thegreenplace.net/2014/02/15/programmatically-populating-a-django-database
 
@@ -17,26 +19,49 @@ class Command(BaseCommand):
     # Update Django Site
 
     def _update_default_site(self):
-        qs = Site.objects.filter(domain__iexact='example.com')
-        if qs.exists():
-            qs.update(domain='https://localhost:8000/', name='bdonor.com')
+        domain = settings.DOMAIN
+        # if self.request.is_secure():
+        #     scheme = "https://"
+        # else:
+        #     scheme = "http://"
+        if domain == "127.0.0.1:8000":
+            domain_name = "https://localhost:8000/"
+        else:
+            domain_name = f"https://{domain}"
+        qs = Site.objects.all()
+        if qs.exists() and qs.count() > 0:
+            qs.update(domain=domain_name, name='bdonor.com')
+
 
     # Create Social App
     def _create_social_app(self):
-        qs = SocialApp.objects.filter(provider__iexact='facebook')
-        if not qs.exists():
-            site_qs = Site.objects.filter(
-                domain__iexact='https://localhost:8000/')
-            if site_qs.exists():
-                if settings.DEBUG:
-                    client_id = settings.FACEBOOK_CLIENT_ID_DEV
-                    secret = settings.FACEBOOK_SECRET_KEY_DEV
-                else:
-                    client_id = settings.FACEBOOK_CLIENT_ID_PROD
-                    secret = settings.FACEBOOK_SECRET_KEY_PROD
-                instance = SocialApp.objects.create(
-                    provider='facebook', name='Facebook', client_id=client_id, secret=secret)
-                instance.sites.set(site_qs)
+        domain = settings.DOMAIN
+        domain_name = f"https://{domain}"
+        social_app_qs = SocialApp.objects.filter(provider__iexact='facebook')
+        site_qs = Site.objects.filter(
+            Q(domain__iexact='https://localhost:8000/') |
+            Q(domain__iexact=domain_name))
+        # if settings.DEBUG or domain == "127.0.0.1:8000":
+        if domain == "127.0.0.1:8000":
+            client_id = settings.FACEBOOK_CLIENT_ID_DEV
+            secret = settings.FACEBOOK_SECRET_KEY_DEV
+        else:
+            client_id = settings.FACEBOOK_CLIENT_ID_PROD
+            secret = settings.FACEBOOK_SECRET_KEY_PROD
+        if not social_app_qs.exists():
+            instance = SocialApp.objects.create(
+                provider='facebook', name='Facebook', client_id=client_id, secret=secret
+            )
+            instance.sites.set(site_qs)
+        else:
+            instance = social_app_qs.update(
+                provider='facebook', name='Facebook', client_id=client_id, secret=secret
+            )
+            updated_qs = SocialApp.objects.filter(provider__iexact='facebook')
+            if updated_qs.exists():
+                for qs in updated_qs:
+                    qs.sites.add(site_qs.first())
+            # print(instance)
 
     # Create Users
 

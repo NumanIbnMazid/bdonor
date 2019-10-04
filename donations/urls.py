@@ -5,7 +5,7 @@ from .views import (OfferDonationCreateView,
                     DonationRespondCreateView, withdraw_respond, DonationFilteredListView,
                     DonationRequestCreateView, DonationRequestUpdateView,
                     MyDonationRequestsListView, DonationRequestsCardListView, DonationRequestsListView,
-                    ManageProgressStatus,)
+                    ManageProgressStatus,MyRespondsListView)
 
 urlpatterns = [
     path('offer/', OfferDonationCreateView.as_view(), name='offer_donation'),
@@ -33,6 +33,8 @@ urlpatterns = [
          name='donation_respond_create'),
     path('withdraw/response/', withdraw_respond, name='withdraw_respond'),
     path('<slug>/details/', DonationDetailView.as_view(), name='donation_details'),
+    path('my/responds/', MyRespondsListView.as_view(),
+         name='my_responds'),
     path('<slug>/progress-status/', ManageProgressStatus.as_view(), name='donation_progress'),
     # Donation Filter
     path('filter/', DonationFilteredListView.as_view(), name='donation_filter'),

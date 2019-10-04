@@ -34,30 +34,30 @@ Donation Details
                                     class="avatar-img rounded-circle">
                             </div>
                             {% endif %}
-                            {% if request.user.user_bank_member.bank.institute == campaign.bank.institute %}
-                            <div class="pull-right">
-                                <a href="{% url 'donation_bank:bank_campaign_update' slug=campaign.slug %}"
-                                    class="btn btn-primary btn-xs text-deco-none">
-                                    <span class="">
-                                        <i class="flaticon-pencil"></i>
-                                        Edit
-                                    </span>
-                                </a>
-                                <button type="button"
-                                    class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_bank_campaign"
-                                    value="{{campaign.slug}}" data-toggle="modal"
-                                    data-target="#modal-delete-bank_campaign">
-                                    <i class="flaticon-interface-5"></i>
-                                    Delete
-                                </button>
-                            </div>
-                            {% endif %}
                             <br>
                         </div>
 
+                        {% if request.user.user_bank_member.bank.institute == campaign.bank.institute %}
+                        <div class="text-center">
+                            <a href="{% url 'donation_bank:bank_campaign_update' slug=campaign.slug %}"
+                                class="btn btn-primary btn-xs text-deco-none">
+                                <span class="">
+                                    <i class="flaticon-pencil"></i>
+                                    Edit
+                                </span>
+                            </a>
+                            <button type="button"
+                                class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_bank_campaign"
+                                value="{{campaign.slug}}" data-toggle="modal" data-target="#modal-delete-bank_campaign">
+                                <i class="flaticon-interface-5"></i>
+                                Delete
+                            </button>
+                        </div>
+                        {% endif %}
+
                         <hr>
 
-                        <div class="card card-post card-round">
+                        <div class="m-2">
                             {% if not campaign.image == "" %}
                             <img class="card-img-top" src="{{ campaign.image.url }}"
                                 alt="{{campaign.title}}" style="height:300px;width:100%;">
@@ -65,8 +65,8 @@ Donation Details
                             <img class="card-img-top" src="{% static 'images/raw/campaign.png' %}" alt="{{campaign.title}}"
                                 style="height:300px;width:100%;">
                             {% endif %}
-                            <div class="card-body">
-                                <div class="text-center">
+                            <div class="">
+                                <div class="text-center m-2">
                                     <div class="info-post ml-2">
                                         <h3 class="card-title">{{campaign.title}}</h3>
                                         <p class="date text-muted">

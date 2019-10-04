@@ -13,6 +13,7 @@
 {% url 'donations:donation_offers_list_card' as donation_offers_list_card_url %}
 {% url 'donations:my_donation_requests' as my_donation_requests_url %}
 {% url 'donations:donation_requests_list_card' as donation_requests_list_card_url %}
+{% url 'donations:my_responds' as my_responds_url %}
 {% url 'donation_bank:bank_create' as bank_create_url %}
 {% url 'donation_bank:bank_dashboard' as bank_dashboard_url %}
 {% url 'donation_bank:bank_campaign_list_public' as bank_campaign_list_public_url %}
@@ -125,13 +126,15 @@
                 </li>
                 
                 <li
-                    class="nav-item {% if request.path == my_donation_offers_url or request.path == my_donation_requests_url %}active submenu{% endif %}">
+                    class="nav-item
+                    {% if request.path == my_donation_offers_url or request.path == my_donation_requests_url or request.path == my_responds_url %}active
+                    submenu{% endif %}">
                     <a data-toggle="collapse" href="#myContribution" class="collapsed">
                         <i class="fas fa-user"></i>
                         <p>My Zone</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {% if request.path == my_donation_offers_url or request.path == my_donation_requests_url %}show{% endif %}"
+                    <div class="collapse {% if request.path == my_donation_offers_url or request.path == my_donation_requests_url or request.path == my_responds_url %}show{% endif %}"
                         id="myContribution">
                         <ul class="nav nav-collapse">
                             <li class="nav-item {% if request.path == my_donation_offers_url %}active{% endif %}">
@@ -154,6 +157,12 @@
                                         </div>
                                     </i>
                                     <p>My Requests</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {% if request.path == my_responds_url %}active{% endif %}">
+                                <a href="{{ my_responds_url }}">
+                                    <i class="fas flaticon-gestures"></i>
+                                    <p>My Responds</p>
                                 </a>
                             </li>
                         </ul>

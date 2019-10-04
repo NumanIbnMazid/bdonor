@@ -112,13 +112,18 @@ Campaign:
 39. Search for transplantation able hospitals by location????????
 40. How many are in awaiting list?
 41. Search for nearest blood/organ/tissue bank, hospital???????
-42. Update Bank Info (Provide Services for- Blood/Organ/Tissue)
+    42. Update Bank Info (Provide Services for- Blood/Organ/Tissue)
 43. Add rating for banks to make more trusted. Or add any certification.
 44. Activity module. Last donated....
 45. Site Help
 46. AB- Will be universal Donor
 48. ***************** ERROR in Manage Progress Status Section ****************************
     Respondent Module Foreign Key Error Probably.
+
+49. Notify Donor if any related request or offer is post, if user subscribed.
+50. Blood test report, Rating.
+51. Mark user as rejected.
+52. Donation receiver feedback.
 
 __ Donor Review
 __ Donation Process, Site Process Video Tutorial\

@@ -16,6 +16,7 @@ All Campaigns
 <div class="row">
     <div class="col-md-12 mx-auto">
         {% if not request.user.user_bank_member.role == "" %}
+        {% if request.user.user_bank_member.bank.is_verified == True %}
         <div class="text-center m-2">
             {% url 'donationBank:bank_add_campaign' as bank_add_campaign_url %}
             <a href="{{ bank_add_campaign_url }}" class="btn btn-default btn-md text-deco-none bg-sky-black m-1">
@@ -23,6 +24,7 @@ All Campaigns
                 Add Campaign
             </a>
         </div>
+        {% endif %}
         {% endif %}
 
         <div class="table-responsive">

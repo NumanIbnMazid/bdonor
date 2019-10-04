@@ -488,6 +488,8 @@ class DonationRespond(models.Model):
     contact = models.CharField(blank=True, null=True, max_length=17, verbose_name='contact')
     message = models.TextField(max_length=500, blank=True, null=True, verbose_name='message')
     is_selected = models.BooleanField(default=False, verbose_name='is selected')
+    is_applied_for_selection = models.BooleanField(
+        default=False, verbose_name='is applied for selection')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
@@ -535,7 +537,7 @@ class DonationProgress(models.Model):
     completion_date = models.DateField(
         blank=True, null=True, verbose_name='completion date')
     management_status = models.PositiveSmallIntegerField(
-        blank=True, null=True, choices=DONATION_MANAGEMENT_CHOICES, verbose_name='managed on')
+        blank=True, null=True, default=0, choices=DONATION_MANAGEMENT_CHOICES, verbose_name='managed on')
     details = models.TextField(max_length=500, blank=True,
                                null=True, verbose_name='details')
     created_at = models.DateTimeField(

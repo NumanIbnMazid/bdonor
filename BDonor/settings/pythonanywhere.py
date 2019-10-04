@@ -1,6 +1,8 @@
 from BDonor.settings.common import *
 from decouple import config, Csv
 
+DOMAIN = "bdonor.pythonanywhere.com"
+
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

@@ -1,77 +1,72 @@
 {% load static %}
 
-<div class="col-md-12">
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-            <!-- Slide-->
-            {% for campaign in campaigns %}
-            <div class="swiper-slide m-4">
-                <div class="card card-post card-round">
-                    {% if not campaign.image == "" %}
-                    <img class="card-img-top" src="{{ campaign.image.url }}" alt="{{campaign.title}}"
-                        style="height:150px;width:100%;">
-                    {% else %}
-                    <img class="card-img-top" src="{% static 'images/raw/campaign.png' %}" alt="{{campaign.title}}"
-                        style="height:150px;width:100%;">
-                    {% endif %}
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="info-post ml-2">
-                                <h3 class="card-title">
-                                    {{ campaign.title }}
-                                </h3>
-                                <h5>
-                                    by 
-                                    <a href="{% url 'donation_bank:bank_details' slug=campaign.bank.slug %}" class="font-italic text-secondary">
-                                        {{campaign.bank.institute|truncatechars_html:24}}
-                                    </a>
-                                </h5>
-                                <p class="date text-muted">
-                                    Held Date:
-                                    <span class="text-secondary">{{ campaign.held_date }}</span>
-                                </p>
-                                <p class="date text-muted">
-                                    End Date:
-                                    <span class="text-secondary">{{ campaign.end_date }}</span>
-                                </p>
-                                <div class="text-center">
-                                    <a href="{% url 'donation_bank:bank_campaign_details' slug=campaign.slug %}"
-                                        class="btn btn-sm btn-secondary text-deco-none m-2">
-                                        View Details
-                                    </a>
+<ul id="lightSlider">
+    <!-- Slide-->
+    {% for campaign in campaigns %}
+    <li class="">
+        <div class="card card-post card-round">
+            {% if not campaign.image == "" %}
+            <img class="card-img-top" src="{{ campaign.image.url }}" alt="{{campaign.title}}"
+                style="height:150px;width:100%;">
+            {% else %}
+            <img class="card-img-top" src="{% static 'images/raw/campaign.png' %}" alt="{{campaign.title}}"
+                style="height:150px;width:100%;">
+            {% endif %}
+            <div class="card-body">
+                <div class="ml-2">
+                    <h3 class="">
+                        {{ campaign.title|truncatechars_html:20 }}
+                    </h3>
+                    <h5>
+                        by
+                        <a href="{% url 'donation_bank:bank_details' slug=campaign.bank.slug %}"
+                            class="font-italic text-secondary">
+                            {{campaign.bank.institute|truncatechars_html:24}}
+                        </a>
+                    </h5>
+                    <p class="date text-muted">
+                        Held Date:
+                        <span class="text-secondary">{{ campaign.held_date }}</span>
+                    </p>
+                    <p class="date text-muted">
+                        End Date:
+                        <span class="text-secondary">{{ campaign.end_date }}</span>
+                    </p>
+                    <div class="text-center">
+                        <a href="{% url 'donation_bank:bank_campaign_details' slug=campaign.slug %}"
+                            class="btn btn-sm btn-secondary text-deco-none m-2">
+                            View Details
+                        </a>
 
-                                    <hr>
+                        <hr>
 
-                                    {% if not campaign.get_end_date_remaining >= 0 %}
-                                    <div class="avatar avatar-sm">
-                                        <img src="{% static 'images/raw/expired.png' %}" alt="expired"
-                                            class="avatar-img rounded-circle">
-                                    </div>
-                                    {% else %}
-                                    <span
-                                        class="{% if campaign.get_end_date_remaining < 4 %}text-danger{% else %}text-success{% endif %} font-bold">
-                                        [ends
-                                        {% if campaign.get_end_date_remaining == 0 %}
-                                        Today
-                                        {% else %}
-                                        in
-                                        {{campaign.get_end_date_remaining}}
-                                        day{{ campaign.get_end_date_remaining|pluralize:"s" }}
-                                        {% endif %}
-                                        ]
-                                    </span>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        {% if not campaign.get_end_date_remaining >= 0 %}
+                        <div class="avatar avatar-sm">
+                            <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                class="avatar-img rounded-circle">
                         </div>
+                        {% else %}
+                        <span
+                            class="{% if campaign.get_end_date_remaining < 4 %}text-danger{% else %}text-success{% endif %} font-bold">
+                            [ends
+                            {% if campaign.get_end_date_remaining == 0 %}
+                            Today
+                            {% else %}
+                            in
+                            {{campaign.get_end_date_remaining}}
+                            day{{ campaign.get_end_date_remaining|pluralize:"s" }}
+                            {% endif %}
+                            ]
+                        </span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            {% empty %}
-            <div class="alert alert-warning col-md-12 text-center">
-                No item found!
-            </div>
-            {% endfor %}
         </div>
+    </li>
+    {% empty %}
+    <div class="alert alert-warning col-md-12 text-center">
+        No item found!
     </div>
-</div>
+    {% endfor %}
+</ul>

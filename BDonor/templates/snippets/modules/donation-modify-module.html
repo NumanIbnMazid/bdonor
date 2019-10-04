@@ -67,12 +67,61 @@
 {% endif %}
 {% endcomment %}
 
-{% if instance.user.user == request.user or request.user.is_superuser %}
-<a href="{% url 'donations:donation_progress' slug=instance.slug %}"
-    class="btn btn-primary btn-sm text-deco-none bg-c-info">
-    <span class="btn-label">
-        <i class="flaticon-mark"></i>
-        progress
-    </span>
-</a>
+{% if request.user.is_superuser %}
+    <a href="{% url 'donations:donation_progress' slug=instance.slug %}"
+        class="btn btn-primary btn-sm text-deco-none bg-c-info">
+        <span class="btn-label">
+            <i class="flaticon-mark"></i>
+            progress
+        </span>
+    </a>
+{% else %}
+
+    {% if instance.donate_type == 0 %}
+
+        {% if instance.user.user == request.user %}
+
+            {% if instance.category == 0 %}
+                {% for donation_respond in instance.donation_respond.all %}
+                    {% if donation_respond.is_applied_for_selection == True %}
+                    <a href="{% url 'donations:donation_progress' slug=instance.slug %}"
+                        class="btn btn-primary btn-sm text-deco-none bg-c-info">
+                        <span class="btn-label">
+                            <i class="flaticon-mark"></i>
+                            progress
+                        </span>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if instance.category == 1 %}
+            <a href="{% url 'donations:donation_progress' slug=instance.slug %}"
+                class="btn btn-primary btn-sm text-deco-none bg-c-info">
+                <span class="btn-label">
+                    <i class="flaticon-mark"></i>
+                    progress
+                </span>
+            </a>
+            {% endif %}
+
+        {% else %}
+
+            {% if instance.category == 0 %}
+                {% for donation_respond in instance.donation_respond.all %}
+                    {% if request.user == donation_respond.respondent %}
+                    <a href="{% url 'donations:donation_progress' slug=instance.slug %}"
+                        class="btn btn-primary btn-sm text-deco-none bg-c-info">
+                        <span class="btn-label">
+                            <i class="flaticon-mark"></i>
+                            progress
+                        </span>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+        {% endif %}
+    {% endif %}
+
 {% endif %}

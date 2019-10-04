@@ -2246,11 +2246,25 @@ $(document).ready(function () {
         $(this).remove();
       });
       $("#donation_type_input").val(1);
-      blood_group_group.addClass("hidden");
+      // blood_group_group.addClass("hidden");
       blood_bag_group.addClass("hidden");
       organ_name_group.removeClass("hidden");
       tissue_name_group.addClass("hidden");
       quantity_group.removeClass("hidden");
+      $("#blood_bag_priority").html("(optional)");
+      $("#blood_bag_priority").addClass("text-muted");
+      blood_bag_input.attr("required", false);
+      // $("#blood_bag_priority").html("(required)");
+      // $("#blood_bag_priority").addClass("text-info");
+      $("#organ_name_priority").html("(required)");
+      $("#organ_name_priority").addClass("text-info");
+      organ_name_input.attr("required", true);
+      $("#tissue_name_priority").html("(optional)");
+      $("#tissue_name_priority").addClass("text-muted");
+      tissue_name_input.attr("required", false);
+      $("#quantity_priority").html("(required)");
+      $("#quantity_priority").addClass("text-info");
+      quantity_input.attr("required", true);
     }
   };
 });

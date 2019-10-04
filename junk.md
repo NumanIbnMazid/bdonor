@@ -1,3 +1,4 @@
+# col-xl-12 col-lg-12 col-md-6 col-sm-6 col-12
 # Type
         - type + priority_filtered          (priority)
         - type + status_filtered            (donation_progress__progress_status)

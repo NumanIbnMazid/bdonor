@@ -86,7 +86,7 @@ class OfferDonationCreateView(CreateView):
             form.instance.donate_type = 1
         elif form.instance.type == 1 and form.instance.organ_name in deceased_organs:
             form.instance.donate_type = 1
-        elif form.instance.type == 1 and form.instance.organ_name in living_organs and form.instance.quantity > 1:
+        elif form.instance.type == 1 and form.instance.organ_name in living_organs and int(form.instance.quantity) > 1:
             form.instance.donate_type = 1
         else:
             form.instance.donate_type = 0
@@ -326,7 +326,7 @@ class OfferDonationUpdateView(UpdateView):
             form.instance.donate_type = 1
         elif form.instance.type == 1 and form.instance.organ_name in deceased_organs:
             form.instance.donate_type = 1
-        elif form.instance.type == 1 and form.instance.organ_name in living_organs and form.instance.quantity > 1:
+        elif form.instance.type == 1 and form.instance.organ_name in living_organs and int(form.instance.quantity) > 1:
             form.instance.donate_type = 1
         else:
             form.instance.donate_type = 0
@@ -656,7 +656,7 @@ class DonationRequestCreateView(CreateView):
             form.instance.donate_type = 1
         elif form.instance.type == 1 and form.instance.organ_name in deceased_organs:
             form.instance.donate_type = 1
-        elif form.instance.type == 1 and form.instance.organ_name in living_organs and form.instance.quantity > 1:
+        elif form.instance.type == 1 and form.instance.organ_name in living_organs and int(form.instance.quantity) > 1:
             form.instance.donate_type = 1
         else:
             form.instance.donate_type = 0
@@ -867,7 +867,7 @@ class DonationRequestUpdateView(UpdateView):
             form.instance.donate_type = 1
         elif form.instance.type == 1 and form.instance.organ_name in deceased_organs:
             form.instance.donate_type = 1
-        elif form.instance.type == 1 and form.instance.organ_name in living_organs and form.instance.quantity > 1:
+        elif form.instance.type == 1 and form.instance.organ_name in living_organs and int(form.instance.quantity) > 1:
             form.instance.donate_type = 1
         else:
             form.instance.donate_type = 0
@@ -1631,8 +1631,54 @@ class ManageProgressStatus(UpdateView):
         return None
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS,
-                                "Donation Progress Status has been updated successfully!")
+        self.object = self.get_object()
+        if self.object.donation.category == 0 and not self.request.user.is_superuser:
+            if not self.request.user == self.object.donation.user.user and not self.request.user.is_superuser:
+                respondent_fake = form.cleaned_data['respondent_fake']
+                # print(respondent_fake)
+                respondent_qs = DonationRespond.objects.filter(
+                    donation=self.object.donation, respondent=self.request.user
+                        )
+                respondent_qs.update(is_applied_for_selection=True)
+                # form.instance.progress_status = 0
+                self.object.respondent.add(respondent_qs.first())
+                form.instance.management_status = 0
+                messages.add_message(self.request, messages.SUCCESS,
+                                        f"Donation Progress Status has been updated successfully! Status is pending for {self.object.donation.user.get_smallname()}'s approval.'")
+            else:
+                # respondents = form.instance.respondent_set
+                respondents = form.cleaned_data['respondent']
+                # print(respondents)
+                for respondent in respondents:
+                    if not self.request.user.is_superuser:
+                        respondent_qs = DonationRespond.objects.filter(
+                            donation=self.object.donation, is_applied_for_selection=True,
+                            respondent=respondent.respondent
+                        )
+                        if respondent_qs.exists():
+                            respondent_qs.update(is_selected=True)
+                        else:
+                            form.instance.progress_status = 0
+                    else:
+                        respondent_qs = DonationRespond.objects.filter(
+                            donation=self.object.donation,
+                            respondent=respondent.respondent
+                        )
+                    if respondent_qs.exists():
+                        respondent_qs.update(is_selected=True)
+                messages.add_message(self.request, messages.SUCCESS,
+                                     "Donation Progress Status has been updated successfully!")
+        else:
+            respondents = form.cleaned_data['respondent']
+            for respondent in respondents:
+                    respondent_qs = DonationRespond.objects.filter(
+                        donation=self.object.donation,
+                        respondent=respondent.respondent
+                    )
+                    if respondent_qs.exists():
+                        respondent_qs.update(is_selected=True)
+            messages.add_message(self.request, messages.SUCCESS,
+                                    "Donation Progress Status has been updated successfully!")
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -1640,6 +1686,8 @@ class ManageProgressStatus(UpdateView):
         if self.object.donation.category == 0:
             if self.request.user.is_superuser:
                 return reverse('donations:donation_offers_list')
+            elif not self.object.donation.user.user == self.request.user and not self.request.user.is_superuser:
+                return reverse('donations:my_responds')
             else:
                 return reverse('donations:my_donation_offers')
         else:
@@ -1659,8 +1707,19 @@ class ManageProgressStatus(UpdateView):
     def user_passes_test(self, request):
         if request.user.is_authenticated:
             self.object = self.get_object()
-            if self.object.donation.user.user == request.user or request.user.is_superuser:
-                return True
+            if self.object.donation.donate_type == 0:
+                if self.object.donation.category == 1:
+                    if self.object.donation.user.user == self.request.user or self.request.user.is_superuser:
+                        return True
+                else:
+                    respondent_qs = DonationRespond.objects.filter(
+                        donation=self.object.donation, respondent=self.request.user
+                    )
+                    if respondent_qs.exists() or self.object.donation.user.user == self.request.user or self.request.user.is_superuser:
+                        return True
+            else:
+                if self.request.user.is_superuser:
+                    return True
         return False
 
     def dispatch(self, request, *args, **kwargs):
@@ -1679,4 +1738,31 @@ class ManageProgressStatus(UpdateView):
             base_template = 'base.html'
         context['base_template'] = base_template
         # Ends Base Template Context
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class MyRespondsListView(AjaxListView):
+    template_name = 'donations/donation-list-card.html'
+    page_template = 'donations/snippets/page_template_list.html'
+
+    def get_queryset(self):
+        qs = DonationRespond.objects.filter(respondent=self.request.user)
+        if qs.exists():
+            return qs
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super(MyRespondsListView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        context['page_title'] = "My Responds"
+        context['can_filter'] = False
+        context['page_type'] = "RESPOND"
         return context

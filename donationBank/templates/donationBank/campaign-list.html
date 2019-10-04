@@ -24,6 +24,7 @@ Bank Donation List
             </div>
             <div class="col-md-10">
                 {% if not request.user.user_bank_member.role == "" %}
+                {% if request.user.user_bank_member.bank.is_verified == True %}
                 <div class="text-center m-2">
                     {% url 'donationBank:bank_add_campaign' as bank_add_campaign_url %}
                     <a href="{{ bank_add_campaign_url }}"
@@ -32,6 +33,7 @@ Bank Donation List
                         Add Campaign
                     </a>
                 </div>
+                {% endif %}
                 {% endif %}
                 <div class="table-responsive">
                     <table id="campaignBankDataTable" class="cell-border hover table-bordered table-hover text-center"
