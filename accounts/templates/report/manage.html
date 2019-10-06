@@ -1,0 +1,39 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header text-center">
+        <h4 class="card-title">{{ page_title }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12 mx-auto">
+                <form class="" method="POST" enctype="multipart/form-data" data-toggle="validator" id="profile_form">
+                    {% csrf_token %}
+
+                    {% include 'snippets/form.html' %}
+
+                    <div class="card-action text-center form-group">
+                        <button type="submit" class="btn btn-success m-2" id="profile_update_btn">
+                            {{ page_title }}
+                        </button>
+                        <button class="btn btn-danger" id="go_back">Cancel</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

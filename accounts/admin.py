@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import UserProfile, UserStripe
+from .models import UserProfile, UserStripe, UserReport
 
 UserAdmin.list_display += ('is_active',)
 
@@ -20,5 +20,14 @@ class UserStripeAdmin(admin.ModelAdmin):
         model = UserStripe
 
 
+class UserReportAdmin(admin.ModelAdmin):
+    list_display = ['user', 'reported_by', 'slug',
+                    'category', 'created_at', 'updated_at']
+
+    class Meta:
+        model = UserReport
+
+
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(UserStripe, UserStripeAdmin)
+admin.site.register(UserReport, UserReportAdmin)

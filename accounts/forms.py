@@ -1,7 +1,7 @@
 from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, UserReport
 from django.template.defaultfilters import filesizeformat
 from django.conf import settings
 import datetime
@@ -307,3 +307,36 @@ class UserProfileUpdateForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         self.uf.save(*args, **kwargs)
         return super(UserProfileUpdateForm, self).save(*args, **kwargs)
+
+
+
+
+
+class UserReportManageForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(UserReportManageForm, self).__init__(*args, **kwargs)
+        self.fields['category'].help_text = "Select a report category..."
+        self.fields['category'].widget.attrs.update({
+            'id': 'report_category_input',
+        })
+        self.fields['details'].help_text = "Enter details..."
+        self.fields['details'].widget.attrs.update({
+            'id': 'report_details_input',
+            'placeholder': 'Enter details...',
+            'rows': 4,
+            'cols': 2,
+        })
+
+    class Meta:
+        model = UserReport
+        fields = ['category', 'details']
+        exclude = ['user', 'slug', 'created_at', 'updated_at']
+
+    def clean_details(self):
+        details = self.cleaned_data.get('details')
+        if not details == None:
+            length = len(details)
+            if length > 600:
+                raise forms.ValidationError(
+                    f"Maximum 600 characters allowed. [currently using: {length}]")
+        return details

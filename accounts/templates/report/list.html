@@ -1,0 +1,143 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+    {% if page_type == "SingleReports" %}
+    {% for object in object_list %}
+    {% if forloop.first %}
+    <button type="button" class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_report_all"
+        value="{{object.user.profile.slug}}" data-toggle="modal" data-target="#modal-delete-report-all">
+        Delete All Reports of this User
+    </button>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mx-auto">
+        
+        <input type="hidden" id="total_records_count" value="{{object_list.count}}">
+        <div class="table-responsive">
+            <table id="userReportDataTable" class="cell-border hover table-bordered table-hover" style="width:100%">
+                <thead>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Reported By</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for object in object_list %}
+                    <tr>
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+                        <td>
+                            <a class="text-deco-none text-dark" href="{{ object.user.profile.get_absolute_url }}">
+                                <div class="avatar avatar-xs">
+                                    {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img rounded-circle" %}
+                                </div>
+                                <h6>
+                                    {{ object.user.profile.get_dynamic_name }}
+                                    <span class="ml-1 text-danger font-bold">
+                                        [{{object.get_user_reports_count}}]
+                                    </span>
+                                </h6>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="text-deco-none text-dark" href="{{ object.reported_by.profile.get_absolute_url }}">
+                                <div class="avatar avatar-xs">
+                                    {% include 'snippets/chunks/user-image.html' with instance=object.reported_by class="avatar-img rounded-circle" %}
+                                </div>
+                                <h6>{{ object.reported_by.profile.get_dynamic_name }}</h6>
+                            </a>
+                        </td>
+                        <td>
+                            {{ object.category }}
+                        </td>
+                        <td>
+                            <a href="{% url 'user_report_detail' slug=object.slug %}" class="btn btn-secondary btn-sm text-deco-none">
+                                <span class="">
+                                    View Details
+                                </span>
+                            </a>
+                            <a href="#" class="btn btn-warning btn-sm text-deco-none">
+                                <span class="text-dark">
+                                    Modify User Permissions
+                                </span>
+                            </a>
+                            <button type="button"
+                                class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_report"
+                                value="{{object.slug}}" data-toggle="modal"
+                                data-target="#modal-delete-report">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <div class="alert alert-warning">
+                                No item found!
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Reported By</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'report/snippets/modals.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#userReportDataTable').DataTable({
+            destroy: true,
+            "ordering": false,
+            "scrollCollapse": true,
+            "stateSave": true,
+            "pagingType": "full_numbers",
+            "language": {
+                "lengthMenu": "Display _MENU_ records per page. <span class='ml-4 text-primary'>Total Records: <span class='font-13 font-bold'>" +
+                    $("#total_records_count").val() + "</span></span>",
+                "zeroRecords": "Nothing found - sorry",
+                "info": "Showing page _PAGE_ of _PAGES_",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mx-auto">
+
+        <input type="hidden" id="total_records_count" value="{{object_list.count}}">
+        <div class="table-responsive">
+            <table id="suspiciousUserDataTable" class="cell-border hover table-bordered table-hover" style="width:100%">
+                <thead>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Total Attempt</th>
+                        <th>First Attempt</th>
+                        <th>Last Attempt</th>
+                        <th>IP Address</th>
+                        <th>MAC Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for object in object_list %}
+                    <tr>
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+                        <td>
+                            <a class="text-deco-none text-dark" href="{{ object.user.profile.get_absolute_url }}">
+                                <div class="avatar avatar-xs">
+                                    {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img rounded-circle" %}
+                                </div>
+                                <h6>
+                                    {{ object.user.profile.get_dynamic_name }}
+                                </h6>
+                            </a>
+                        </td>
+                        <td>
+                            {{ object.attempt }}
+                        </td>
+                        <td>
+                            {% if datetime|date:"d-M-Y" == object.first_attempt|date:"d-M-Y" %}
+                            {{ object.first_attempt|timesince }} ago
+                            {% else %}
+                            {{ object.first_attempt }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if datetime|date:"d-M-Y" == object.last_attempt|date:"d-M-Y" %}
+                            {{ object.last_attempt|timesince }} ago
+                            {% else %}
+                            {{ object.last_attempt }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ object.ip }}
+                        </td>
+                        <td>
+                            {{ object.mac }}
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-warning btn-sm text-deco-none">
+                                <span class="text-dark">
+                                    Modify User Permissions
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            <div class="alert alert-warning">
+                                No item found!
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Total Attempt</th>
+                        <th>First Attempt</th>
+                        <th>Last Attempt</th>
+                        <th>IP Address</th>
+                        <th>MAC Address</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#suspiciousUserDataTable').DataTable({
+            destroy: true,
+            "ordering": false,
+            "scrollCollapse": true,
+            "stateSave": true,
+            "pagingType": "full_numbers",
+            "language": {
+                "lengthMenu": "Display _MENU_ records per page. <span class='ml-4 text-primary'>Total Records: <span class='font-13 font-bold'>" +
+                    $("#total_records_count").val() + "</span></span>",
+                "zeroRecords": "Nothing found - sorry",
+                "info": "Showing page _PAGE_ of _PAGES_",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+        });
+    });
+</script>
+{% endblock %}

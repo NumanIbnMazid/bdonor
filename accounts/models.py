@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.db.models import Q
 from .utils import time_str_mix_slug, upload_image_path
@@ -143,6 +143,49 @@ class UserStripe(models.Model):
             return self.user.username
 
 
+class UserReport(models.Model):
+    INAPPROPRIATE_BEHAVIOR = 'Inappropriate Behavior'
+    HAVE_DISEASES = 'Have Diseases'
+    ASKS_FOR_MONEY = 'Asks for Money'
+    IS_NOT_AUTHENTIC = 'Is not Authentic'
+    OTHERS = 'Others'
+    CATEGORY_CHOICES = (
+        (INAPPROPRIATE_BEHAVIOR, 'Inappropriate Behavior'),
+        (HAVE_DISEASES, 'Have Diseases'),
+        (ASKS_FOR_MONEY, 'Asks for Money'),
+        (IS_NOT_AUTHENTIC, 'Is not Authentic'),
+        (OTHERS, 'Others')
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE, related_name='user_report', verbose_name='user')
+    reported_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                    on_delete=models.CASCADE, related_name='user_reported_by', verbose_name='reported by')
+    slug = models.SlugField(unique=True, verbose_name='slug')
+    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, verbose_name='category')
+    details = models.TextField(blank=True, null=True, verbose_name='details')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='created at')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    class Meta:
+        verbose_name = ("User Report")
+        verbose_name_plural = ("User Reports")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.user.username
+
+    def get_user_reports_count(self):
+        result = "Undefined"
+        qs = UserReport.objects.filter(user=self.user)
+        if qs.exists():
+            result = qs.count()
+        return result
+
+
+
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     username = instance.username.lower()
@@ -150,6 +193,17 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance, slug=slug_binding)
     instance.profile.save()
+
+
+
+def user_report_slug_pre_save_receiver(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        username = instance.user.username.lower()[:10]
+        slug_binding = username + "_" + time_str_mix_slug()
+        instance.slug = slug_binding
+
+pre_save.connect(user_report_slug_pre_save_receiver, sender=UserReport)
+
 
 
 def stripeCallback(sender, request, user, **kwargs):

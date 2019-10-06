@@ -12,6 +12,8 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('chat/', include('chat.urls')),
     path('chat-messages/', get_chat_list_template, name='chat_list'),
+    path('suspicious/', include(('suspicious.urls',
+                                 'suspicious'), namespace='suspicious')),
     path('utils/', include(('utils.urls', 'utils'), namespace='utils')),
     path('donations/', include(('donations.urls', 'donations'), namespace='donations')),
     path('checkout/', include(('checkout.urls', 'checkout'), namespace='checkout')),

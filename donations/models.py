@@ -122,7 +122,7 @@ class DonationQuerySet(models.query.QuerySet):
             # Blood QS
             if request.user.is_authenticated and not request.user.profile.blood_group == None and not request.user.profile.blood_group == "":
                     # Blood Group order
-                    blood_groups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+                    blood_groups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'Any Blood Group']
                     user_blood_group = request.user.profile.blood_group
                     if user_blood_group in blood_groups:
                         blood_groups.remove(user_blood_group)
