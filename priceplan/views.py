@@ -12,9 +12,17 @@ from django.views.decorators.csrf import csrf_exempt
 import datetime
 from .forms import PlanForm
 from suspicious.models import Suspicious
+# Custom Decorators Starts
+from accounts.decorators import (
+    can_browse_required, can_donate_required, can_ask_for_a_donor_required,
+    can_manage_bank_required, can_chat_required
+)
+# Custom Decorators Ends
+
+decorators = [login_required, can_browse_required]
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class PlanCreateView(CreateView):
     template_name = 'priceplan/manage.html'
     form_class = PlanForm
@@ -66,6 +74,7 @@ class PlanCreateView(CreateView):
 
 @csrf_exempt
 @login_required
+@can_browse_required
 def priceplan_delete(request):
     url = reverse('home')
     if request.method == "POST":
@@ -85,7 +94,7 @@ def priceplan_delete(request):
     return HttpResponseRedirect(url)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class PlanDetailView(DetailView):
     template_name = 'priceplan/details.html'
 
@@ -121,6 +130,7 @@ class PlanDetailView(DetailView):
         return super(PlanDetailView, self).dispatch(request, *args, **kwargs)
 
 
+@method_decorator(decorators, name='dispatch')
 class PlanUpdateView(UpdateView):
     template_name = 'priceplan/manage.html'
     form_class = PlanForm
@@ -182,7 +192,7 @@ class PlanUpdateView(UpdateView):
         return super(PlanUpdateView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class PricePlanListView(ListView):
     template_name = 'priceplan/priceplans.html'
 

@@ -1,9 +1,11 @@
 from decouple import config, Csv
 
 # Allauth Staffs
+BLOCKED_URL = '/blocked/'
 LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+HOME_URL = '/'
 SITE_NAME = 'BDonor'
 ACCOUNT_EMAIL_MAX_LENGTH = 190
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7

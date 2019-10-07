@@ -15,9 +15,17 @@ import json
 from django.db.models import Count
 from suspicious.utils import block_suspicious_user
 from suspicious.models import Suspicious
+# Custom Decorators Starts
+from accounts.decorators import (
+    can_browse_required, can_donate_required, can_ask_for_a_donor_required,
+    can_manage_bank_required, can_chat_required
+)
+# Custom Decorators Ends
+
+decorators = [login_required, can_browse_required]
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class SitePreferenceView(TemplateView):
     def get(self, request, *args, **kwargs):
         user_profile = UserProfile.objects.filter(user=request.user).first()
@@ -43,6 +51,7 @@ class SitePreferenceView(TemplateView):
 
 
 @login_required
+@can_browse_required
 def change_site_preference(request):
     url = reverse('home')
     if request.method == "POST":
@@ -86,6 +95,7 @@ def change_site_preference(request):
 
 
 @login_required
+@can_browse_required
 def change_site_preference_default(request):
     url = reverse('home')
     user_profile = UserProfile.objects.filter(user=request.user).first()
@@ -101,6 +111,7 @@ def change_site_preference_default(request):
 
 
 @login_required
+@can_browse_required
 def address_autocomplete_view(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -119,6 +130,7 @@ def address_autocomplete_view(request):
 
 
 @login_required
+@can_browse_required
 def hospital_autocomplete_view(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -137,7 +149,7 @@ def hospital_autocomplete_view(request):
     return HttpResponse(data, mimetype)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class NotificationListView(AjaxListView):
     template_name = 'notification/list.html'
     # paginate_by = 4
@@ -165,7 +177,8 @@ class NotificationListView(AjaxListView):
         # Ends Base Template Context
         return context
 
-@method_decorator(login_required, name='dispatch')
+
+@method_decorator(decorators, name='dispatch')
 class NotificationDetailView(DetailView):
     template_name = 'notification/details.html'
 
@@ -207,6 +220,7 @@ class NotificationDetailView(DetailView):
 
 
 @login_required
+@can_browse_required
 def mark_all_as_read(request):
     user = request.user
     url = reverse('home')

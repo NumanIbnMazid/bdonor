@@ -8,6 +8,14 @@ from chat.models import Thread
 from donationBank.models import Campaign
 from donations.models import Donation
 from django.db.models import Q
+# Custom Decorators Starts
+from accounts.decorators import (
+    can_browse_required, can_donate_required, can_ask_for_a_donor_required,
+    can_manage_bank_required, can_chat_required
+)
+# Custom Decorators Ends
+
+decorators = [login_required, can_browse_required]
 
 
 class HomeView(TemplateView):
@@ -61,6 +69,8 @@ class HomeView(TemplateView):
 
 
 @login_required
+@can_browse_required
+@can_chat_required
 @page_template('chat/snippets/list.html')
 def get_chat_list_template(request,
                            template='chat/chat-list.html',
@@ -82,3 +92,11 @@ def get_chat_list_template(request,
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
+
+
+@method_decorator(login_required, name='dispatch')
+class BlockedView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if self.request.user.user_permissions_user.can_browse == False:
+            return render(request, "exceptions/blocked.html")
+        return render(request, "exceptions/error.html")

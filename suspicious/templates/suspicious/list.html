@@ -71,8 +71,10 @@
                             {{ object.mac }}
                         </td>
                         <td>
-                            <a href="#" class="btn btn-warning btn-sm text-deco-none">
+                            <a href="{% url 'user_permission_update' slug=object.user.profile.slug %}"
+                                class="btn btn-warning btn-sm text-deco-none">
                                 <span class="text-dark">
+                                    <i class="flaticon-user-5 font-bold"></i>
                                     Modify User Permissions
                                 </span>
                             </a>

@@ -184,6 +184,28 @@ class UserReport(models.Model):
 
 
 
+class UserPermission(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+            on_delete=models.CASCADE, related_name='user_permissions_user', verbose_name='user'
+    )
+    can_browse = models.BooleanField(default=True, verbose_name='can browse')
+    can_donate = models.BooleanField(default=True, verbose_name='can donate')
+    can_ask_for_a_donor = models.BooleanField(default=True, verbose_name='can ask for a donor')
+    can_manage_bank = models.BooleanField(default=True, verbose_name='can manage bank')
+    can_chat = models.BooleanField(default=True, verbose_name='can chat')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='created at')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    class Meta:
+        verbose_name = ("User Permission")
+        verbose_name_plural = ("User Permissions")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.user.username
+
+
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -192,6 +214,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     slug_binding = username+'-'+time_str_mix_slug()
     if created:
         UserProfile.objects.create(user=instance, slug=slug_binding)
+        UserPermission.objects.create(user=instance)
     instance.profile.save()
 
 

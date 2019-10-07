@@ -11,11 +11,18 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+# Custom Decorators Starts
+from accounts.decorators import (
+    can_browse_required
+)
+# Custom Decorators Ends
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 @login_required
+@can_browse_required
 def checkout(request, slug):
     publishKey = settings.STRIPE_PUBLISHABLE_KEY
     # print(request.user.userstripe.stripe_id)

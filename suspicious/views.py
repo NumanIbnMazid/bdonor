@@ -8,9 +8,17 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 from .utils import block_suspicious_user
+# Custom Decorators Starts
+from accounts.decorators import (
+    can_browse_required, can_donate_required, can_ask_for_a_donor_required,
+    can_manage_bank_required, can_chat_required
+)
+# Custom Decorators Ends
+
+decorators = [login_required, can_browse_required]
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class SuspiciousListView(ListView):
     template_name = 'suspicious/list.html'
 

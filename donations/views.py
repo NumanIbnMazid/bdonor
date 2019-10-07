@@ -27,9 +27,18 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 # Site.objects.get_current().domain
 # import socket
+# Custom Decorators Starts
+from accounts.decorators import (
+    can_browse_required, can_donate_required, can_ask_for_a_donor_required,
+    can_manage_bank_required, can_chat_required
+)
+# Custom Decorators Ends
+
+decorators = [login_required, can_browse_required]
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_donate_required, name='dispatch')
 class OfferDonationCreateView(CreateView):
     template_name = 'donations/donation-manage.html'
     form_class = DonationForm
@@ -264,7 +273,8 @@ class OfferDonationCreateView(CreateView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_donate_required, name='dispatch')
 class OfferDonationUpdateView(UpdateView):
     template_name = 'donations/donation-manage.html'
     form_class = DonationForm
@@ -514,7 +524,7 @@ class OfferDonationUpdateView(UpdateView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class DonationOffersCardListView(AjaxListView):
     template_name = 'donations/donation-list-card.html'
     page_template = 'donations/snippets/page_template_list.html'
@@ -547,7 +557,7 @@ class DonationOffersCardListView(AjaxListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class DonationOffersListView(ListView):
     template_name = 'donations/donation-list.html'
 
@@ -577,7 +587,7 @@ class DonationOffersListView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class MyDonationOffersListView(AjaxListView):
     template_name = 'donations/donation-list-card.html'
     page_template = 'donations/snippets/page_template_list.html'
@@ -607,7 +617,8 @@ class MyDonationOffersListView(AjaxListView):
 
 # ====================== Donation Requests ======================
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_ask_for_a_donor_required, name='dispatch')
 class DonationRequestCreateView(CreateView):
     template_name = 'donations/donation-manage.html'
     form_class = DonationForm
@@ -810,7 +821,8 @@ class DonationRequestCreateView(CreateView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_ask_for_a_donor_required, name='dispatch')
 class DonationRequestUpdateView(UpdateView):
     template_name = 'donations/donation-manage.html'
     form_class = DonationForm
@@ -1042,7 +1054,7 @@ class DonationRequestUpdateView(UpdateView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class DonationRequestsCardListView(AjaxListView):
     template_name = 'donations/donation-list-card.html'
     page_template = 'donations/snippets/page_template_list.html'
@@ -1075,7 +1087,7 @@ class DonationRequestsCardListView(AjaxListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class DonationRequestsListView(ListView):
     template_name = 'donations/donation-list.html'
 
@@ -1107,7 +1119,7 @@ class DonationRequestsListView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class MyDonationRequestsListView(AjaxListView):
     template_name = 'donations/donation-list-card.html'
     page_template = 'donations/snippets/page_template_list.html'
@@ -1137,7 +1149,7 @@ class MyDonationRequestsListView(AjaxListView):
 
 # ==================== Donation All Dynamic Mixed ====================
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class DonationDetailView(DetailView):
     template_name = 'donations/donation-details.html'
 
@@ -1158,7 +1170,7 @@ class DonationDetailView(DetailView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class DonationRespondCreateView(CreateView):
     template_name = 'donations/respond.html'
     form_class = DonationRespondForm
@@ -1342,11 +1354,22 @@ class DonationRespondCreateView(CreateView):
                 reverse('profile_update', kwargs={
                         'slug': request.user.profile.slug})
             )
+        slug = self.kwargs.get('slug')
+        donation = Donation.objects.get_by_slug(slug, self.request)
+        if self.request.user.user_permissions_user.can_donate == False and donation.category == 1:
+            messages.add_message(self.request, messages.INFO,
+                                 "You are not allowed to donate!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        if self.request.user.user_permissions_user.can_ask_for_a_donor == False and donation.category == 0:
+            messages.add_message(self.request, messages.INFO,
+                                 "You are not allowed to ask for a donor!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
         return super(DonationRespondCreateView, self).dispatch(request, *args, **kwargs)
 
 
 @csrf_exempt
 @login_required
+@can_browse_required
 def withdraw_respond(request):
     url = reverse('home')
     user = request.user
@@ -1368,6 +1391,7 @@ def withdraw_respond(request):
 
 @csrf_exempt
 @login_required
+@can_browse_required
 def donation_delete(request):
     url = reverse('home')
     user = request.user
@@ -1388,6 +1412,7 @@ def donation_delete(request):
     return HttpResponseRedirect(url)
 
 
+@method_decorator(decorators, name='dispatch')
 class DonationFilteredListView(ListView):
     template_name = "donations/search-result.html"
 
@@ -1619,6 +1644,7 @@ class DonationFilteredListView(ListView):
         return qs
 
 
+@method_decorator(decorators, name='dispatch')
 class ManageProgressStatus(UpdateView):
     template_name = 'donations/manage-progress-status.html'
     form_class = DonationProgressForm
@@ -1741,7 +1767,7 @@ class ManageProgressStatus(UpdateView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class MyRespondsListView(AjaxListView):
     template_name = 'donations/donation-list-card.html'
     page_template = 'donations/snippets/page_template_list.html'

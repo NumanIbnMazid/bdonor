@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import UpdateView, DetailView, ListView, CreateView
-from .models import UserProfile, UserReport
+from .models import UserProfile, UserReport, UserPermission
 from suspicious.utils import block_suspicious_user
-from .forms import UserProfileUpdateForm, UserReportManageForm
+from .forms import UserProfileUpdateForm, UserReportManageForm, UserPermissionManageForm
 from django import forms
 from django.contrib import messages
 from django.urls import reverse
@@ -12,8 +12,22 @@ from django.utils.decorators import method_decorator
 from el_pagination.views import AjaxListView
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from .utils import time_str_mix_slug
+from utils.handlers import create_notification
+from django.core.mail import EmailMultiAlternatives
+# Custom Decorators Starts
+from accounts.decorators import (
+    can_browse_required, can_donate_required, can_ask_for_a_donor_required,
+    can_manage_bank_required, can_chat_required
+)
+# Custom Decorators Ends
+
+decorators = [login_required, can_browse_required]
 
 
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_donate_required, name='dispatch')
+@method_decorator(can_ask_for_a_donor_required, name='dispatch')
 class UserListView(AjaxListView):
     template_name = 'profile/profile-list.html'
     page_template = 'profile/entry_list_page.html'
@@ -35,7 +49,9 @@ class UserListView(AjaxListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+# @method_decorator(can_donate_required, name='dispatch')
+# @method_decorator(can_ask_for_a_donor_required, name='dispatch')
 class ProfileDetailView(DetailView):
     template_name = 'profile/profile-details.html'
 
@@ -67,10 +83,16 @@ class ProfileDetailView(DetailView):
         if not self.user_passes_test(request):
             block_suspicious_user(request)
             return HttpResponseRedirect(reverse('home'))
+        self.object = self.get_object()
+        if not self.object.user == self.request.user:
+            if self.request.user.user_permissions_user.can_donate == False or self.request.user.user_permissions_user.can_ask_for_a_donor == False:
+                messages.add_message(self.request, messages.INFO,
+                                     "You are not allowed to view others profile as your donation permission is blocked!")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
         return super(ProfileDetailView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class ProfileUpdateView(UpdateView):
     template_name = 'profile/profile-update.html'
     form_class = UserProfileUpdateForm
@@ -130,7 +152,12 @@ class ProfileUpdateView(UpdateView):
         return reverse('profile_update', kwargs={'slug': slug})
 
 
-@method_decorator(login_required, name='dispatch')
+
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_donate_required, name='dispatch')
+@method_decorator(can_ask_for_a_donor_required, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
+@method_decorator(can_chat_required, name='dispatch')
 class UserReportCreateView(CreateView):
     template_name = 'report/manage.html'
     form_class = UserReportManageForm
@@ -202,7 +229,7 @@ class UserReportCreateView(CreateView):
         return super(UserReportCreateView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class UserReportListView(ListView):
     template_name = 'report/list.html'
 
@@ -235,7 +262,7 @@ class UserReportListView(ListView):
         return super(UserReportListView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class UserReportDetailView(DetailView):
     template_name = 'report/detail.html'
 
@@ -270,7 +297,7 @@ class UserReportDetailView(DetailView):
         return super(UserReportDetailView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class SingleUserReportListView(ListView):
     template_name = 'report/list.html'
 
@@ -314,6 +341,7 @@ class SingleUserReportListView(ListView):
 
 @csrf_exempt
 @login_required
+@can_browse_required
 def report_delete_all(request):
     url = reverse('home')
     user = request.user
@@ -338,6 +366,7 @@ def report_delete_all(request):
 
 @csrf_exempt
 @login_required
+@can_browse_required
 def report_delete(request):
     url = reverse('home')
     user = request.user
@@ -357,3 +386,138 @@ def report_delete(request):
     else:
         block_suspicious_user(request)
     return HttpResponseRedirect(url)
+
+
+@method_decorator(decorators, name='dispatch')
+class UserPermissionListView(ListView):
+    template_name = 'user-permission/list.html'
+
+    def get_queryset(self):
+        qs = UserPermission.objects.all()
+        if qs.exists():
+            return qs
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPermissionListView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        context['page_title'] = "User Permissions List"
+        return context
+
+    def user_passes_test(self, request):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(UserPermissionListView, self).dispatch(request, *args, **kwargs)
+
+
+@method_decorator(decorators, name='dispatch')
+class UserPermissionUpdateView(UpdateView):
+    template_name = 'snippets/common/manage.html'
+    form_class = UserPermissionManageForm
+
+    def get_object(self):
+        slug = self.kwargs['slug']
+        profile_qs = UserProfile.objects.filter(slug=slug)
+        if profile_qs.exists():
+            qs = UserPermission.objects.filter(user=profile_qs.first().user)
+            if qs.exists():
+                return qs.first()
+        return None
+
+    def get_success_url(self):
+        return reverse('user_permission_list')
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        details_fake = form.cleaned_data['details_fake']
+        message_array = []
+        fields_dict = {
+            'can_browse': 'Browse Permission', 'can_donate': 'Donate Permission',
+            'can_ask_for_a_donor': 'Donor Request Permission',
+            'can_manage_bank': 'Bank Manage Permission', 'can_chat': 'Chat Permission'
+        }
+        for key, value in fields_dict.items():
+            if key in form.changed_data:
+                if form.cleaned_data[key] == False:
+                    status = "<span style='color:red;'>Blocked</span>"
+                else:
+                    status = "<span style='color:green;'>Revoked</span>"
+                msg = f"{value}: {status}"
+                message_array.append(msg)
+        if not details_fake == None and not details_fake == "":
+            message_bind = f"<br>Permission Changed: <span style='color:blue;font-size:15px;margin-left:5px;'>{message_array}</span>. <br><br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Message:</span><br> {details_fake}"
+        else:
+            message_bind = f"<br>Permission Changed: <span style='color:blue;font-size:15px;margin-left:5px;'>{message_array}</span>."
+        receiver = self.object.user
+        sender = self.request.user
+        receiver_email = receiver.email
+        # Sending Email
+        mail_msg = f"Hello {receiver.profile.get_username()} ! <br> Your Permissions in BDonor has been updated!. <br> <br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Additional Information:</span> {message_bind} <br><br><br> Have a good day. <br>Thanks for being with us."
+        mail_subject = 'Your Permissions in BDonor has been updated!'
+        mail_from = 'bdonorweb@gmail.com'
+        mail_text = 'Please do not Reply'
+        subject = mail_subject
+        from_email = mail_from
+        to = [receiver_email]
+        text_content = mail_text
+        html_content = mail_msg
+        msg = EmailMultiAlternatives(
+            subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        # Create Notification
+        request = self.request
+        sender = self.request.user
+        receiver = receiver
+        category = 'userPermission_Update'
+        identifier = time_str_mix_slug()
+        subject = 'Your Permissions in BDonor has been updated!'
+        message = f"Your Permissions in BDonor has been updated! <br> <br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Additional Information:</span> {message_bind}"
+        create_notification(
+            request=request, sender=sender, receiver=receiver, category=category, identifier=identifier, subject=subject, message=message
+        )
+        messages.add_message(self.request, messages.SUCCESS,
+                             f"{self.object.user.profile.get_smallname()}'s Permissions has been updated successfully !")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPermissionUpdateView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        self.object = self.get_object()
+        context['page_title'] = f"Update {self.object.user.profile.get_smallname()}'s Permissions"
+        return context
+
+    def user_passes_test(self, request):
+        if self.request.user.is_superuser:
+            self.object = self.get_object()
+            if not self.object.user.is_superuser:
+                return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            messages.add_message(self.request, messages.ERROR,
+                "Superuser's permission can't be changed from here! Please use the Django Admin Panel."
+            )
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        return super(UserPermissionUpdateView, self).dispatch(request, *args, **kwargs)

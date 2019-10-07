@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        {% block head_title %}Error!{% endblock %} | BDonor - Blood, Organ & Tissue Donation Management System
+    </title>
+    {% include 'snippets/head-snippets.html' %}
+    {% include 'snippets/css.html' %}
+    {% include 'snippets/head-js.html' %}
+</head>
+
+<body>
+
+    <style>
+        .error-template {padding: 40px 15px;text-align: center;}
+        .error-actions {margin-top:15px;margin-bottom:15px;}
+        .error-actions .btn { margin-right:10px; }
+    </style>
+    
+
+    <div class="container">
+        {% include 'snippets/messages.html' %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1 class="text-danger">
+                        Oops!
+                    </h1>
+                    <h2 class="text-danger">
+                        Something went wrong!</h2>
+                    <div class="error-actions">
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                            Take Me Home 
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

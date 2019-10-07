@@ -16,6 +16,7 @@
 {% url 'priceplan:plan_create' as plan_create_url %}
 {% url 'user_report_list' as user_report_list_url %}
 {% url 'suspicious:suspicious_list' as suspicious_list_url %}
+{% url 'user_permission_list' as user_permission_list_url %}
 {% endif %}
 
 <div class="sidebar sidebar-style-2"
@@ -132,6 +133,12 @@
                     <a href="{{ suspicious_list_url }}">
                         <i class="flaticon-exclamation font-bold"></i>
                         <p>Suspicious Users</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if request.path == user_permission_list_url %}active{% endif %}">
+                    <a href="{{ user_permission_list_url }}">
+                        <i class="flaticon-user-5 font-bold"></i>
+                        <p>User Permissions</p>
                     </a>
                 </li>
                 {% endif %}

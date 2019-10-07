@@ -7,6 +7,7 @@ from .views import (OfferDonationCreateView,
                     MyDonationRequestsListView, DonationRequestsCardListView, DonationRequestsListView,
                     ManageProgressStatus,MyRespondsListView)
 
+
 urlpatterns = [
     path('offer/', OfferDonationCreateView.as_view(), name='offer_donation'),
     path('my/offers/', MyDonationOffersListView.as_view(),

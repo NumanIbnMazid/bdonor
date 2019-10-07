@@ -22,9 +22,18 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models import Count, F, Sum
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+# Custom Decorators Starts
+from accounts.decorators import (
+    can_browse_required, can_donate_required, can_ask_for_a_donor_required,
+    can_manage_bank_required, can_chat_required
+)
+# Custom Decorators Ends
+
+decorators = [login_required, can_browse_required]
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationBankCreateView(CreateView):
     template_name = 'donationBank/manage.html'
     form_class = DonationBankForm
@@ -138,7 +147,8 @@ class DonationBankCreateView(CreateView):
         return super(DonationBankCreateView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class BankDashboardView(TemplateView):
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -166,6 +176,8 @@ class BankDashboardView(TemplateView):
 
 @csrf_exempt
 @login_required
+@can_browse_required
+@can_manage_bank_required
 def donationBank_delete(request):
     url = reverse('home')
     if request.method == "POST":
@@ -185,7 +197,8 @@ def donationBank_delete(request):
     return HttpResponseRedirect(url)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+# @method_decorator(can_manage_bank_required, name='dispatch')
 class DonationBankDetailView(DetailView):
     template_name = 'donationBank/details.html'
 
@@ -251,6 +264,8 @@ class DonationBankDetailView(DetailView):
         return super(DonationBankDetailView, self).dispatch(request, *args, **kwargs)
 
 
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationBankUpdateView(UpdateView):
     template_name = 'donationBank/manage.html'
     form_class = DonationBankForm
@@ -326,7 +341,8 @@ class DonationBankUpdateView(UpdateView):
         return super(DonationBankUpdateView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+
+@method_decorator(decorators, name='dispatch')
 class DonationBankListView(ListView):
     template_name = 'donationBank/list.html'
 
@@ -350,7 +366,8 @@ class DonationBankListView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationBankSettingUpdateView(UpdateView):
     template_name = 'donationBank/manage.html'
     form_class = DonationBankSettingForm
@@ -490,6 +507,8 @@ class DonationBankSettingUpdateView(UpdateView):
 
 @csrf_exempt
 @login_required
+@can_browse_required
+@can_manage_bank_required
 def member_request_create(request):
     url = reverse('home')
     user = request.user
@@ -551,6 +570,8 @@ def member_request_create(request):
 
 @csrf_exempt
 @login_required
+@can_browse_required
+@can_manage_bank_required
 def member_request_delete(request):
     url = reverse('home')
     user = request.user
@@ -597,6 +618,8 @@ def member_request_delete(request):
 
 @csrf_exempt
 @login_required
+@can_browse_required
+@can_manage_bank_required
 def member_request_accept(request):
     url = reverse('home')
     user = request.user
@@ -660,6 +683,8 @@ def member_request_accept(request):
 
 @csrf_exempt
 @login_required
+@can_browse_required
+@can_manage_bank_required
 def member_request_reject(request):
     url = reverse('home')
     user = request.user
@@ -708,7 +733,8 @@ def member_request_reject(request):
     return HttpResponseRedirect(url)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class BankMembersListView(ListView):
     template_name = 'donationBank/members-list.html'
 
@@ -753,7 +779,10 @@ class BankMembersListView(ListView):
         return super(BankMembersListView, self).dispatch(request, *args, **kwargs)
 
 
+@csrf_exempt
 @login_required
+@can_browse_required
+@can_manage_bank_required
 def membership_remove(request):
     url = reverse('home')
     user = request.user
@@ -791,7 +820,8 @@ def membership_remove(request):
     return HttpResponseRedirect(url)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationCreateView(CreateView):
     template_name = 'donationBank/donation-manage.html'
     form_class = DonationManageForm
@@ -878,7 +908,8 @@ class DonationCreateView(CreateView):
         return super(DonationCreateView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationListView(ListView):
     template_name = 'donationBank/donation-list.html'
     context_object_name = 'donation_list'
@@ -922,7 +953,8 @@ class DonationListView(ListView):
         return super(DonationListView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationDetailView(DetailView):
     template_name = 'donationBank/donation-details.html'
     context_object_name = 'donation'
@@ -963,7 +995,8 @@ class DonationDetailView(DetailView):
         return super(DonationDetailView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationUpdateView(UpdateView):
     template_name = 'donationBank/donation-manage.html'
     form_class = DonationManageForm
@@ -1060,6 +1093,8 @@ class DonationUpdateView(UpdateView):
 
 @csrf_exempt
 @login_required
+@can_browse_required
+@can_manage_bank_required
 def donation_delete(request):
     url = reverse('home')
     user = request.user
@@ -1077,7 +1112,8 @@ def donation_delete(request):
     return HttpResponseRedirect(url)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationRequestCreateView(CreateView):
     template_name = 'donationBank/donation-request-manage.html'
     form_class = DonationRequestManageForm
@@ -1165,7 +1201,8 @@ class DonationRequestCreateView(CreateView):
         return super(DonationRequestCreateView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class ManageProgressStatus(UpdateView):
     template_name = 'donationBank/manage-progress-status.html'
     form_class = DonationProgressForm
@@ -1228,8 +1265,8 @@ class ManageProgressStatus(UpdateView):
         return context
 
 
-
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class CampaignCreateView(CreateView):
     template_name = 'donationBank/campaign-manage.html'
     form_class = CampaignManageForm
@@ -1295,7 +1332,8 @@ class CampaignCreateView(CreateView):
         return super(CampaignCreateView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class CampaignListView(ListView):
     template_name = 'donationBank/campaign-list.html'
     context_object_name = 'campaign_list'
@@ -1342,7 +1380,7 @@ class CampaignListView(ListView):
         return super(CampaignListView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class CampaignPublicListView(ListView):
     template_name = 'donationBank/campaign-list-public.html'
     context_object_name = 'campaign_list'
@@ -1378,7 +1416,7 @@ class CampaignPublicListView(ListView):
         return super(CampaignPublicListView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
 class CampaignDetailView(DetailView):
     template_name = 'donationBank/campaign-details.html'
     context_object_name = 'campaign'
@@ -1430,7 +1468,8 @@ class CampaignDetailView(DetailView):
         return super(CampaignDetailView, self).dispatch(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class CampaignUpdateView(UpdateView):
     template_name = 'donationBank/campaign-manage.html'
     form_class = CampaignManageForm
@@ -1506,6 +1545,8 @@ class CampaignUpdateView(UpdateView):
 
 @csrf_exempt
 @login_required
+@can_browse_required
+@can_manage_bank_required
 def campaign_delete(request):
     url = reverse('home')
     user = request.user

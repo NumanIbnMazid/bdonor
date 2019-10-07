@@ -14,29 +14,20 @@
 {% block content %}
 
 <div class="row">
-
-    {% if page_type == "SingleReports" %}
-    {% for object in object_list %}
-    {% if forloop.first %}
-    <button type="button" class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_report_all"
-        value="{{object.user.profile.slug}}" data-toggle="modal" data-target="#modal-delete-report-all">
-        Delete All Reports of this User
-    </button>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
-
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mx-auto">
-        
+
         <input type="hidden" id="total_records_count" value="{{object_list.count}}">
         <div class="table-responsive">
-            <table id="userReportDataTable" class="cell-border hover table-bordered table-hover" style="width:100%">
+            <table id="userPermissionDataTable" class="cell-border hover table-bordered table-hover" style="width:100%">
                 <thead>
                     <tr class="text-center">
                         <th>#</th>
                         <th>User</th>
-                        <th>Reported By</th>
-                        <th>Category</th>
+                        <th>Can Browse</th>
+                        <th>Can Donate</th>
+                        <th>Can Ask for a Donor</th>
+                        <th>Can Manage Bank</th>
+                        <th>Can Chat</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -53,47 +44,66 @@
                                 </div>
                                 <h6>
                                     {{ object.user.profile.get_dynamic_name }}
-                                    <span class="ml-1 text-danger font-bold">
-                                        [{{object.get_user_reports_count}}]
-                                    </span>
                                 </h6>
                             </a>
                         </td>
                         <td>
-                            <a class="text-deco-none text-dark" href="{{ object.reported_by.profile.get_absolute_url }}">
-                                <div class="avatar avatar-xs">
-                                    {% include 'snippets/chunks/user-image.html' with instance=object.reported_by class="avatar-img rounded-circle" %}
-                                </div>
-                                <h6>{{ object.reported_by.profile.get_dynamic_name }}</h6>
-                            </a>
+                            {% if object.can_browse == True %}
+                            <i class="flaticon-success font-20 font-bold text-success"></i>
+                            {% elif object.can_browse == False %}
+                            <i class="flaticon-error font-20 font-bold text-danger"></i>
+                            {% else %}
+                            -
+                            {% endif %}
                         </td>
                         <td>
-                            {{ object.category }}
+                            {% if object.can_donate == True %}
+                            <i class="flaticon-success font-20 font-bold text-success"></i>
+                            {% elif object.can_donate == False %}
+                            <i class="flaticon-error font-20 font-bold text-danger"></i>
+                            {% else %}
+                            -
+                            {% endif %}
                         </td>
                         <td>
-                            <a href="{% url 'user_report_detail' slug=object.slug %}" class="btn btn-secondary btn-sm text-deco-none">
-                                <span class="">
-                                    View Details
-                                </span>
-                            </a>
-                            <a href="{% url 'user_permission_update' slug=object.user.profile.slug %}"
-                                class="btn btn-warning btn-sm text-deco-none">
+                            {% if object.can_ask_for_a_donor == True %}
+                            <i class="flaticon-success font-20 font-bold text-success"></i>
+                            {% elif object.can_ask_for_a_donor == False %}
+                            <i class="flaticon-error font-20 font-bold text-danger"></i>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if object.can_manage_bank == True %}
+                            <i class="flaticon-success font-20 font-bold text-success"></i>
+                            {% elif object.can_manage_bank == False %}
+                            <i class="flaticon-error font-20 font-bold text-danger"></i>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if object.can_chat == True %}
+                            <i class="flaticon-success font-20 font-bold text-success"></i>
+                            {% elif object.can_chat == False %}
+                            <i class="flaticon-error font-20 font-bold text-danger"></i>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'user_permission_update' slug=object.user.profile.slug %}" class="btn btn-warning btn-sm text-deco-none">
                                 <span class="text-dark">
                                     <i class="flaticon-user-5 font-bold"></i>
                                     Modify User Permissions
                                 </span>
                             </a>
-                            <button type="button"
-                                class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_report"
-                                value="{{object.slug}}" data-toggle="modal"
-                                data-target="#modal-delete-report">
-                                Delete
-                            </button>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center">
+                        <td colspan="8" class="text-center">
                             <div class="alert alert-warning">
                                 No item found!
                             </div>
@@ -105,8 +115,11 @@
                     <tr class="text-center">
                         <th>#</th>
                         <th>User</th>
-                        <th>Reported By</th>
-                        <th>Category</th>
+                        <th>Can Browse</th>
+                        <th>Can Donate</th>
+                        <th>Can Ask for a Donor</th>
+                        <th>Can Manage Bank</th>
+                        <th>Can Chat</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
@@ -125,7 +138,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#userReportDataTable').DataTable({
+        $('#userPermissionDataTable').DataTable({
             destroy: true,
             "ordering": false,
             "scrollCollapse": true,

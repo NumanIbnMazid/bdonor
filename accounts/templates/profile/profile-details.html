@@ -25,17 +25,28 @@ My Profile
             <span class="">Profile Details</span>
             <span class="pull-right">
                 {% include 'snippets/modules/chat-module.html' with instance=object.user class="btn btn-sm text-deco-none border-info-1" text="chat" %}
+                
+                {% if not request.user == object.user %}
                 <a href="{% url 'user_report_create' slug=object.slug %}" class="btn btn-dark btn-sm">
                     <span class="text-warning">
                         <i class="flaticon-exclamation font-bold"></i>
                         Report This User
                     </span>
                 </a>
+                {% endif %}
+                
                 {% if request.user.is_superuser %}
                 <a href="{% url 'user_report_list_single' slug=object.slug %}" class="btn btn-dark btn-sm">
                     <span class="text-warning">
                         <i class="flaticon-list font-bold"></i>
                         Reports
+                    </span>
+                </a>
+                <a href="{% url 'user_permission_update' slug=object.slug %}"
+                    class="btn btn-warning btn-sm text-deco-none">
+                    <span class="text-dark">
+                        <i class="flaticon-user-5 font-bold"></i>
+                        Modify User Permissions
                     </span>
                 </a>
                 {% endif %}

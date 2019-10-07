@@ -1,12 +1,13 @@
 from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserProfile, UserReport
+from .models import UserProfile, UserReport, UserPermission
 from django.template.defaultfilters import filesizeformat
 from django.conf import settings
 import datetime
 import re
 import os
+from ckeditor.widgets import CKEditorWidget
 
 
 # class DateInput(forms.DateInput):
@@ -310,8 +311,6 @@ class UserProfileUpdateForm(forms.ModelForm):
 
 
 
-
-
 class UserReportManageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserReportManageForm, self).__init__(*args, **kwargs)
@@ -340,3 +339,59 @@ class UserReportManageForm(forms.ModelForm):
                 raise forms.ValidationError(
                     f"Maximum 600 characters allowed. [currently using: {length}]")
         return details
+
+
+class UserPermissionManageForm(forms.ModelForm):
+    # details_fake = forms.CharField()
+    details_fake = forms.CharField(required=False, widget=CKEditorWidget())
+    def __init__(self, *args, **kwargs):
+        super(UserPermissionManageForm, self).__init__(*args, **kwargs)
+        self.fields['can_browse'].help_text = "Select browse permission..."
+        self.fields['can_browse'].widget.attrs.update({
+            'id': 'permission_can_browse_input',
+        })
+        self.fields['can_donate'].help_text = "Select donating permission..."
+        self.fields['can_donate'].widget.attrs.update({
+            'id': 'permission_can_donate_input',
+        })
+        self.fields['can_ask_for_a_donor'].help_text = "Select asking for a donor permission..."
+        self.fields['can_ask_for_a_donor'].widget.attrs.update({
+            'id': 'permission_can_ask_for_a_donor_input',
+        })
+        self.fields['can_manage_bank'].help_text = "Select managing bank's permission..."
+        self.fields['can_manage_bank'].widget.attrs.update({
+            'id': 'permission_can_manage_bank_input',
+        })
+        self.fields['can_chat'].help_text = "Select chatting permission..."
+        self.fields['can_chat'].widget.attrs.update({
+            'id': 'permission_can_chat_input',
+        })
+        # self.fields['details_fake'] = forms.CharField(
+        #         label="Message", required=False, widget=forms.Textarea())
+        self.fields['details_fake'].help_text = "Provide information to user about the reason and other facts..."
+        # self.fields['details_fake'].widget.attrs.update({
+        #     'id': 'permission_details_fake_input',
+        #     'placeholder': 'Provide message to user...',
+        #     'maxlength': 500,
+        #     'rows': 2,
+        #     'cols': 3
+        # })
+        self.fields['details_fake'].label = "Message"
+        self.fields['details_fake'].widget.attrs.update({
+            'id': 'permission_details_fake_input'
+        })
+
+    class Meta:
+        model = UserPermission
+        fields = ['can_browse', 'can_donate', 'can_ask_for_a_donor',
+                  'can_manage_bank', 'can_chat', 'details_fake']
+        exclude = ['user', 'created_at', 'updated_at']
+
+    def clean_details_fake(self):
+        details_fake = self.cleaned_data.get('details_fake')
+        if not details_fake == None:
+            length = len(details_fake)
+            if length > 500:
+                raise forms.ValidationError(
+                    f"Maximum 500 characters allowed. [currently using: {length}]")
+        return details_fake
