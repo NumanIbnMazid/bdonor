@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'priceplan',
     'checkout',
     'donationBank',
+    'blog',
 ]
 
 SITE_ID = 1

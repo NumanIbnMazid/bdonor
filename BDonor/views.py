@@ -8,6 +8,7 @@ from chat.models import Thread
 from donationBank.models import Campaign
 from donations.models import Donation
 from django.db.models import Q
+from accounts.models import UserPermission
 # Custom Decorators Starts
 from accounts.decorators import (
     can_browse_required, can_donate_required, can_ask_for_a_donor_required,
@@ -99,4 +100,19 @@ class BlockedView(TemplateView):
     def get(self, request, *args, **kwargs):
         if self.request.user.user_permissions_user.can_browse == False:
             return render(request, "exceptions/blocked.html")
+        return render(request, "exceptions/error.html")
+
+
+
+@method_decorator(login_required, name='dispatch')
+class AccessDeniedView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        u_permission = self.request.user.user_permissions_user
+        if u_permission.can_browse == False or u_permission.can_donate == False or u_permission.can_ask_for_a_donor == False or u_permission.can_manage_bank == False or u_permission.can_chat == False:
+            permissions = UserPermission.objects.filter(user=self.request.user)
+            if permissions.exists():
+                context = {
+                    'permission': permissions.first(),
+                }
+            return render(request, "exceptions/access-denied.html", context=context)
         return render(request, "exceptions/error.html")

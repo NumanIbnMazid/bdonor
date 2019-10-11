@@ -1,0 +1,146 @@
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Access Denied | BDonor - Blood, Organ & Tissue Donation Management System</title>
+    {% include 'snippets/head-snippets.html' %}
+    {% include 'snippets/css.html' %}
+    {% block extra_css %}{% endblock %}
+    {% include 'snippets/head-js.html' %}
+    <link href="{% static 'assets/css/access-denied.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'snippets/messages.html' %}
+    <!-- Main Page Starts -->
+    <div class="error-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-6 col-sm-6 col-12">
+                    <div class="error-text m-4">
+                        <h1 class="error font-40 c-text-danger font-bold">
+                            Access Denied !
+                        </h1>
+                        <div class="im-sheep">
+                            <div class="top">
+                                <div class="body"></div>
+                                <div class="head">
+                                    <div class="im-eye one"></div>
+                                    <div class="im-eye two"></div>
+                                    <div class="im-ear one"></div>
+                                    <div class="im-ear two"></div>
+                                </div>
+                            </div>
+                            <div class="im-legs">
+                                <div class="im-leg"></div>
+                                <div class="im-leg"></div>
+                                <div class="im-leg"></div>
+                                <div class="im-leg"></div>
+                            </div>
+                        </div>
+                        <h4 class="text-danger">
+                            You don't have Permission to view the requested page content.
+                        </h4>
+                        <h5 class="c-text-primary">
+                            You are missing one of the permissions that are needed to view the requested page content.
+                        </h5>
+
+                        {% if permission.can_browse == False or permission.can_donate == False or permission.can_ask_for_a_donor == False or permission.can_manage_bank == False or permission.can_chat == False %}
+                        <p class="text-dark">
+                            <div class="table-responsive">
+                                <h4 class="c-text-info">Permissions Blocked:</h4>
+                                <table class="table table-hover">
+                                    <tbody>
+                                        {% if permission.can_browse == False %}
+                                        <tr class="font-bold">
+                                            <td>Browse Permission</td>
+                                            <td>
+                                                <i class="flaticon-error font-20 font-bold text-danger"></i>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if permission.can_donate == False %}
+                                        <tr class="font-bold">
+                                            <td>Donate Permission</td>
+                                            <td>
+                                                <i class="flaticon-error font-20 font-bold text-danger"></i>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if permission.can_ask_for_a_donor == False %}
+                                        <tr class="font-bold">
+                                            <td>Donor Request Permission</td>
+                                            <td>
+                                                <i class="flaticon-error font-20 font-bold text-danger"></i>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if permission.can_manage_bank == False %}
+                                        <tr class="font-bold">
+                                            <td>Bank Manage Permission</td>
+                                            <td>
+                                                <i class="flaticon-error font-20 font-bold text-danger"></i>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if permission.can_chat == False %}
+                                        <tr class="font-bold">
+                                            <td>Chat Permission</td>
+                                            <td>
+                                                <i class="flaticon-error font-20 font-bold text-danger"></i>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h5>
+                                Last Permission Updated at: 
+                                {% if datetime|date:"d-M-Y" == permission.updated_at|date:"d-M-Y" %}
+                                {{ permission.updated_at|timesince }} ago
+                                {% else %}
+                                {{ permission.updated_at }}
+                                {% endif %}
+                                <span class="font-italic ml-4 font-bold">
+                                    [BY- ADMIN]
+                                </span>
+                            </h5>
+                        </p>
+                        {% endif %}
+
+                        <div class="error-actions">
+                            <a href="{% url 'home' %}" class="btn btn-primary btn-lg m-2">
+                                <i class="fas fa-home"></i>
+                                Take Me Home
+                            </a>
+                            <button id="go_back" class="btn btn-lg btn-info m-2">
+                                <i class="flaticon-back"></i>
+                                Go Back
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="footer">
+                        <div class="contact">
+                            <p class="marquee">If you have any query, please feel free to contact with us.</p>
+                        </div>
+
+                        <p class="copyright">
+                            &copy; 2020 BDonor |
+                            Developed <i class="fa fa-heart heart text-danger"></i> by
+                            <a href="https://www.facebook.com/numanibnmazid" target="_blank">
+                                Numan Ibn Mazid
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Page Ends -->
+    {% include 'snippets/js.html' %}
+</body>
+
+</html>

@@ -178,7 +178,7 @@ class NotificationListView(AjaxListView):
         return context
 
 
-@method_decorator(decorators, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class NotificationDetailView(DetailView):
     template_name = 'notification/details.html'
 

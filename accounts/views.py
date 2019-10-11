@@ -454,19 +454,19 @@ class UserPermissionUpdateView(UpdateView):
                 if form.cleaned_data[key] == False:
                     status = "<span style='color:red;'>Blocked</span>"
                 else:
-                    status = "<span style='color:green;'>Revoked</span>"
+                    status = "<span style='color:green;'>Allowed</span>"
                 msg = f"{value}: {status}"
                 message_array.append(msg)
         if not details_fake == None and not details_fake == "":
-            message_bind = f"<br>Permission Changed: <span style='color:blue;font-size:15px;margin-left:5px;'>{message_array}</span>. <br><br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Message:</span><br> {details_fake}"
+            message_bind = f"<br>Permission Changed: <span style='color:blue;font-size:15px;margin-left:5px;'>{message_array}</span>. <br><br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Message:</span><br> {details_fake}<br><br><p>If you have any query, please feel free to contact with us.</p>"
         else:
-            message_bind = f"<br>Permission Changed: <span style='color:blue;font-size:15px;margin-left:5px;'>{message_array}</span>."
+            message_bind = f"<br>Permission Changed: <span style='color:blue;font-size:15px;margin-left:5px;'>{message_array}<br><br><p>If you have any query, please feel free to contact with us.</p></span>"
         receiver = self.object.user
         sender = self.request.user
         receiver_email = receiver.email
         # Sending Email
-        mail_msg = f"Hello {receiver.profile.get_username()} ! <br> Your Permissions in BDonor has been updated!. <br> <br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Additional Information:</span> {message_bind} <br><br><br> Have a good day. <br>Thanks for being with us."
-        mail_subject = 'Your Permissions in BDonor has been updated!'
+        mail_msg = f"Hello {receiver.profile.get_username()} ! <br> Your Permissions in BDonor has been changed!. <br> <br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Additional Information:</span> {message_bind} <br><br><br> Have a good day. <br>Thanks for being with us."
+        mail_subject = 'Your Permissions in BDonor has been changed!'
         mail_from = 'bdonorweb@gmail.com'
         mail_text = 'Please do not Reply'
         subject = mail_subject
@@ -484,8 +484,8 @@ class UserPermissionUpdateView(UpdateView):
         receiver = receiver
         category = 'userPermission_Update'
         identifier = time_str_mix_slug()
-        subject = 'Your Permissions in BDonor has been updated!'
-        message = f"Your Permissions in BDonor has been updated! <br> <br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Additional Information:</span> {message_bind}"
+        subject = 'Your Permissions in BDonor has been changed!'
+        message = f"Your Permissions in BDonor has been changed! <br> <br> <span style='color:black;font-style:italic;font-size:17px;font-weight:700;'>Additional Information:</span> {message_bind}"
         create_notification(
             request=request, sender=sender, receiver=receiver, category=category, identifier=identifier, subject=subject, message=message
         )

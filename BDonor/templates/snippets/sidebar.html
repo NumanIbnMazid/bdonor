@@ -17,6 +17,7 @@
 {% url 'donation_bank:bank_create' as bank_create_url %}
 {% url 'donation_bank:bank_dashboard' as bank_dashboard_url %}
 {% url 'donation_bank:bank_campaign_list_public' as bank_campaign_list_public_url %}
+{% url 'blog:blog_post_create' as blog_post_create_url %}
 {% endif %}
 
 <div class="sidebar sidebar-style-2"
@@ -199,6 +200,13 @@
                 {% endif %}
 
                 {% endif %}
+
+                <li class="nav-item {% if request.path == blog_post_create_url %}active{% endif %}">
+                    <a href="{{ blog_post_create_url }}">
+                        <i class="flaticon-agenda-1"></i>
+                        <p>Blog</p>
+                    </a>
+                </li>
                 
                 <li class="nav-item {% if request.path == user_list_url %}active{% endif %}">
                     <a href="{{ user_list_url }}">

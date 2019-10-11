@@ -1,0 +1,70 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block extra_head_js %}
+<!-- CKEDITOR JS -->
+<script>
+    window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/blog.css' %}" type="text/css" />
+{# File Input CSS #}
+<link rel="stylesheet" href="{% static 'vendor/file-input/fileinput.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+{% include 'blog/snippets/header.html' %}
+
+<div class="card">
+    <div class="card-header text-center">
+        <h4 class="card-title">{{ page_title }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mx-auto">
+                <form class="" method="POST" enctype="multipart/form-data" data-toggle="validator" id="common_form">
+                    {% csrf_token %}
+
+                    {% include 'snippets/common/form.html' %}
+
+                    <div class="card-action text-center form-group">
+                        <button type="submit" class="btn btn-success m-2" id="common_form_submit_btn">
+                            {{ page_title }}
+                        </button>
+                        <button class="btn btn-danger" id="go_back">Cancel</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'blog/snippets/footer.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+{# FILES PAGE SCRIPTS #}
+<script type="text/javascript" src="{% static 'vendor/file-input/piexif.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/file-input/sortable.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/file-input/purify.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/file-input/popper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/file-input/bootstrap.bundle.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/file-input/fileinput.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/file-input/theme.min.js' %}"></script>
+
+{# FILES PAGE SCRIPTS #}
+<script type="text/javascript" src="{% static 'assets/js/form-validator/blog-form.js' %}"></script>
+{% endblock %}

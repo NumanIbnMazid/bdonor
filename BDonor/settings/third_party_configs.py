@@ -6,6 +6,7 @@ LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 HOME_URL = '/'
+ACCESS_DENIED_URL = '/access-denied/'
 SITE_NAME = 'BDonor'
 ACCOUNT_EMAIL_MAX_LENGTH = 190
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
@@ -48,6 +49,8 @@ ONNOROKOM_PASSWORD = config('ONNOROKOM_PASSWORD', default='')
 
 # File Staffs
 ALLOWED_IMAGE_TYPES = ['.jpg', '.jpeg', '.png']
+ALLOWED_DOCUMENT_TYPES = ['.doc', '.docx', '.pdf']
+ALLOWED_FILES_TYPES = ['.jpg', '.jpeg', '.png', '.pdf', '.doc', '.docx']
 # 1.5MB - 1621440
 # 2.5MB - 2621440
 # 5MB - 5242880

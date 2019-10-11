@@ -16,7 +16,7 @@ def can_browse_required(view_func):
 # Donate ability
 
 user_can_donate_required = user_passes_test(
-    lambda user: user.user_permissions_user.can_donate == True, login_url=settings.HOME_URL)
+    lambda user: user.user_permissions_user.can_donate == True, login_url=settings.ACCESS_DENIED_URL)
 
 
 def can_donate_required(view_func):
@@ -27,7 +27,7 @@ def can_donate_required(view_func):
 
 
 user_can_ask_for_a_donor_required = user_passes_test(
-    lambda user: user.user_permissions_user.can_ask_for_a_donor == True, login_url=settings.HOME_URL)
+    lambda user: user.user_permissions_user.can_ask_for_a_donor == True, login_url=settings.ACCESS_DENIED_URL)
 
 
 def can_ask_for_a_donor_required(view_func):
@@ -38,7 +38,7 @@ def can_ask_for_a_donor_required(view_func):
 
 
 user_can_manage_bank_required = user_passes_test(
-    lambda user: user.user_permissions_user.can_manage_bank == True, login_url=settings.HOME_URL)
+    lambda user: user.user_permissions_user.can_manage_bank == True, login_url=settings.ACCESS_DENIED_URL)
 
 
 def can_manage_bank_required(view_func):
@@ -49,7 +49,7 @@ def can_manage_bank_required(view_func):
 
 
 user_can_chat_required = user_passes_test(
-    lambda user: user.user_permissions_user.can_chat == True, login_url=settings.HOME_URL)
+    lambda user: user.user_permissions_user.can_chat == True, login_url=settings.ACCESS_DENIED_URL)
 
 
 def can_chat_required(view_func):
