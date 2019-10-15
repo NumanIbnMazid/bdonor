@@ -1,3 +1,7 @@
+{% url 'blog:blog_post_create' as blog_post_create_url %}
+{% url 'blog:blog_list' as blog_list_url %}
+{% url 'blog:blog_my_posts_list' as blog_my_posts_list_url %}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-dark">
     <a class="navbar-brand" href="#">BDonor Blog</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -7,31 +11,25 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    Dropdown
+            <li class="nav-item {% if request.path == blog_post_create_url %}active{% endif %}">
+                <a class="nav-link" href="{{ blog_post_create_url }}">
+                    Add Post
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
+            <li class="nav-item {% if request.path == blog_list_url %}active{% endif %}">
+                <a class="nav-link" href="{{ blog_list_url }}">
+                    All Posts
+                </a>
+            </li>
+            <li class="nav-item {% if request.path == blog_my_posts_list_url %}active{% endif %}">
+                <a class="nav-link" href="{{ blog_my_posts_list_url }}">
+                    My Posts
+                </a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        <!-- <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        </form> -->
     </div>
 </nav>

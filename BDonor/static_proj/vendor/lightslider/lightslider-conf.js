@@ -46,36 +46,3 @@ $(document).ready(function () {
         ]
     });
 });
-
-// $(document).ready(function () {
-//     $('#donation_offers, #donation_requests').lightSlider({
-//         item: 4,
-//         loop: false,
-//         slideMove: 2,
-//         slideMargin: 13,
-//         pause: 2000,
-//         slideEndAnimation: true,
-//         keyPress: false,
-//         currentPagerPosition: 'middle',
-//         enableTouch: true,
-//         enableDrag: true,
-//         freeMove: true,
-//         swipeThreshold: 40,
-//         responsive: [{
-//                 breakpoint: 800,
-//                 settings: {
-//                     item: 2,
-//                     slideMove: 1,
-//                     slideMargin: 6,
-//                 }
-//             },
-//             {
-//                 breakpoint: 480,
-//                 settings: {
-//                     item: 1,
-//                     slideMove: 1
-//                 }
-//             }
-//         ]
-//     });
-// });

@@ -201,7 +201,7 @@
 
                 {% endif %}
 
-                <li class="nav-item {% if request.path == blog_post_create_url %}active{% endif %}">
+                <li class="nav-item {% if request.path == blog_post_create_url %}active{% endif %}" id="blog_dynamic_li">
                     <a href="{{ blog_post_create_url }}">
                         <i class="flaticon-agenda-1"></i>
                         <p>Blog</p>
@@ -241,6 +241,9 @@
     !(pathname.match("/donation-bank/list/$")) &&
     !(pathname.match("/campaign/list/public/$"))) {
         $("#dynamic_li").addClass("active");
+    }
+    if((pathname.match("^/blog/"))) {
+        $("#blog_dynamic_li").addClass("active");
     }
     //else {
     //    $("#dynamic_li").removeClass("active");

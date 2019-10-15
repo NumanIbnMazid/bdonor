@@ -1,0 +1,71 @@
+{% load static %}
+
+{% block extra_css %}
+<!-- owl-carousel CSS -->
+<link rel="stylesheet" href="{% static 'vendor/owlcarousel/owl.carousel.min.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'vendor/owlcarousel/owl.theme.default.min.css' %}" type="text/css" />
+{% endblock %}
+
+<div class="card card-post card-round">
+
+    {% if object.blog_attachments.all.count >= 1 %}
+    <div class="owl-carousel">
+        {% for attachment in object.blog_attachments.all %}
+        {% if attachment.get_file_type == 'image' %}
+            <img class="card-img-top" src="{{ attachment.file.url }}" 
+            alt="{{ attachment.blog.title }}" style="height:170px;width:100%;">
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card-body">
+        <div class="d-flex">
+            <a class="text-deco-none text-dark" href="{{ object.user.profile.get_absolute_url }}">
+                <div class="avatar">
+                    {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img rounded-circle" %}
+                </div>
+            </a>
+            <div class="info-post ml-2">
+                <a class="text-deco-none text-dark truncate-50" href="{{ object.user.profile.get_absolute_url }}">
+                    <p class="username">
+                        {{ object.user.profile.get_dynamic_name }}
+                    </p>
+                </a>
+                <p class="date text-muted">
+                    <i class="flaticon-time"></i>
+                    {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
+                    {{ object.created_at|timesince }} ago
+                    {% else %}
+                    {{ object.created_at }}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="separator-solid"></div>
+
+        <h3 class="card-title c-text-primary">
+            {{ object.title }}
+        </h3>
+
+        <p class="card-text">
+            {{ object.details|safe|linebreaks|truncatechars_html:200 }}
+        </p>
+
+        {% if object.tags %}
+        <p class="card-category text-info mb-1">
+            <a href="#">{{ object.tags }}</a>
+        </p>
+        {% endif %}
+
+        <a href="{% url 'blog:blog_detail' slug=object.slug %}" class="btn btn-primary btn-rounded btn-sm">
+            View Details
+        </a>
+    </div>
+</div>
+
+{% block extra_js %}
+<!-- owl-carousel JS -->
+<script type="text/javascript" src="{% static 'vendor/owlcarousel/owl.carousel.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/owlcarousel/owlcarousel-conf.js' %}"></script>
+{% endblock %}

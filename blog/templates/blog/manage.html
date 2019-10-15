@@ -6,17 +6,17 @@
 {{ page_title }}
 {% endblock %}{% endblock %}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/blog.css' %}" type="text/css" />
+{# File Input CSS #}
+<link rel="stylesheet" href="{% static 'vendor/file-input/fileinput.css' %}" type="text/css" />
+{% endblock %}
+
 {% block extra_head_js %}
 <!-- CKEDITOR JS -->
 <script>
     window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';
 </script>
-{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'assets/css/blog.css' %}" type="text/css" />
-{# File Input CSS #}
-<link rel="stylesheet" href="{% static 'vendor/file-input/fileinput.css' %}" type="text/css" />
 {% endblock %}
 
 {% block content %}
@@ -33,7 +33,9 @@
                 <form class="" method="POST" enctype="multipart/form-data" data-toggle="validator" id="common_form">
                     {% csrf_token %}
 
-                    {% include 'snippets/common/form.html' %}
+                    <input type="hidden" value="{{ upload_remaining }}" id="upload_remaining">
+
+                    {% include 'blog/snippets/form.html' %}
 
                     <div class="card-action text-center form-group">
                         <button type="submit" class="btn btn-success m-2" id="common_form_submit_btn">

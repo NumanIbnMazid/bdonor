@@ -1,0 +1,54 @@
+{% load static %}
+{% load el_pagination_tags %}
+
+{% if object_list.count >= 1 %}
+{% paginate 12 object_list %}
+{% endif %}
+
+{% block extra_css %}
+<!-- el-pagination css -->
+<link rel="stylesheet" href="{% static 'vendor/el-pagination/el-pagination.css' %}" type="text/css" />
+{% endblock %}
+
+<div class="row">
+
+    {% for object in object_list %}
+
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+
+        {% include include_template_var with instance=object %}
+
+    </div>
+    {% empty %}
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="alert alert-warning text-center font-bold font-20 text-danger">
+            Nothing found !!!
+        </div>
+        {% if add_url %}
+        <div class="text-center">
+            <a href="{% url add_url %}" class="btn btn-md btn-primary">
+                <i class="fas fa-plus font-20"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+</div>
+
+{% if object_list.count >= 1 %}
+{% show_more "Show More" %}
+{% endif %}
+
+
+
+{% block extra_js %}
+<!-- el-pagination JS -->
+<script type="text/javascript" src="{% static 'vendor/el-pagination/el-pagination.js' %}"></script>
+<script>
+    $.endlessPaginate({
+        paginateOnScroll: true,
+        paginateOnScrollChunkSize: 5
+    });
+</script>
+{% endblock %}

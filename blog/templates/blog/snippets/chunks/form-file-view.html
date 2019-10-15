@@ -1,0 +1,61 @@
+{% load static %}
+
+<div id="files_div">
+    <div class="table-responsive">
+        <table class="table table-borderless">
+            <tbody class="text-center">
+                {% for attachment in object.blog_attachments.all %}
+                {% if attachment.get_file_type == 'image' %}
+                <tr>
+                    <td>
+                        <img class="img-thumbnail ez-view" src="{{ attachment.file.url }}"
+                            alt="{{ attachment.blog.title }}" style="height:100px;width:150px;">
+                    </td>
+                    <td>
+                        <button type="button"
+                            class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_attachment"
+                            value="{{attachment.slug}}" data-toggle="modal" data-target="#modal-delete-attachment">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                {% else %}
+
+                {% if attachment.get_file_extension == ".doc" or attachment.get_file_extension == ".docx" %}
+                <tr>
+                    <td>
+                        <iframe class="doc img-thumbnail m-2" height="100" width="100%"
+                            src="https://docs.google.com/gview?url={{domain}}{{attachment.file.url}}&embedded=true">
+                        </iframe>
+                    </td>
+                    <td>
+                        <button type="button"
+                            class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_attachment"
+                            value="{{attachment.slug}}" data-toggle="modal" data-target="#modal-delete-attachment">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if attachment.get_file_extension == ".pdf" %}
+                <tr>
+                    <td>
+                        <img class="ez-view m-2" src="{% static 'images/raw/pdf.png' %}" href="{{attachment.file.url}}"
+                            alt="{{ attachment.blog.title }}">
+                    </td>
+                    <td>
+                        <button type="button"
+                            class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_attachment"
+                            value="{{attachment.slug}}" data-toggle="modal" data-target="#modal-delete-attachment">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                {% endif %}
+
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

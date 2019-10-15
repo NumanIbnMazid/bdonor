@@ -1,0 +1,23 @@
+<span class="text-muted font-italic">
+    <i class="flaticon-time"></i>
+    {% if datetime|date:"d-M-Y" == attachment.created_at|date:"d-M-Y" %}
+    {{ attachment.created_at|timesince }} ago
+    {% else %}
+    {{ attachment.created_at }}
+    {% endif %}
+</span>
+<div class="row">
+    <div class="col-md-4">
+        <div>
+            <input type="checkbox" class="check-box form-check-input" data-url="{{domain}}{{attachment.file.url}}">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <span>{{forloop.counter}}</span>
+    </div>
+    <div class="col-md-4">
+        <a class="" href="{{domain}}{{attachment.file.url}}" download>
+            <i class="fas fa-cloud-download-alt font-20"></i>
+        </a>
+    </div>
+</div>

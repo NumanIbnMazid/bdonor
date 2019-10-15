@@ -1,0 +1,52 @@
+{% load static %}
+
+{% if object.blog_attachments.all.count >= 1 %}
+
+<h4 class="mt-3">Attached Files</h4>
+
+<div class="text-center m-2 text-primary">
+
+    {% include 'blog/snippets/zip-div.html' %}
+
+    <span id="check-all" class="pointer">
+        <i class="fa fa-square" id="dflt"> Select All </i>
+        <i class="fa fa-check-square hidden" id="chkd"> All Selected </i>
+        <i class="fa fa-square hidden" id="uchkd"> Select All </i>
+    </span>
+
+    {% for attachment in object.blog_attachments.all %}
+
+    {% if attachment.get_file_type == 'image' %}
+    <div class="container-fluid border-white-1 m-2">
+        <img class="img-thumbnail ez-view m-2" src="{{ attachment.file.url }}" alt="{{ attachment.blog.title }}"
+            style="height:170px;width:100%;">
+        {% include 'blog/snippets/chunks/attach-actions.html' %}
+    </div>
+    {% endif %}
+
+    {% if attachment.get_file_type == 'document' %}
+    {% if attachment.get_file_extension == ".doc" or attachment.get_file_extension == ".docx" %}
+    <div class="container-fluid border-white-1 m-2">
+        <iframe class="doc img-thumbnail m-2" height="480" width="640"
+            src="https://docs.google.com/gview?url={{domain}}{{attachment.file.url}}&embedded=true">
+        </iframe>
+        {% include 'blog/snippets/chunks/attach-actions.html' %}
+    </div>
+    {% endif %}
+
+    {% if attachment.get_file_extension == ".pdf" %}
+    <div class="container-fluid border-white-1 m-2">
+        <img class="ez-view m-2" src="{% static 'images/raw/pdf.png' %}" href="{{attachment.file.url}}"
+            alt="{{ attachment.blog.title }}">
+        {% include 'blog/snippets/chunks/attach-actions.html' %}
+    </div>
+    {% endif %}
+
+    {% endif %}
+    {% endfor %}
+
+</div>
+
+<div class="separator-solid"></div>
+
+{% endif %}

@@ -1,0 +1,24 @@
+<div id="zip_div" class="text-center mt-4">
+    <div class="text-center" id="zip_btn_div">
+        <button id="download_btn" class="hidden btn btn-md btn-dark btn-raised ripple-effect m-2">
+            <span class="c-text-info">Download Files as Zip</span>
+        </button> <br>
+        <button id="cancel_btn" class="hidden btn btn-xs btn-danger m-t-sm btn-raised ripple-effect m-2"
+            onClick="window.location.reload()">
+            <span class="">Cancel</span>
+        </button>
+    </div>
+    <!-- Zip Download progress and Result -->
+    <div class="progress hidden m-2" id="progress_bar">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+            style="width: 0%;">
+        </div>
+    </div>
+    <p class="hidden m-2" id="result"></p>
+    <button id="clear_btn" class="hidden btn btn-sm btn-danger btn-raised ripple-effect m-2"
+        onClick="window.location.reload()">
+        <span class="c-text-dark">Clear</span>
+    </button>
+    <input type="hidden" id="zip-name" name="zip-name" value="{{ object.user.profile.get_smallname }}">
+    <!-- Zip Download progress and Result -->
+</div>

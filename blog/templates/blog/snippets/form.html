@@ -1,4 +1,5 @@
 {% load widget_tweaks %}
+{% load static %}
 
 {% if form.visible_fields %}
 <div class="text-center m-b-sm">
@@ -58,30 +59,12 @@
                     <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
                         <div class="extra_info" id="{{field.name}}_extra_info"></div>
 
-                        {% if field.field.widget.input_type == "file" %}
-
-                        {{ field|add_class:'form-control form-control' }}
-
-                        <label for="file-upload" id="file-drag">
-                            Select a file to upload
-                            <br />OR-
-                            <br />Drag a file into this box
-                            <br /><br />
-                            <span id="file-upload-btn" class="button">
-                                Add a file
-                            </span>
-                        </label>
-                        <progress id="file-progress" value="0">
-                            <span>0</span>%
-                        </progress>
-                        <output for="file-upload" id="messages"></output>
-                        <span id="file-msg" class="text-center font-bold"></span>
-
-                        {% else %}
-
-                        {{ field|add_class:'form-control form-control' }}
-
+                        {% if field.name == 'file' %}
+                        {% include 'blog/snippets/chunks/form-file-view.html' %}
                         {% endif %}
+
+                        {{ field|add_class:'form-control form-control' }}
+
                         <div class="help-block with-errors text-center" id="{{field.name}}_help_block"></div>
                         <div class="text-center">
                             <span class="input-message text-danger font-13" id="{{field.name}}_msg"></span>

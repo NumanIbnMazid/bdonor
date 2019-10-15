@@ -12,10 +12,6 @@ My Profile
 {% endif %}
 {% endblock %}{% endblock %}{% endblock %}
 
-{% block extra_css %}
-<!-- Image-Magnify CSS -->
-<link rel="stylesheet" href="{% static 'vendor/image-magnify/jquery.magnify.css' %}" type="text/css" />
-{% endblock %}
 
 {% block content %}
 
@@ -160,10 +156,7 @@ My Profile
                                     <tr>
                                         <td class="text-muted" width='23%'>Image</td>
                                         <td class="text-muted">
-                                            <a data-magnify="gallery" data-caption="{{object.user.username}}"
-                                                data-group="" href="{{ object.image.url }}">
-                                                {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img avatar-xxl rounded border-white-3" %}
-                                            </a>
+                                            {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img avatar-xxl rounded border-white-3 ez-view" %}
                                         </td>
                                     </tr>
                                     {% endif %}
@@ -274,10 +267,4 @@ My Profile
     </div>
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
-<!-- Image-Magnify JS -->
-<script src="{% static 'vendor/image-magnify/magnify-conf.js' %}"></script>
-<script src="{% static 'vendor/image-magnify/jquery.magnify.js' %}"></script>
 {% endblock %}

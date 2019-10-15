@@ -1,0 +1,34 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{ page_title }}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/blog.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+{% include 'blog/snippets/header.html' %}
+
+<div class="card">
+    <div class="card-header text-center">
+        <h4 class="card-title">{{ page_title }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mx-auto">
+                
+                {% include page_template with include_template_var=include_template_var %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'blog/snippets/footer.html' %}
+
+{% endblock %}

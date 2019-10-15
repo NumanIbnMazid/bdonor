@@ -1,0 +1,87 @@
+<!-- Attachment delete Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-delete-attachment" tabindex="-1" role="dialog"
+    aria-labelledby="attachmentDefaultModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="attachmentDefaultModalLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'blog:attachment_delete' %}" id="attachmentDeleteForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="attachment_slug" name="slug" value="0">
+                    <div class="text-center">
+                        <p class="c-text-danger font-bold font-15">
+                            You are going to delete this permanently. Are you sure???
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="delete-donation">Yes, Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Blog delete Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-delete-blog" tabindex="-1" role="dialog"
+    aria-labelledby="blogDefaultModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="blogDefaultModalLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'blog:blog_delete' %}" id="blogDeleteForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="blog_slug" name="slug" value="0">
+                    <div class="text-center">
+                        <p class="c-text-danger font-bold font-15">
+                            You are going to delete this permanently. Are you sure???
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="delete-donation">Yes, Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% block extra_js %}
+<script>
+    // delete attachment
+    $(".js_delete_attachment").click(function () {
+        let new_attachment_slug = this.value;
+        $('#attachment_slug').val(new_attachment_slug);
+        //console.log(new_attachment_slug);
+    });
+    document.querySelector('#attachmentDeleteForm').addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    });
+    // delete blog
+    $(".js_delete_blog").click(function () {
+        let new_blog_slug = this.value;
+        $('#blog_slug').val(new_blog_slug);
+        //console.log(new_blog_slug);
+    });
+    document.querySelector('#blogDeleteForm').addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    });
+</script>
+{% endblock %}

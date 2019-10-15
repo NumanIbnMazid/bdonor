@@ -50,7 +50,7 @@ ONNOROKOM_PASSWORD = config('ONNOROKOM_PASSWORD', default='')
 # File Staffs
 ALLOWED_IMAGE_TYPES = ['.jpg', '.jpeg', '.png']
 ALLOWED_DOCUMENT_TYPES = ['.doc', '.docx', '.pdf']
-ALLOWED_FILES_TYPES = ['.jpg', '.jpeg', '.png', '.pdf', '.doc', '.docx']
+ALLOWED_FILE_TYPES = ['.jpg', '.jpeg', '.png', '.pdf', '.doc', '.docx']
 # 1.5MB - 1621440
 # 2.5MB - 2621440
 # 5MB - 5242880
@@ -61,6 +61,7 @@ ALLOWED_FILES_TYPES = ['.jpg', '.jpeg', '.png', '.pdf', '.doc', '.docx']
 # 250MB - 214958080
 # 500MB - 429916160
 MAX_IMAGE_UPLOAD_SIZE = 1621440
+MAX_UPLOAD_SIZE = 1621440
 
 
 # CK EDITOR
