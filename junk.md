@@ -1,4 +1,4 @@
-# col-xl-12 col-lg-12 col-md-6 col-sm-6 col-12
+# col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12
 # request.META.get('HTTP_REFERER', '/')
 # Type
         - type + priority_filtered          (priority)

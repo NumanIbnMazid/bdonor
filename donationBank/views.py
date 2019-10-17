@@ -3,9 +3,13 @@ from django.views.generic import CreateView, UpdateView, ListView, DetailView, T
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .forms import (DonationBankForm, DonationBankSettingForm, DonationManageForm,
-                    DonationRequestManageForm, CampaignManageForm, DonationProgressForm)
+                    DonationRequestManageForm, CampaignManageForm, DonationProgressForm,
+                    DonationRequestProgressForm
+                    )
 from .models import (DonationBank, DonationBankSetting, BankMember,
-                     MemberRequest, Donation, DonationRequest, DonationProgress, Campaign,)
+                     MemberRequest, Donation, DonationRequest, DonationProgress, Campaign,
+                     DonationRequestProgress
+                     )
 from django.urls import reverse
 from django.contrib import messages
 from django import forms
@@ -955,6 +959,91 @@ class DonationListView(ListView):
 
 @method_decorator(decorators, name='dispatch')
 @method_decorator(can_manage_bank_required, name='dispatch')
+class DonationRequestListView(ListView):
+    template_name = 'donationBank/donation-request-list.html'
+    context_object_name = 'donation_list'
+
+    def get_queryset(self):
+        user = self.request.user
+        bank_qs = DonationBank.objects.filter(bank_member__user=user)
+        if bank_qs.exists():
+            bank = bank_qs.first()
+            qs = DonationRequest.objects.filter_by_bank_slug(bank.slug)
+            return qs
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super(DonationRequestListView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        qs = DonationBank.objects.filter(bank_member__user=self.request.user)
+        bank_object = None
+        if qs.exists():
+            bank_object = qs.first()
+        context['object'] = bank_object
+        return context
+
+    def user_passes_test(self, request):
+        qs = DonationBank.objects.filter(
+            bank_member__user=request.user, is_verified=True)
+        if qs.exists() and self.request.user.profile.account_type == 1:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(DonationRequestListView, self).dispatch(request, *args, **kwargs)
+
+
+@method_decorator(decorators, name='dispatch')
+# @method_decorator(can_manage_bank_required, name='dispatch')
+class DonationRequestPublicListView(ListView):
+    template_name = 'donationBank/donation-request-public.html'
+    context_object_name = 'donation_list'
+
+    def get_queryset(self):
+        qs = DonationRequest.objects.all().dynamic_order()
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(DonationRequestPublicListView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        qs = DonationBank.objects.filter(bank_member__user=self.request.user)
+        bank_object = None
+        if qs.exists():
+            bank_object = qs.first()
+        context['object'] = bank_object
+        return context
+
+    def user_passes_test(self, request):
+        if self.request.user.is_authenticated:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(DonationRequestPublicListView, self).dispatch(request, *args, **kwargs)
+
+
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
 class DonationDetailView(DetailView):
     template_name = 'donationBank/donation-details.html'
     context_object_name = 'donation'
@@ -993,6 +1082,90 @@ class DonationDetailView(DetailView):
             block_suspicious_user(request)
             return HttpResponseRedirect(reverse('home'))
         return super(DonationDetailView, self).dispatch(request, *args, **kwargs)
+
+
+
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
+class DonationRequestDetailView(DetailView):
+    template_name = 'donationBank/donation-request-details.html'
+    context_object_name = 'donation'
+
+    def get_object(self, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        return DonationRequest.objects.get_by_slug(slug)
+
+    def get_context_data(self, **kwargs):
+        context = super(DonationRequestDetailView, self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        qs = DonationBank.objects.filter(bank_member__user=self.request.user)
+        bank_object = None
+        if qs.exists():
+            bank_object = qs.first()
+        context['object'] = bank_object
+        return context
+
+    def user_passes_test(self, request):
+        self.object = self.get_object()
+        qs = DonationBank.objects.filter(
+            slug=self.object.bank.slug, bank_member__user=request.user, is_verified=True
+        )
+        if qs.exists() and self.request.user.profile.account_type == 1:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(DonationRequestDetailView, self).dispatch(request, *args, **kwargs)
+
+
+
+@method_decorator(decorators, name='dispatch')
+# @method_decorator(can_manage_bank_required, name='dispatch')
+class DonationRequestPublicDetailView(DetailView):
+    template_name = 'donationBank/donation-request-details.html'
+    context_object_name = 'donation'
+
+    def get_object(self, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        return DonationRequest.objects.get_by_slug(slug)
+
+    def get_context_data(self, **kwargs):
+        context = super(DonationRequestPublicDetailView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        qs = DonationBank.objects.filter(bank_member__user=self.request.user)
+        bank_object = None
+        if qs.exists():
+            bank_object = qs.first()
+        context['object'] = bank_object
+        return context
+
+    def user_passes_test(self, request):
+        if self.request.user.is_authenticated:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(DonationRequestPublicDetailView, self).dispatch(request, *args, **kwargs)
+
 
 
 @method_decorator(decorators, name='dispatch')
@@ -1091,6 +1264,102 @@ class DonationUpdateView(UpdateView):
         return super(DonationUpdateView, self).dispatch(request, *args, **kwargs)
 
 
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
+class DonationRequestUpdateView(UpdateView):
+    template_name = 'donationBank/donation-request-manage.html'
+    form_class = DonationRequestManageForm
+
+    def get_object(self, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        return DonationRequest.objects.get_by_slug(slug)
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        user = self.request.user
+        qs = DonationBank.objects.filter(bank_member__user=user)
+        if qs.exists():
+            donation_type = form.instance.donation_type
+            bank_object = qs.first()
+            if donation_type == 1 and form.instance.organ_name == None:
+                form.add_error(
+                    'organ_name', forms.ValidationError(
+                        "You must select organ name."
+                    )
+                )
+            elif donation_type == 2 and form.instance.tissue_name == None:
+                form.add_error(
+                    'tissue_name', forms.ValidationError(
+                        "You must select tissue name."
+                    )
+                )
+            elif donation_type == 1 and form.instance.quantity == None:
+                form.add_error(
+                    'quantity', forms.ValidationError(
+                        "You must enter the quantity."
+                    )
+                )
+            elif donation_type == 0 and form.instance.quantity == None:
+                form.add_error(
+                    'quantity', forms.ValidationError(
+                        "You must enter blood bag quantity."
+                    )
+                )
+            else:
+                if form.instance.organ_name == "Heart" or form.instance.organ_name == "Liver" or form.instance.organ_name == "Pancreas" or form.instance.organ_name == "Intestines":
+                    form.instance.quantity = 1
+                if form.instance.donation_type == 0:
+                    form.instance.quantity = 1
+                form.instance.bank = bank_object
+                messages.add_message(self.request, messages.SUCCESS,
+                                     "Donation Request has been updated successfully!")
+                return super().form_valid(form)
+        return super().form_invalid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(DonationRequestUpdateView, self).get_form_kwargs()
+        if self.form_class:
+            kwargs.update({'request': self.request})
+            kwargs.update({'object': self.get_object()})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('donation_bank:bank_donation_request_list')
+
+    def get_context_data(self, **kwargs):
+        context = super(DonationRequestUpdateView,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        context['page_title'] = "Update Donation Request"
+        qs = DonationBank.objects.filter(bank_member__user=self.request.user)
+        bank_object = None
+        if qs.exists():
+            bank_object = qs.first()
+        context['object'] = bank_object
+        return context
+
+    def user_passes_test(self, request):
+        self.object = self.get_object()
+        qs = DonationBank.objects.filter(
+            slug=self.object.bank.slug, bank_member__user=request.user, is_verified=True
+        )
+        if qs.exists() and self.request.user.profile.account_type == 1:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(DonationRequestUpdateView, self).dispatch(request, *args, **kwargs)
+
+
 @csrf_exempt
 @login_required
 @can_browse_required
@@ -1106,6 +1375,27 @@ def donation_delete(request):
             messages.add_message(request, messages.SUCCESS,
                                  "Deleted successfully!")
             url = reverse('donation_bank:bank_donation_list')
+        else:
+            messages.add_message(request, messages.WARNING,
+                                 "Not found!")
+    return HttpResponseRedirect(url)
+
+
+@csrf_exempt
+@login_required
+@can_browse_required
+@can_manage_bank_required
+def donation_request_delete(request):
+    url = reverse('home')
+    user = request.user
+    if request.method == "POST":
+        slug = request.POST.get("slug")
+        qs = DonationRequest.objects.filter(slug=slug)
+        if qs.exists():
+            qs.delete()
+            messages.add_message(request, messages.SUCCESS,
+                                 "Deleted successfully!")
+            url = reverse('donation_bank:bank_donation_request_list')
         else:
             messages.add_message(request, messages.WARNING,
                                  "Not found!")
@@ -1263,6 +1553,74 @@ class ManageProgressStatus(UpdateView):
             bank_object = qs.first()
         context['object'] = bank_object
         return context
+
+
+
+
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
+class ManageRequestProgressStatus(UpdateView):
+    template_name = 'donationBank/manage-progress-status.html'
+    form_class = DonationRequestProgressForm
+
+    def get_object(self, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        qs = DonationRequestProgress.objects.filter(donation__slug=slug)
+        if qs.exists():
+            return qs.first()
+        return None
+
+    def form_valid(self, form):
+        # category = 0
+        self.object = self.get_object()
+        # print(form.instance.completion_date)
+        messages.add_message(self.request, messages.SUCCESS,
+                             "Donation Request Progress Status has been updated successfully!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('donation_bank:bank_donation_request_list')
+
+    def get_form_kwargs(self):
+        kwargs = super(ManageRequestProgressStatus, self).get_form_kwargs()
+        if self.form_class:
+            kwargs.update({'request': self.request})
+            kwargs.update({'object': self.get_object()})
+        return kwargs
+
+    def user_passes_test(self, request):
+        self.object = self.get_object()
+        qs = DonationBank.objects.filter(
+            slug=self.object.donation.bank.slug, bank_member__user=request.user, is_verified=True
+        )
+        if qs.exists() and self.request.user.profile.account_type == 1:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(ManageRequestProgressStatus, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageRequestProgressStatus,
+                        self).get_context_data(**kwargs)
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        qs = DonationBank.objects.filter(bank_member__user=self.request.user)
+        bank_object = None
+        if qs.exists():
+            bank_object = qs.first()
+        context['object'] = bank_object
+        return context
+
+
 
 
 @method_decorator(decorators, name='dispatch')

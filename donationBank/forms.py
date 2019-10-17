@@ -1,7 +1,7 @@
 from django import forms
 import re
 from .models import (DonationBank, DonationBankSetting, Donation, 
-                    DonationRequest, DonationProgress, Campaign)
+                     DonationRequest, DonationProgress, Campaign, DonationRequestProgress)
 import datetime
 from ckeditor.widgets import CKEditorWidget
 from django.template.defaultfilters import filesizeformat
@@ -659,6 +659,216 @@ class DonationProgressForm(forms.ModelForm):
 
     class Meta:
         model = DonationProgress
+        fields = ['progress_status', 'completion_date', 'first_name', 'last_name',
+                  'gender', 'blood_group', 'dob', 'contact', 'email', 'address', 'city', 'state', 'country', 'details']
+        exclude = ['donation', 'created_at', 'updated_at']
+
+    def clean_completion_date(self):
+        completion_date = self.cleaned_data.get('completion_date')
+        today = datetime.date.today()
+        if not completion_date == None:
+            if not self.object == None and not self.object.completion_date == None and completion_date == self.object.completion_date:
+                return completion_date
+            else:
+                if completion_date > today:
+                    raise forms.ValidationError(
+                        "Completion date can't be greater than today!")
+        return completion_date
+    
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get("first_name")
+        if not first_name == None:
+            allowed_char = re.match(r'^[A-Za-z-., ]+$', first_name)
+            length = len(first_name)
+            if length > 15:
+                raise forms.ValidationError("Maximum 15 characters allowed !")
+            if not allowed_char:
+                raise forms.ValidationError(
+                    "Only 'A-Za-z.,-' these characters and spaces are allowed.")
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get("last_name")
+        if not last_name == None:
+            allowed_char = re.match(r'^[A-Za-z-., ]+$', last_name)
+            length = len(last_name)
+            if length > 20:
+                raise forms.ValidationError("Maximum 20 characters allowed !")
+            if not allowed_char:
+                raise forms.ValidationError(
+                    "Only 'A-Za-z.,-' these characters and spaces are allowed.")
+        return last_name
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if not email == None:
+            length = len(email)
+            if length > 150:
+                raise forms.ValidationError(
+                    "Maximum 150 characters allowed !")
+        return email
+
+    def clean_dob(self):
+        dob = self.cleaned_data.get('dob')
+        if not dob == None:
+            today = datetime.date.today()
+            if dob > today:
+                raise forms.ValidationError(
+                    "Please enter valid Date of Birth. Date cannot be greater than today!")
+        return dob
+
+    def clean_contact(self):
+        contact = self.cleaned_data.get("contact")
+        if not contact == None:
+            allowed_char = re.match(r'^[0-9+]+$', contact)
+            if not allowed_char:
+                raise forms.ValidationError(
+                    "Please enter a valid contact number!")
+            length = len(contact)
+            if length > 20:
+                raise forms.ValidationError(
+                    "Maximum 20 characters allowed !")
+        return contact
+
+    def clean_address(self):
+        address = self.cleaned_data.get('address')
+        if not address == None:
+            length = len(address)
+            if length > 100:
+                raise forms.ValidationError(
+                    f"Maximum 100 characters allowed. [currently using: {length}]")
+        return address
+
+    def clean_city(self):
+        city = self.cleaned_data.get('city')
+        if not city == None:
+            length = len(city)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return city
+
+    def clean_state(self):
+        state = self.cleaned_data.get('state')
+        if not state == None:
+            length = len(state)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return state
+
+    def clean_country(self):
+        country = self.cleaned_data.get('country')
+        if not country == None:
+            length = len(country)
+            if length > 25:
+                raise forms.ValidationError(
+                    f"Maximum 25 characters allowed. [currently using: {length}]")
+        return country
+
+    def clean_details(self):
+        details = self.cleaned_data.get('details')
+        if not details == None:
+            length = len(details)
+            if length > 400:
+                raise forms.ValidationError(
+                    f"Maximum 400 characters allowed. [currently using: {length}]")
+        return details
+
+
+
+
+
+class DonationRequestProgressForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.object = kwargs.pop('object', None)
+        super(DonationRequestProgressForm, self).__init__(*args, **kwargs)
+        self.fields['progress_status'].help_text = "Select progress status..."
+        self.fields['progress_status'].widget.attrs.update({
+            'id': 'donation_progress_status_input',
+        })
+        self.fields['completion_date'].help_text = "Select completion date..."
+        self.fields['completion_date'].widget.attrs.update({
+            'id': 'donation_progress_completion_date_input',
+            'placeholder': 'Ex: 2019-02-27',
+        })
+        self.fields['first_name'].help_text = "Enter first name of donation receiver. Only 'A-Za-z.,\-' these characters and spaces are allowed."
+        self.fields['first_name'].widget.attrs.update({
+            'id': 'donation_progress_first_name_input',
+            'placeholder': 'Enter first name...',
+            'maxlength': 30,
+            'pattern': "^[A-Za-z.,\- ]{1,}$",
+        })
+        self.fields['last_name'].help_text = "Enter last name of donation receiver. Only 'A-Za-z.,\-' these characters and spaces are allowed."
+        self.fields['last_name'].widget.attrs.update({
+            'id': 'donation_progress_last_name_input',
+            'placeholder': 'Enter last name...',
+            'maxlength': 30,
+            'pattern': "^[A-Za-z.,\- ]{1,}$",
+        })
+        self.fields['email'].help_text = "Enter donation receiver's email address."
+        self.fields['email'].widget.attrs.update({
+            'id': 'donation_progress_email_input',
+            'placeholder': 'Enter email address...',
+        })
+        self.fields['gender'].help_text = "Select gender."
+        self.fields['gender'].widget.attrs.update({
+            'id': 'donation_progress_gender_input',
+        })
+        self.fields['dob'].help_text = "Enter date of birth."
+        self.fields['dob'].widget.attrs.update({
+            'placeholder': 'Ex: 1996-02-27',
+            'id': 'donation_progress_dob_input',
+            'onchange': "resetMessage()",
+        })
+        self.fields['blood_group'].help_text = "Select blood group."
+        self.fields['blood_group'].widget.attrs.update({
+            'id': 'donation_progress_blood_group_input',
+        })
+        self.fields['contact'].help_text = "Type contact number..."
+        self.fields['contact'].widget.attrs.update({
+            'id': 'donation_progress_contact_input',
+            'placeholder': 'Ex: +8801680000000',
+            'maxlength': 20,
+            'minlength': 5,
+            'onkeyup': "resetMessage()",
+        })
+        self.fields['address'].help_text = "Enter Address of the donation receiver."
+        self.fields['address'].widget.attrs.update({
+            'id': 'donation_progress_address_input',
+            'placeholder': 'Enter address...',
+            'maxlength': 100,
+        })
+        self.fields['city'].help_text = "Enter the name of city."
+        self.fields['city'].widget.attrs.update({
+            'id': 'donation_progress_city_input',
+            'placeholder': 'Enter city...',
+            'maxlength': 25,
+        })
+        self.fields['state'].help_text = "Enter the name of the state."
+        self.fields['state'].widget.attrs.update({
+            'id': 'donation_progress_state_input',
+            'placeholder': 'Enter state...',
+            'maxlength': 25,
+        })
+        self.fields['country'].help_text = "Select country."
+        self.fields['country'].widget.attrs.update({
+            'id': 'donation_progress_country_input',
+            'placeholder': 'Select country...',
+            'maxlength': 25,
+        })
+        self.fields['details'].help_text = "Maximum 400 characters allowed."
+        self.fields['details'].widget.attrs.update({
+            'id': 'donation_progress_details_input',
+            'placeholder': 'Provide some additional information...',
+            'maxlength': 400,
+            'rows': 2,
+            'cols': 2
+        })
+
+    class Meta:
+        model = DonationRequestProgress
         fields = ['progress_status', 'completion_date', 'first_name', 'last_name',
                   'gender', 'blood_group', 'dob', 'contact', 'email', 'address', 'city', 'state', 'country', 'details']
         exclude = ['donation', 'created_at', 'updated_at']

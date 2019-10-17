@@ -15,7 +15,7 @@ class Blog(models.Model):
     )
     slug = models.SlugField(max_length=255, unique=True, verbose_name='slug')
     title = models.CharField(max_length=250, verbose_name='title')
-    details = models.TextField(max_length=5000, verbose_name='details')
+    details = models.TextField(max_length=20000, verbose_name='details')
     tags = models.CharField(max_length=150, blank=True, null=True, verbose_name='tags')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='created at')

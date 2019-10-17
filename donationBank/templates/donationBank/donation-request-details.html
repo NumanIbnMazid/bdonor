@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head_title %}{% block page_title %}{% block breadcrumb %}
-Donation Details
+Donation Request Details
 {% endblock %}{% endblock %}{% endblock %}
 
 {% block content %}
@@ -14,15 +14,27 @@ Donation Details
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-md-2">
+            <div class="{% if request.user.user_bank_member.bank.institute == object.institute %}col-md-2{% else %}col-md-4{% endif %}">
                 {% include 'donationBank/snippets/sidebar.html' %}
+
+                {% if not request.user.user_bank_member.bank.institute == object.institute %}
+                <div class="border-white-1">
+                    <div class="text-center">
+                        <p class="font-17 mt-3 font-bold">Bank Information</p>
+                    </div>
+                    {% include 'donationBank/snippets/bank-short-info.html' with instance=donation.bank %}
+                </div>
+                {% endif %}
             </div>
-            <div class="col-md-10">
+            <div
+                class="{% if request.user.user_bank_member.bank.institute == object.institute %}col-md-10{% else %}col-md-8{% endif %}">
                 <div class="card">
                     <div class="card-body">
+                        
+                        {% if request.user.user_bank_member.bank.institute == object.institute %}
                         <div class="mb-2 text-center">
                             <div class="pull-left">
-                                <a href="{% url 'donation_bank:bank_manage_progress_status' slug=donation.slug %}"
+                                <a href="{% url 'donation_bank:bank_manage_request_progress_status' slug=donation.slug %}"
                                     class="btn btn-primary btn-xs text-deco-none bg-c-info">
                                     <span class="btn-label">
                                         <i class="flaticon-mark"></i>
@@ -30,15 +42,9 @@ Donation Details
                                     </span>
                                 </a>
                             </div>
-                            <span class="font-17 font-bold text-muted">Donation Details</span> 
-                            {% if not donation.get_expiration_days >= 0 %}
-                            <div class="avatar avatar-sm">
-                                <img src="{% static 'images/raw/expired.png' %}" alt="expired"
-                                    class="avatar-img rounded-circle">
-                            </div>
-                            {% endif %}
+                            <span class="font-17 font-bold text-muted">Donation Request Details</span>
                             <div class="pull-right">
-                                <a href="{% url 'donation_bank:bank_donation_update' slug=donation.slug %}"
+                                <a href="{% url 'donation_bank:bank_donation_request_update' slug=donation.slug %}"
                                     class="btn btn-primary btn-xs text-deco-none">
                                     <span class="">
                                         <i class="flaticon-pencil"></i>
@@ -46,27 +52,37 @@ Donation Details
                                     </span>
                                 </a>
                                 <button type="button"
-                                    class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_bank_donation"
-                                    value="{{donation.slug}}" data-toggle="modal" data-target="#modal-delete-bank_donation">
+                                    class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1
+                                    js_delete_bank_donation_request"
+                                    value="{{donation.slug}}" data-toggle="modal"
+                                    data-target="#modal-delete-bank_donation_request">
                                     <i class="flaticon-interface-5"></i>
                                     Delete
                                 </button>
                             </div>
                             <br>
                         </div>
+                        {% endif %}
+
                         <hr>
+
                         <div class="d-flex justify-content-between">
                             <div>
+                                {% if not request.user.user_bank_member.bank.institute == object.institute %}
                                 <h5>
                                     <b>
                                         <span class="text-secondary">
-                                            Donor:
+                                            Bank:
                                         </span>
                                         <span class="text-primary ml-2">
-                                            {{ donation.get_donor_name }}
+                                            <a href="{% url 'donation_bank:bank_details' slug=donation.bank.slug %}"
+                                            class="text-primary">
+                                                {{ donation.bank.institute }}
+                                            </a>
                                         </span>
                                     </b>
                                 </h5>
+                                {% endif %}
                                 <div class="text-small op-8">
                                     <span class="text-secondary">
                                         Published:
@@ -84,10 +100,8 @@ Donation Details
                                         Progress Status:
                                     </span>
                                     <span
-                                        class="ml-2
-                                        {% if donation.donation_progress.progress_status == 1 %}c-text-success{% else %}c-text-warning{% endif %}
-                                        font-bold">
-                                        {{ donation.donation_progress.get_progress_status }}
+                                        class="ml-2 {% if donation.donation_request_progress.progress_status == 1 %}c-text-success{% else %}c-text-warning{% endif %} font-bold">
+                                        {{ donation.donation_request_progress.get_progress_status }}
                                     </span>
                                 </p>
                             </div>
@@ -152,34 +166,6 @@ Donation Details
                             </h5>
                             {% endif %}
 
-                            {% if donation.collection_date %}
-                            <h5>
-                                <span class="text-secondary">
-                                    Collection date:
-                                </span>
-                                <span class="ml-2">
-                                    {{ donation.collection_date|date:'d-M-Y' }}
-                                </span>
-                            </h5>
-                            {% endif %}
-
-                            {% if donation.expiration_date %}
-                            <h5>
-                                <span class="text-secondary">
-                                    Expiration date:
-                                </span>
-                                <span class="ml-2">
-                                    {{ donation.expiration_date|date:'d-M-Y' }}
-                                    {% if not donation.get_expiration_days >= 0 %}
-                                    <div class="avatar avatar-sm">
-                                        <img src="{% static 'images/raw/expired.png' %}" alt="expired"
-                                            class="avatar-img rounded-circle">
-                                    </div>
-                                    {% endif %}
-                                </span>
-                            </h5>
-                            {% endif %}
-
                             {% if donation.details %}
                             <div class="card">
                                 <div class="card-header">
@@ -195,136 +181,154 @@ Donation Details
 
                             <hr>
 
+                            {% if donation.donation_progress.progress_status == 1 %}
                             <div class="text-center">
                                 <h5 class="font-bold">Donor Information</h5>
                             </div>
 
-                            {% if donation.first_name %}
+                            <span class="text-secondary">
+                                Published:
+                            </span>
+                            <span class="ml-2">
+                                {% if datetime|date:"d-M-Y" == donation.created_at|date:"d-M-Y" %}
+                                {{ donation.created_at|timesince }} ago
+                                {% else %}
+                                {{ donation.created_at }}
+                                {% endif %}
+                            </span>
+                            {% if donation.donation_request_progress.completion_date %}
                             <h5>
                                 <span class="text-secondary">
                                     First Name:
                                 </span>
                                 <span class="text-primary ml-2">
-                                    {{ donation.first_name }}
+                                    {% if datetime|date:"d-M-Y" == donation.donation_request_progress.completion_date|date:"d-M-Y" %}
+                                    {{ donation.donation_request_progress.completion_date|timesince }} ago
+                                    {% else %}
+                                    {{ donation.donation_request_progress.completion_date }}
+                                    {% endif %}
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.last_name %}
+                            {% if donation.donation_request_progress.first_name %}
+                            <h5>
+                                <span class="text-secondary">
+                                    First Name:
+                                </span>
+                                <span class="text-primary ml-2">
+                                    {{ donation.donation_request_progress.first_name }}
+                                </span>
+                            </h5>
+                            {% endif %}
+
+                            {% if donation.donation_request_progress.last_name %}
                             <h5>
                                 <span class="text-secondary">
                                     Last Name:
                                 </span>
                                 <span class="text-primary ml-2">
-                                    {{ donation.last_name }}
+                                    {{ donation.donation_request_progress.last_name }}
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.gender %}
+                            {% if donation.donation_request_progress.gender %}
                             <h5>
                                 <span class="text-secondary">
                                     Gender:
                                 </span>
                                 <span class="text-primary ml-2">
-                                    {{ donation.gender }}
+                                    {{ donation.donation_request_progress.gender }}
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.dob %}
+                            {% if donation.donation_request_progress.dob %}
                             <h5>
                                 <span class="text-secondary">
                                     Date of Birth:
                                 </span>
                                 <span class="text-primary ml-2">
-                                    {{ donation.dob }} 
+                                    {{ donation.donation_request_progress.dob }}
                                     <span class="text-muted ml-2">
-                                        [Age - {{donation.get_donor_age}}]
+                                        [Age - {{donation.donation_request_progress.get_age}}]
                                     </span>
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.diseases %}
-                            <h5>
-                                <span class="text-secondary">
-                                    Diseases:
-                                </span>
-                                <span class="text-primary ml-2">
-                                    {{ donation.diseases }}
-                                </span>
-                            </h5>
-                            {% endif %}
-
-                            {% if donation.email %}
+                            {% if donation.donation_request_progress.email %}
                             <h5>
                                 <span class="text-secondary">
                                     Email:
                                 </span>
                                 <span class="text-primary ml-2">
-                                    {{ donation.email }}
+                                    {{ donation.donation_request_progress.email }}
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.contact %}
+                            {% if donation.donation_request_progress.contact %}
                             <h5>
                                 <span class="text-secondary">
                                     Contact no. :
                                 </span>
                                 <span class="ml-2">
                                     <a href="#">
-                                        {{ donation.contact }}
+                                        {{ donation.donation_request_progress.contact }}
                                     </a>
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.address %}
+                            {% if donation.donation_request_progress.address %}
                             <h5>
                                 <span class="text-secondary">
                                     Address:
                                 </span>
                                 <span class="ml-2">
-                                    {{ donation.address }}
+                                    {{ donation.donation_request_progress.address }}
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.city %}
+                            {% if donation.donation_request_progress.city %}
                             <h5>
                                 <span class="text-secondary">
                                     City:
                                 </span>
                                 <span class="ml-2">
-                                    {{ donation.city }}
+                                    {{ donation.donation_request_progress.city }}
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.state %}
+                            {% if donation.donation_request_progress.state %}
                             <h5>
                                 <span class="text-secondary">
                                     State:
                                 </span>
                                 <span class="ml-2">
-                                    {{ donation.state }}
+                                    {{ donation.donation_request_progress.state }}
                                 </span>
                             </h5>
                             {% endif %}
 
-                            {% if donation.country %}
+                            {% if donation.donation_request_progress.country %}
                             <h5>
                                 <span class="text-secondary">
                                     Country:
                                 </span>
                                 <span class="ml-2">
-                                    {{ donation.country.name }}
+                                    {{ donation.donation_request_progress.country.name }}
                                 </span>
                             </h5>
                             {% endif %}
+
+                            {% endif %}
                         </div>
+
                     </div>
                 </div>
             </div>

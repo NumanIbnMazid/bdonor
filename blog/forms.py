@@ -68,7 +68,7 @@ class BlogManageForm(forms.ModelForm):
             'id': 'blog_title_input',
             'placeholder': 'Give post title...',
             'maxlength': 150,
-            'pattern': "^[_A-z0-9 +-.,#]{1,}$",
+            'pattern': "^[_A-z0-9 +-.,?:)(@}{%&$!+*|~><';#]{1,}$",
         })
         self.fields['details'].help_text = "Enter details..."
         self.fields['details'].widget.attrs.update({
@@ -96,7 +96,8 @@ class BlogManageForm(forms.ModelForm):
     def clean_title(self):
         title = self.cleaned_data.get('title')
         if not title == None:
-            allowed_chars = re.match(r'^[_A-z0-9 +-.,#]+$', title)
+            allowed_chars = re.match(
+                r"^[_A-z0-9 +-.,?:)(@}{%&$!+*|~><';#]+$", title)
             length = len(title)
             if not allowed_chars:
                 raise forms.ValidationError(
@@ -110,9 +111,9 @@ class BlogManageForm(forms.ModelForm):
         details = self.cleaned_data.get('details')
         if not details == None:
             length = len(details)
-            if length > 5000:
+            if length > 10000:
                 raise forms.ValidationError(
-                    f"Maximum 5000 characters allowed. [currently using: {length}]")
+                    f"Maximum 10000 characters allowed. [currently using: {length}]")
         return details
 
     def clean_tags(self):

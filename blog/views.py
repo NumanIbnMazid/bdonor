@@ -25,7 +25,6 @@ from accounts.decorators import (
 decorators = [login_required, can_browse_required]
 
 
-
 @method_decorator(decorators, name='dispatch')
 class BlogPostCreateView(CreateView):
     template_name = 'blog/manage.html'

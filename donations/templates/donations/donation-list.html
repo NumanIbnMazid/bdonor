@@ -10,6 +10,7 @@
 {% url 'donations:donation_offers_list' as donation_offers_list_url %}
 {% url 'donations:donation_requests_list_card' as donation_requests_list_card_url %}
 {% url 'donations:donation_requests_list' as donation_requests_list_url %}
+{% url 'donation_bank:bank_donation_request_list_public' as bank_donation_request_list_public_url %}
 
 <div class="row">
     <div class="col-md-10">
@@ -31,6 +32,12 @@
             <a href="{{ donation_requests_list_card_url }}" class="btn btn-dark btn-xs font-13 text-deco-none mt-1">
                 <i class="flaticon-credit-card m-1"></i>
                 Card View
+            </a>
+        </div>
+        <div class="mb-3">
+            <a href="{{ bank_donation_request_list_public_url }}"
+                class="btn btn-dark btn-xs font-13 text-deco-none mt-1">
+                Requests By Banks
             </a>
         </div>
         {% endif %}

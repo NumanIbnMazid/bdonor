@@ -1,0 +1,60 @@
+<div class="table-responsive table-hover table-sales">
+    <table class="table">
+        <tbody>
+            {% if instance.services %}
+            <tr>
+                <td>Services</td>
+                <td class="font-italic">
+                    {{ instance.services }}
+                </td>
+            </tr>
+            {% endif %}
+
+            {% if instance.address %}
+            <tr>
+                <td>Address</td>
+                <td>{{ instance.address }}</td>
+            </tr>
+            {% endif %}
+
+            {% if instance.city %}
+            <tr>
+                <td>City</td>
+                <td>{{ instance.city }}</td>
+            </tr>
+            {% endif %}
+
+            {% if instance.state %}
+            <tr>
+                <td>State</td>
+                <td>{{ instance.state }}</td>
+            </tr>
+            {% endif %}
+
+            {% if instance.country %}
+            <tr>
+                <td>Country</td>
+                <td>{{ instance.country.name }}</td>
+            </tr>
+            {% endif %}
+
+            {% if instance.contact %}
+            <tr>
+                <td>Contact</td>
+                <td>
+                    <a href="#">
+                        {{ instance.contact }}
+                    </a>
+                </td>
+            </tr>
+            {% endif %}
+
+            {% if instance.email %}
+            <tr>
+                <td>Email</td>
+                <td>{{ instance.email }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>

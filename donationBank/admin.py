@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (DonationBank, DonationBankSetting, BankMember, MemberRequest,
-                     Donation, DonationRequest, DonationProgress, Campaign,
+                     Donation, DonationRequest, DonationProgress, Campaign, DonationRequestProgress
                      )
 
 
@@ -55,6 +55,13 @@ class DonationProgressAdmin(admin.ModelAdmin):
         model = DonationProgress
 
 
+class DonationRequestProgressAdmin(admin.ModelAdmin):
+    list_display = ['donation', 'progress_status', 'completion_date']
+
+    class Meta:
+        model = DonationRequestProgress
+
+
 class CampaignAdmin(admin.ModelAdmin):
     list_display = ['bank', 'title', 'held_date',
                     'end_date', 'contact', 'country']
@@ -70,4 +77,5 @@ admin.site.register(MemberRequest, MemberRequestAdmin)
 admin.site.register(Donation, DonationAdmin)
 admin.site.register(DonationRequest, DonationRequestAdmin)
 admin.site.register(DonationProgress, DonationProgressAdmin)
+admin.site.register(DonationRequestProgress, DonationRequestProgressAdmin)
 admin.site.register(Campaign, CampaignAdmin)

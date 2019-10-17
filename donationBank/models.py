@@ -844,16 +844,18 @@ class DonationRequestQuerySet(models.query.QuerySet):
         qs = self.filter().order_by('-created_at')
         if request.user.is_authenticated and not request.user.profile.country == None:
             user_country = request.user.profile.country.code
-            country_donation_qs = self.filter().order_by('-created_at')
-            if country_donation_qs.exists():
-                countries_bind = country_donation_qs.values_list(
+            country_bank_qs = DonationBank.objects.filter().order_by('-created_at')
+            if country_bank_qs.exists():
+                countries_bind = country_bank_qs.values_list(
                     'country', flat=True)
                 order_field = list(countries_bind)
                 if user_country in order_field:
                     order_field.remove(user_country)
                 order_field.insert(0, user_country)
                 qs = sorted(self.filter().order_by('-created_at'),
-                            key=lambda p: order_field.index(p.country))
+                            key=lambda p: order_field.index(p.bank.country))
+                print(order_field)
+                print(qs)
         else:
             qs = self.filter().order_by('-created_at')
         return qs
@@ -1040,14 +1042,14 @@ class DonationRequest(models.Model):
         return self.bank.institute
 
     def get_donation_type(self):
-        type = "Undefined"
-        if self.type == 0:
-            type = "Blood"
-        if self.type == 1:
-            type = "Organ"
-        if self.type == 2:
-            type = "Tissue"
-        return type
+        donation_type = "Undefined"
+        if self.donation_type == 0:
+            donation_type = "Blood"
+        if self.donation_type == 1:
+            donation_type = "Organ"
+        if self.donation_type == 2:
+            donation_type = "Tissue"
+        return donation_type
 
     def get_type_dynamic_short_detail(self):
         detail = "Undefined"
@@ -1139,6 +1141,99 @@ class DonationProgress(models.Model):
             progress_status = "Completed"
         return progress_status
 
+    def get_age(self):
+        age = 0
+        if not self.dob == None:
+            age = int((datetime.datetime.now().date() - self.dob).days / 365.25)
+        return age
+
+
+class DonationRequestProgress(models.Model):
+    PENDING = 0
+    DONE = 1
+    DONATION_PROGRESS_CHOICES = (
+        (PENDING, 'Pending'),
+        (DONE, 'Completed'),
+    )
+    MALE = 'Male'
+    FEMALE = 'Female'
+    OTHERS = 'Others'
+    GENDER_CHOICES = (
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
+        (OTHERS, 'Others'),
+    )
+    A_POSITIVE = 'A+'
+    A_NEGATIVE = 'A-'
+    B_POSITIVE = 'B+'
+    B_NEGATIVE = 'B-'
+    O_POSITIVE = 'O+'
+    O_NEGATIVE = 'O-'
+    AB_POSITIVE = 'AB+'
+    AB_NEGATIVE = 'AB-'
+    BLOOD_GROUP_CHOICES = (
+        (A_POSITIVE, 'A+'),
+        (A_NEGATIVE, 'A-'),
+        (B_POSITIVE, 'B+'),
+        (B_NEGATIVE, 'B-'),
+        (O_POSITIVE, 'O+'),
+        (O_NEGATIVE, 'O-'),
+        (AB_POSITIVE, 'AB+'),
+        (AB_NEGATIVE, 'AB-')
+    )
+    donation = models.OneToOneField(DonationRequest, on_delete=models.CASCADE,
+                                    unique=True, related_name='donation_request_progress', verbose_name='donation')
+    progress_status = models.PositiveSmallIntegerField(
+        choices=DONATION_PROGRESS_CHOICES, default=0, verbose_name='progress status')
+    completion_date = models.DateField(
+        blank=True, null=True, verbose_name='completion date')
+    first_name = models.CharField(
+        blank=True, null=True, max_length=50, verbose_name='first name')
+    last_name = models.CharField(
+        blank=True, null=True, max_length=50, verbose_name='last name')
+    gender = models.CharField(choices=GENDER_CHOICES, blank=True,
+                              null=True, max_length=10, verbose_name='gender')
+    blood_group = models.CharField(
+        blank=True, null=True, max_length=10, choices=BLOOD_GROUP_CHOICES, verbose_name='blood group')
+    dob = models.DateField(blank=True, null=True, verbose_name='Date of Birth')
+    contact = models.CharField(
+        blank=True, null=True, max_length=20, verbose_name='contact')
+    email = models.EmailField(blank=True, null=True, verbose_name='email')
+    address = models.CharField(
+        blank=True, null=True, max_length=250, verbose_name='address')
+    city = models.CharField(blank=True, null=True,
+                            max_length=100, verbose_name='city')
+    state = models.CharField(blank=True, null=True,
+                             max_length=100, verbose_name='state/province')
+    country = CountryField(blank=True, null=True)
+    details = models.TextField(max_length=500, blank=True,
+                               null=True, verbose_name='details')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='created at')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    class Meta:
+        verbose_name = ("Donation Request Progress")
+        verbose_name_plural = ("Donation Request Progresses")
+        ordering = ["-updated_at"]
+
+    def __str__(self):
+        return self.donation.bank.institute
+
+    def get_progress_status(self):
+        progress_status = "Undefined"
+        if self.progress_status == 0:
+            progress_status = "Pending"
+        if self.progress_status == 1:
+            progress_status = "Completed"
+        return progress_status
+
+    def get_age(self):
+        age = 0
+        if not self.dob == None:
+            age = int((datetime.datetime.now().date() - self.dob).days / 365.25)
+        return age
+
 
 def donation_bank_slug_pre_save_receiver(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -1200,6 +1295,12 @@ pre_save.connect(donation_request_slug_pre_save_receiver, sender=DonationRequest
 def create_donation_progress(sender, instance, created, **kwargs):
     if created:
         DonationProgress.objects.create(donation=instance)
+
+
+@receiver(post_save, sender=DonationRequest)
+def create_donation_progress(sender, instance, created, **kwargs):
+    if created:
+        DonationRequestProgress.objects.create(donation=instance)
 
 
 def campaign_pre_save_receiver(sender, instance, *args, **kwargs):

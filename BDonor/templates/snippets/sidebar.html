@@ -6,6 +6,7 @@
 {% url 'donations:donation_offers_list' as donation_offers_list_url %}
 {% url 'donations:donation_requests_list' as donation_requests_list_url %}
 {% url 'donationBank:bank_list' as bank_list_url %}
+{% url 'blog:blog_list' as blog_list_url %}
 {% if request.user.is_authenticated %}
 {% url 'profile_details' slug=request.user.profile.slug as profile_details_url %}
 {% url 'profile_update' slug=request.user.profile.slug as profile_update_url %}
@@ -17,7 +18,6 @@
 {% url 'donation_bank:bank_create' as bank_create_url %}
 {% url 'donation_bank:bank_dashboard' as bank_dashboard_url %}
 {% url 'donation_bank:bank_campaign_list_public' as bank_campaign_list_public_url %}
-{% url 'blog:blog_post_create' as blog_post_create_url %}
 {% endif %}
 
 <div class="sidebar sidebar-style-2"
@@ -201,8 +201,8 @@
 
                 {% endif %}
 
-                <li class="nav-item {% if request.path == blog_post_create_url %}active{% endif %}" id="blog_dynamic_li">
-                    <a href="{{ blog_post_create_url }}">
+                <li class="nav-item {% if request.path == blog_list_url %}active{% endif %}" id="blog_dynamic_li">
+                    <a href="{{ blog_list_url }}">
                         <i class="flaticon-agenda-1"></i>
                         <p>Blog</p>
                     </a>
