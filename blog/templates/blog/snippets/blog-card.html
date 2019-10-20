@@ -33,6 +33,11 @@
                     </p>
                 </a>
                 <p class="date text-muted">
+                    <i class="fas fa-align-justify"></i>
+                    <span class="c-text-muted font-italic font-bold">
+                        {{ object.get_category }}
+                    </span>
+                    <br>
                     <i class="flaticon-time"></i>
                     {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
                     {{ object.created_at|timesince }} ago
@@ -45,7 +50,10 @@
         <div class="separator-solid"></div>
 
         <h3 class="card-title c-text-primary">
-            {{ object.title }}
+            <a href="{% url 'blog:blog_detail' slug=object.slug %}" 
+            class="text-primary">
+                {{ object.title }}
+            </a>
         </h3>
 
         <p class="card-text">

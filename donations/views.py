@@ -1193,7 +1193,7 @@ class DonationRespondCreateView(CreateView):
                     object_instance = "Donation seeker"
                 messages.add_message(self.request, messages.WARNING,
                                      f"Blood group don't matched! Blood group needs to be matched for transplantation. Please be carefull. Your blood group is '{request.user.profile.blood_group}' and {object_instance}'s blood group is '{donation.blood_group}' !")
-                if donation.category == 1:
+                if donation.category == 1 or donation.category == 0:
                     return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', '/'))
         return response
 

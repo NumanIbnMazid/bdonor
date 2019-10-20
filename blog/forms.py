@@ -70,6 +70,10 @@ class BlogManageForm(forms.ModelForm):
             'maxlength': 150,
             'pattern': "^[_A-z0-9 +-.,?:)(@}{%&$!+*|~><';#]{1,}$",
         })
+        self.fields['category'].help_text = "Select blog post category..."
+        self.fields['category'].widget.attrs.update({
+            'id': 'blog_category_input',
+        })
         self.fields['details'].help_text = "Enter details..."
         self.fields['details'].widget.attrs.update({
             'id': 'blog_details_input',
@@ -87,7 +91,7 @@ class BlogManageForm(forms.ModelForm):
 
     class Meta:
         model = Blog
-        fields = ['title', 'details', 'tags']
+        fields = ['title', 'category', 'details', 'tags']
         exclude = ['user', 'slug', 'created_at', 'updated_at']
         widgets = {
             'details': CKEditorWidget(),

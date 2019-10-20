@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Blog, Attachment
+from .models import Blog, Attachment, Comment
 
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ['user', 'title', 'slug', 'tags']
+    list_display = ['user', 'title', 'category', 'slug', 'tags']
 
     class Meta:
         model = Blog
@@ -15,5 +15,13 @@ class AttachmentAdmin(admin.ModelAdmin):
         model = Attachment
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['blog', 'commented_by', 'is_selected', 'created_at']
+
+    class Meta:
+        model = Comment
+
+
 admin.site.register(Blog, BlogAdmin)
 admin.site.register(Attachment, AttachmentAdmin)
+admin.site.register(Comment, CommentAdmin)

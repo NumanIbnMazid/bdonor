@@ -11,6 +11,11 @@ Home Page
 <link rel="stylesheet" href="{% static 'vendor/lightslider/lightslider.css' %}" type="text/css" />
 {% endblock %}
 
+{% block extra_head_js %}
+<!-- jquery-geo-locate JS -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQGXPTnUyBYyQQt3v0NTkihsR1WU-1Tr8"></script>
+{% endblock %}
+
 {% block content %}
 
 <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
@@ -97,7 +102,11 @@ Home Page
 {% endblock %}
 
 {% block extra_js %}
+<!-- jquery-geo-locate -->
+<script type="text/javascript" src="{% static 'vendor/geo-location/jquery-geolocate.min.js' %}"></script>
 <!-- lightslider JS -->
 <script type="text/javascript" src="{% static 'vendor/lightslider/lightslider.js' %}"></script>
 <script type="text/javascript" src="{% static 'vendor/lightslider/lightslider-conf.js' %}"></script>
+<!-- home scripts -->
+<script type="text/javascript" src="{% static 'assets/js/page-scripts/home.js' %}"></script>
 {% endblock %}

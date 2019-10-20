@@ -1,0 +1,115 @@
+{% load static %}
+
+<style>
+    .comment-wrapper .panel-body {
+        max-height: 650px;
+        overflow: auto;
+    }
+
+    .comment-wrapper .media-list .media img {
+        width: 64px;
+        height: 64px;
+        border: 2px solid #e5e7e8;
+    }
+
+    .comment-wrapper .media-list .media {
+        border-bottom: 1px dashed #efefef;
+        margin-bottom: 25px;
+    }
+</style>
+
+<hr>
+
+<div class="row bootstrap snippets mt-4">
+    <div class="col-md-12 col-md-offset-12 col-sm-12">
+        <div class="comment-wrapper">
+            <div class="panel panel-info">
+                <div class="panel-heading text-center font-20 text-muted font-bold m-4">
+                    Comments
+                </div>
+                <div class="panel-body p-4">
+                    <form action="{% url 'blog:comment_create' slug=object.slug %}" method="POST" class="m-b-none"
+                        id="comment_form">
+                        {% csrf_token %}
+                        <textarea class="form-control" name="comment" id="comment_input" 
+                        placeholder="write a comment..." rows="3"></textarea>
+                        <p class="text-danger font-bold text-center">
+                            <span id="comment_msg"></span>
+                        </p>
+                        <br>
+                        <button type="submit" class="btn btn-info pull-right">Post</button>
+                        <div class="clearfix"></div>
+                    </form>
+                    <hr>
+                    <input type="hidden" id="is_scroll" value="{{ is_scroll }}">
+                    <ul class="media-list" id="comment_list">
+                        {% for comment in comments %}
+                        <li class="media">
+                            <a href="{{ comment.commented_by.profile.get_absolute_url }}" class="pull-left">
+                                {% include 'snippets/chunks/user-image.html' with instance=comment.commented_by class="avatar-img avatar-sm rounded-circle" %}
+                            </a>
+                            <div class="media-body ml-2">
+                                <span class="text-muted pull-right">
+                                    <i class="flaticon-time"></i>
+                                    {% if datetime|date:"d-M-Y" == comment.created_at|date:"d-M-Y" %}
+                                    <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                                    {% else %}
+                                    <small class="text-muted">{{ comment.created_at }}</small>
+                                    {% endif %}
+                                </span>
+                                <strong class="">
+                                    <a href="{{ comment.commented_by.profile.get_absolute_url }}" class="text-deco-none">
+                                        {% if request.user == comment.commented_by %}
+                                        @You
+                                        {% else %}
+                                        @{{ comment.commented_by.profile.get_dynamic_name }}
+                                        {% endif %}
+                                    </a>
+                                </strong>
+                                <p>
+                                    {{ comment.comment|safe|linebreaks }}
+                                </p>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <div class="col-md-12 text-center">
+                            <div class="alert alert-warning">
+                                No one commented yet!
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    $(document).ready(function(){
+        $('#comment_input').click(function() {
+            console.log("Found");
+            $("#comment_msg").html("");
+         });
+    });
+    $("#comment_form").submit(function(event) {
+        comment = $("#comment_input");
+        console.log(comment.val());
+        event.preventDefault();
+        if (comment.val().length > 786) {
+            event.preventDefault();
+            $("#comment_msg").html("Maximum 786 characters allowed. Currently using: "+ comment.val().length +" characters");
+        } 
+        else if(comment.val() == ""){
+            $("#comment_msg").html("Please write comment first!");
+        }
+        else {
+            this.submit();
+            return true;
+        }
+        return true;
+    });
+</script>
+{% endblock %}

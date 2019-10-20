@@ -25,6 +25,11 @@ ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = 'BDonor'
 ACCOUNT_USERNAME_BLACKLIST = ['robot', 'hacker', 'virus', 'spam']
 ACCOUNT_ADAPTER = 'BDonor.adapter.UsernameMaxAdapter'
+ACCOUNT_FORMS = {
+    'signup': 'BDonor.forms.CustomSignupForm',
+}
+# AUTH_USER_MODEL = 'BDonor.accounts.models.UserProfile'
+# ACCOUNT_SIGNUP_FORM_CLASS = 'BDonor.forms.CustomSignupForm'
 
 # EL-PAGINATION Staffs
 EL_PAGINATION_PER_PAGE = 12

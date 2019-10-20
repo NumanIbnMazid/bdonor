@@ -1,4 +1,5 @@
 {% load static %}
+{% url 'home' as home_url %}
 
 <ul
     id="{% if instance == donation_offers %}donation_offers{% elif instance == donation_requests %}donation_requests{% else %}lightSlider{% endif %}">
@@ -111,8 +112,10 @@
 
                 {% endif %}
 
+                {% if not request.path == home_url %}
                 {% include 'snippets/modules/donation-modify-module.html' with instance=donation %}
-
+                {% endif %}
+                
             </div>
         </div>
 

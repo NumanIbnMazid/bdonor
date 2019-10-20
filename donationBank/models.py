@@ -854,8 +854,8 @@ class DonationRequestQuerySet(models.query.QuerySet):
                 order_field.insert(0, user_country)
                 qs = sorted(self.filter().order_by('-created_at'),
                             key=lambda p: order_field.index(p.bank.country))
-                print(order_field)
-                print(qs)
+                # print(order_field)
+                # print(qs)
         else:
             qs = self.filter().order_by('-created_at')
         return qs

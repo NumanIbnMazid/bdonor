@@ -1,4 +1,4 @@
-from allauth.account.forms import SignupForm
+# from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth.models import User
 from .models import UserProfile, UserReport, UserPermission
@@ -14,11 +14,11 @@ from ckeditor.widgets import CKEditorWidget
 #     input_type = 'date'
 
 
-class CustomSignupForm(SignupForm):
-    def signup(self, request, user):
-        user.save()
-        userprofile, created = self.get_or_create(user=user)
-        user.userprofile.save()
+# class CustomSignupForm(SignupForm):
+#     def signup(self, request, user):
+#         user.save()
+#         userprofile, created = self.get_or_create(user=user)
+#         user.userprofile.save()
 
 
 class UserForm(forms.ModelForm):

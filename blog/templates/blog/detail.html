@@ -75,6 +75,11 @@
                             </p>
                         </a>
                         <p class="date text-muted">
+                            <i class="fas fa-align-justify"></i>
+                            <span class="c-text-muted font-italic font-bold">
+                                {{ object.get_category }}
+                            </span>
+                            <br>
                             <i class="flaticon-time"></i>
                             {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
                             {{ object.created_at|timesince }} ago
@@ -102,6 +107,8 @@
                     <a href="#">{{ object.tags }}</a>
                 </p>
                 {% endif %}
+
+                {% include 'blog/snippets/comments.html' %}
 
             </div>
 

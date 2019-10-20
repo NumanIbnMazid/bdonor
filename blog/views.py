@@ -14,7 +14,7 @@ from django.template.defaultfilters import filesizeformat
 from suspicious.utils import block_suspicious_user
 from django.views.decorators.csrf import csrf_exempt
 from .forms import BlogManageForm
-from .models import Blog, Attachment
+from .models import Blog, Attachment, Comment
 # Custom Decorators Starts
 from accounts.decorators import (
     can_browse_required, can_donate_required, can_ask_for_a_donor_required,
@@ -99,7 +99,7 @@ class BlogAjaxListView(AjaxListView):
     # paginate_by = 3
 
     def get_queryset(self):
-        qs = Blog.objects.all()
+        qs = Blog.objects.all().dynamic_order()
         return qs
 
     def get_context_data(self, **kwargs):
@@ -143,6 +143,9 @@ class BlogDetailView(DetailView):
         else:
             scheme = "http://"
         context['domain'] = f"{scheme}{host}"
+        self.object = self.get_object()
+        comment_qs = Comment.objects.filter(blog=self.object)
+        context['comments'] = comment_qs
         return context
 
 
@@ -289,4 +292,25 @@ def blog_delete(request):
         else:
             messages.add_message(request, messages.WARNING,
                                  "Something went wrong!")
+    return HttpResponseRedirect(url)
+
+
+@login_required
+@can_browse_required
+def create_comment(request, slug):
+    url = reverse('home')
+    if request.method == 'POST':
+        user = request.user
+        comment = request.POST.get('comment')
+        blog_qs = Blog.objects.filter(slug=slug)
+        if blog_qs.exists():
+            blog = blog_qs.first()
+            Comment.objects.create(
+                blog=blog, commented_by=user, comment=comment)
+            # messages.add_message(request, messages.SUCCESS, "Comment added successfully!")
+            url = reverse(
+                'blog:blog_detail', kwargs={'slug': slug})
+        else:
+            messages.add_message(request, messages.WARNING,
+                                    "Blog doesn't exists !!!")
     return HttpResponseRedirect(url)

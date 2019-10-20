@@ -1,5 +1,6 @@
 {% load static %}
 {% url 'donations:donation_update' slug=object.slug as donation_update_url %}
+{% url 'home' as home_url %}
 
 <div
     class="card card-dark
@@ -109,8 +110,9 @@
 
         {% endif %}
 
+        {% if not request.path == home_url %}
         {% include 'snippets/modules/donation-modify-module.html' with instance=object %}
-
+        {% endif %}
     </div>
 </div>
 

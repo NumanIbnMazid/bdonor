@@ -8,6 +8,9 @@ from django.urls import reverse
 from allauth.account.signals import user_logged_in, user_signed_up
 import stripe
 from django_countries.fields import CountryField
+from django.http import Http404
+from middlewares.middlewares import RequestMiddleware
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -211,9 +214,13 @@ class UserPermission(models.Model):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     username = instance.username.lower()
+    request = RequestMiddleware(get_response=None)
+    request = request.thread_local.current_request
+    blood_group = request.POST.get("blood_group")
+    # print(blood_group)
     slug_binding = username+'-'+time_str_mix_slug()
     if created:
-        UserProfile.objects.create(user=instance, slug=slug_binding)
+        UserProfile.objects.create(user=instance, blood_group=blood_group, slug=slug_binding)
         UserPermission.objects.create(user=instance)
     instance.profile.save()
 

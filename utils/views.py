@@ -4,9 +4,11 @@ from el_pagination.views import AjaxListView
 from django.urls import reverse
 from accounts.models import UserProfile
 from .models import SitePreference, Location, Notification
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 import datetime
+from django_countries.fields import CountryField
+from django_countries import countries, Countries
 # Method Decorator imports
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -147,6 +149,29 @@ def hospital_autocomplete_view(request):
         data = 'fail'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+
+
+@login_required
+@can_browse_required
+def update_user_country(request):
+    # if request.user.is_authenticated:
+    if request.is_ajax():
+        location = request.GET.get('location', None)
+        # print(location)
+        all_countries_list = list(countries)
+        for code, name in list(countries):
+            # print(f"{name} - {code}")
+            if location == name:
+                profile_qs = UserProfile.objects.filter(user=request.user)
+                if profile_qs.exists():
+                    instance = profile_qs.update(country=code)
+                    # print(instance)
+        data = {
+            'location': UserProfile.objects.filter(country__iexact=location).exists()
+        }
+        return JsonResponse(data)
+    # return None
 
 
 @method_decorator(decorators, name='dispatch')
