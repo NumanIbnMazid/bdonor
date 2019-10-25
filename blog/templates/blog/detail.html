@@ -14,6 +14,8 @@
 <!-- owl-carousel CSS -->
 <link rel="stylesheet" href="{% static 'vendor/owlcarousel/owl.carousel.min.css' %}" type="text/css" />
 <link rel="stylesheet" href="{% static 'vendor/owlcarousel/owl.theme.default.min.css' %}" type="text/css" />
+{# Amsify CSS #}
+<link rel="stylesheet" href="{% static 'vendor/amsify-tags/amsify.suggestags.css' %}" type="text/css" />
 {% endblock %}
 
 {% block content %}
@@ -142,4 +144,6 @@
 <script src="{% static 'vendor/zip-downloader/jszip-utils.js' %}"></script>
 <script src="{% static 'vendor/zip-downloader/FileSaver.js' %}"></script>
 <script src="{% static 'vendor/zip-downloader/zip-config.js' %}"></script>
+<!-- Amsify Plugin -->
+<script type="text/javascript" src="{% static 'vendor/amsify-tags/jquery.amsify.suggestags.js' %}"></script>
 {% endblock %}

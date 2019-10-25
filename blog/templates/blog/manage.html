@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="{% static 'assets/css/blog.css' %}" type="text/css" />
 {# File Input CSS #}
 <link rel="stylesheet" href="{% static 'vendor/file-input/fileinput.css' %}" type="text/css" />
+{# Amsify CSS #}
+<link rel="stylesheet" href="{% static 'vendor/amsify-tags/amsify.suggestags.css' %}" type="text/css" />
 {% endblock %}
 
 {% block extra_head_js %}
@@ -55,9 +57,12 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- CKeditor Plugin -->
 <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
 <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-
+<!-- Amsify Plugin -->
+<script type="text/javascript" src="{% static 'vendor/amsify-tags/jquery.amsify.suggestags.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/amsify-tags/amsify-conf.js' %}"></script>
 {# FILES PAGE SCRIPTS #}
 <script type="text/javascript" src="{% static 'vendor/file-input/piexif.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'vendor/file-input/sortable.min.js' %}"></script>

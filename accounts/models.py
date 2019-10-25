@@ -214,14 +214,20 @@ class UserPermission(models.Model):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     username = instance.username.lower()
-    request = RequestMiddleware(get_response=None)
-    request = request.thread_local.current_request
-    blood_group = request.POST.get("blood_group")
-    # print(blood_group)
     slug_binding = username+'-'+time_str_mix_slug()
-    if created:
-        UserProfile.objects.create(user=instance, blood_group=blood_group, slug=slug_binding)
-        UserPermission.objects.create(user=instance)
+    try:
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        blood_group = request.POST.get("blood_group")
+        # print(blood_group)
+        if created:
+            UserProfile.objects.create(user=instance, blood_group=blood_group, slug=slug_binding)
+            UserPermission.objects.create(user=instance)
+    except AttributeError:
+        if created:
+            UserProfile.objects.create(
+                user=instance, slug=slug_binding)
+            UserPermission.objects.create(user=instance)
     instance.profile.save()
 
 

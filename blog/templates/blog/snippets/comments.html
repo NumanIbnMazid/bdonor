@@ -31,8 +31,8 @@
                     <form action="{% url 'blog:comment_create' slug=object.slug %}" method="POST" class="m-b-none"
                         id="comment_form">
                         {% csrf_token %}
-                        <textarea class="form-control" name="comment" id="comment_input" 
-                        placeholder="write a comment..." rows="3"></textarea>
+                        <textarea class="form-control" name="comment" id="comment_input"
+                            placeholder="write a comment..." rows="3"></textarea>
                         <p class="text-danger font-bold text-center">
                             <span id="comment_msg"></span>
                         </p>
@@ -41,7 +41,6 @@
                         <div class="clearfix"></div>
                     </form>
                     <hr>
-                    <input type="hidden" id="is_scroll" value="{{ is_scroll }}">
                     <ul class="media-list" id="comment_list">
                         {% for comment in comments %}
                         <li class="media">
@@ -58,7 +57,8 @@
                                     {% endif %}
                                 </span>
                                 <strong class="">
-                                    <a href="{{ comment.commented_by.profile.get_absolute_url }}" class="text-deco-none">
+                                    <a href="{{ comment.commented_by.profile.get_absolute_url }}"
+                                        class="text-deco-none">
                                         {% if request.user == comment.commented_by %}
                                         @You
                                         {% else %}
@@ -69,6 +69,78 @@
                                 <p>
                                     {{ comment.comment|safe|linebreaks }}
                                 </p>
+                                {% if not request.user == comment.commented_by %}
+                                <span class="pull-right">
+                                    <button type="button"
+                                        class="btn btn-primary btn-xs text-deco-none m-1 js_comment_reply"
+                                        value="{{comment.id}}" data-toggle="modal" data-target="#modal-comment-reply">
+                                        Reply
+                                    </button>
+                                </span>
+                                {% endif %}
+                                {% if comment.comment_reply.all.count >= 1 %}
+                                <span>
+                                    <button class="btn bg-c-info btn-xs text-deco-none m-1" type="button"
+                                        data-toggle="collapse"
+                                        data-target="#commentReply{{comment.id}}" aria-expanded="true"
+                                        aria-controls="commentReply{{comment.id}}">
+                                        <span class="c-text-muted">View Replies</span>
+                                    </button>
+                                    <div class="collapse mt-2" id="commentReply{{comment.id}}">
+                                        <div class="card card-body">
+                                            {% for reply in comment.comment_reply.all %}
+                                            
+                                            <div class="comments-list">
+                                                <div class="media">
+                                                    <a class="media-left m-2"
+                                                        href="{{ reply.replied_by.profile.get_absolute_url }}">
+                                                        {% include 'snippets/chunks/user-image.html' with instance=reply.replied_by class="avatar-img avatar-xs rounded-circle" %}
+                                                    </a>
+                                                    <div class="media-body">
+                                                        <strong class="media-heading user_name">
+                                                            <a href="{{ reply.replied_by.profile.get_absolute_url }}"
+                                                                class="text-deco-none">
+                                                                {% if request.user == reply.replied_by %}
+                                                                @You
+                                                                {% else %}
+                                                                @{{ reply.replied_by.profile.get_dynamic_name }}
+                                                                {% endif %}
+                                                            </a>
+                                                        </strong>
+                                                        <p class="pull-right">
+                                                            <i class="flaticon-time"></i>
+                                                            {% if datetime|date:"d-M-Y" == reply.created_at|date:"d-M-Y" %}
+                                                            <small class="text-muted">{{ reply.created_at|timesince }}
+                                                                ago</small>
+                                                            {% else %}
+                                                            <small class="text-muted">{{ reply.created_at }}</small>
+                                                            {% endif %}
+                                                        </p>
+                                                        
+                                                        <p>
+                                                            {{ reply.reply|safe|linebreaks }}
+                                                        </p>
+                                                        {% if not request.user == reply.replied_by %}
+                                                        <p>
+                                                            <span class="pull-right">
+                                                                <button type="button"
+                                                                    class="btn btn-primary btn-xs text-deco-none m-1 js_comment_reply"
+                                                                    value="{{comment.id}}" data-toggle="modal"
+                                                                    data-target="#modal-comment-reply">
+                                                                    Reply
+                                                                </button>
+                                                            </span>
+                                                        </p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </span>
+                                {% endif %}
                             </div>
                         </li>
                         {% empty %}
@@ -86,26 +158,27 @@
     </div>
 </div>
 
+{% include 'blog/snippets/chunks/modals.html' %}
+
 {% block extra_js %}
 <script>
-    $(document).ready(function(){
-        $('#comment_input').click(function() {
-            console.log("Found");
+    $(document).ready(function () {
+        $('#comment_input').click(function () {
+            //console.log("Found");
             $("#comment_msg").html("");
-         });
+        });
     });
-    $("#comment_form").submit(function(event) {
+    $("#comment_form").submit(function (event) {
         comment = $("#comment_input");
         console.log(comment.val());
         event.preventDefault();
         if (comment.val().length > 786) {
             event.preventDefault();
-            $("#comment_msg").html("Maximum 786 characters allowed. Currently using: "+ comment.val().length +" characters");
-        } 
-        else if(comment.val() == ""){
+            $("#comment_msg").html("Maximum 786 characters allowed. Currently using: " + comment.val().length +
+                " characters");
+        } else if (comment.val() == "") {
             $("#comment_msg").html("Please write comment first!");
-        }
-        else {
+        } else {
             this.submit();
             return true;
         }

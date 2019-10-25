@@ -245,6 +245,27 @@ class Comment(models.Model):
         return self.blog.title
 
 
+class CommentReply(models.Model):
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, related_name='comment_reply', verbose_name='comment'
+    )
+    replied_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_comment_reply', verbose_name='replied by'
+    )
+    reply = models.TextField(max_length=1000, verbose_name='reply')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='created at')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    class Meta:
+        verbose_name = 'Comment Reply'
+        verbose_name_plural = 'Comment Replies'
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        return self.comment.commented_by.username
+
+
 
 def blog_slug_pre_save_receiver(sender, instance, *args, **kwargs):
     if not instance.slug:

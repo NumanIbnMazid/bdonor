@@ -14,7 +14,7 @@ from django.template.defaultfilters import filesizeformat
 from suspicious.utils import block_suspicious_user
 from django.views.decorators.csrf import csrf_exempt
 from .forms import BlogManageForm
-from .models import Blog, Attachment, Comment
+from .models import Blog, Attachment, Comment, CommentReply
 # Custom Decorators Starts
 from accounts.decorators import (
     can_browse_required, can_donate_required, can_ask_for_a_donor_required,
@@ -115,9 +115,9 @@ class BlogAjaxListView(AjaxListView):
         context['include_template_var'] = "blog/snippets/blog-card.html"
         context['add_url'] = "blog:blog_post_create"
         return context
+    
 
-
-@method_decorator(decorators, name='dispatch')
+# @method_decorator(can_browse_required, name='dispatch')
 class BlogDetailView(DetailView):
     template_name = 'blog/detail.html'
 
@@ -147,6 +147,20 @@ class BlogDetailView(DetailView):
         comment_qs = Comment.objects.filter(blog=self.object)
         context['comments'] = comment_qs
         return context
+
+    def user_passes_test(self, request):
+        if self.request.user.is_authenticated:
+            if self.request.user.user_permissions_user.can_browse == True:
+                return True
+            else:
+                return False
+        return True
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(BlogDetailView, self).dispatch(request, *args, **kwargs)
 
 
 @method_decorator(decorators, name='dispatch')
@@ -196,9 +210,9 @@ class BlogPostUpdateView(UpdateView):
                     file = Attachment(file=formfile,
                                       blog=self.object)
                     file.save()
-            messages.add_message(self.request, messages.SUCCESS,
-                                 "Blog post has been updated successfully!"
-                                 )
+        messages.add_message(self.request, messages.SUCCESS,
+                                "Blog post has been updated successfully!"
+                                )
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -313,4 +327,27 @@ def create_comment(request, slug):
         else:
             messages.add_message(request, messages.WARNING,
                                     "Blog doesn't exists !!!")
+    return HttpResponseRedirect(url)
+
+
+@csrf_exempt
+@login_required
+@can_browse_required
+def reply_comment(request):
+    url = reverse('home')
+    user = request.user
+    if request.method == "POST":
+        comment_id = request.POST.get("id")
+        reply = request.POST.get("comment-reply")
+        qs = Comment.objects.filter(id=comment_id)
+        if qs.exists():
+            instance = CommentReply.objects.create(
+                comment=qs.first(), replied_by=user,
+                reply=reply
+            )
+            url = reverse('blog:blog_detail',
+                          kwargs={'slug': qs.first().blog.slug})
+        else:
+            messages.add_message(request, messages.WARNING,
+                                 "Something went wrong!")
     return HttpResponseRedirect(url)

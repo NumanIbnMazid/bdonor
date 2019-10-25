@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     BlogPostCreateView, BlogAjaxListView, BlogDetailView, MyPostsAjaxListView,
-    BlogPostUpdateView, delete_attachment, blog_delete, create_comment
+    BlogPostUpdateView, delete_attachment, blog_delete, create_comment, reply_comment
 )
 
 urlpatterns = [
@@ -13,4 +13,5 @@ urlpatterns = [
     path('attachment/delete/', delete_attachment, name='attachment_delete'),
     path('delete/', blog_delete, name='blog_delete'),
     path('<slug>/comment/create/', create_comment, name='comment_create'),
+    path('comment/reply/', reply_comment, name='reply_comment'),
 ]

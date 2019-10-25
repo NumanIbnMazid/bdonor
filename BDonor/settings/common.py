@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     # 'django_cool_paginator',
     'el_pagination',
+    'django_extensions',
     'django.contrib.sites',
     'allauth',
     'allauth.account',

@@ -7,6 +7,8 @@
 {% endblock %}{% endblock %}{% endblock %}
 
 {% block extra_css %}
+{# Amsify CSS #}
+<link rel="stylesheet" href="{% static 'vendor/amsify-tags/amsify.suggestags.css' %}" type="text/css" />
 <link rel="stylesheet" href="{% static 'assets/css/blog.css' %}" type="text/css" />
 {% endblock %}
 
@@ -31,4 +33,10 @@
 
 {% include 'blog/snippets/footer.html' %}
 
+{% endblock %}
+
+
+{% block extra_js %}
+<!-- Amsify Plugin -->
+<script type="text/javascript" src="{% static 'vendor/amsify-tags/jquery.amsify.suggestags.js' %}"></script>
 {% endblock %}

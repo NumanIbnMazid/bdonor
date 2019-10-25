@@ -1298,7 +1298,7 @@ def create_donation_progress(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=DonationRequest)
-def create_donation_progress(sender, instance, created, **kwargs):
+def create_donation_request_progress(sender, instance, created, **kwargs):
     if created:
         DonationRequestProgress.objects.create(donation=instance)
 

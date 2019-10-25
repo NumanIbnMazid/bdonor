@@ -165,7 +165,8 @@ def update_user_country(request):
             if location == name:
                 profile_qs = UserProfile.objects.filter(user=request.user)
                 if profile_qs.exists():
-                    instance = profile_qs.update(country=code)
+                    if not profile_qs.first().country.code == code:
+                        instance = profile_qs.update(country=code)
                     # print(instance)
         data = {
             'location': UserProfile.objects.filter(country__iexact=location).exists()

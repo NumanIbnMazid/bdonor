@@ -536,7 +536,7 @@ class DonationOffersCardListView(AjaxListView):
             # qs = Donation.objects.all().offers().is_published(
             # ).living_donates().is_verified().dynamic_order()
             qs = Donation.objects.all().offers().is_published(
-            ).is_verified().dynamic_order()
+            ).is_verified().is_pending().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -566,7 +566,7 @@ class DonationOffersListView(ListView):
             qs = Donation.objects.all().offers().is_published().dynamic_order()
         else:
             # qs = Donation.objects.all().offers().is_published().living_donates().is_verified().dynamic_order()
-            qs = Donation.objects.all().offers().is_published().is_verified().dynamic_order()
+            qs = Donation.objects.all().offers().is_published().is_verified().is_pending().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -1066,7 +1066,7 @@ class DonationRequestsCardListView(AjaxListView):
             # qs = Donation.objects.all().requests().is_published(
             # ).living_donates().is_verified().dynamic_order()
             qs = Donation.objects.all().requests().is_published(
-            ).is_verified().dynamic_order()
+            ).is_verified().is_pending().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
@@ -1098,7 +1098,7 @@ class DonationRequestsListView(ListView):
             # qs = Donation.objects.all().requests().is_published(
             # ).living_donates().is_verified().dynamic_order()
             qs = Donation.objects.all().requests().is_published(
-            ).is_verified().dynamic_order()
+            ).is_verified().is_pending().dynamic_order()
         # if qs.exists():
         #     return qs
         return qs
