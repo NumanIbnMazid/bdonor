@@ -49,6 +49,9 @@ STATICFILES_DIRS = [
 STATIC_ROOT = '/home/bdonor/static_cdn/static_root'
 MEDIA_ROOT = '/home/bdonor/static_cdn/media_root'
 
+# ==================== All-Auth Modules ===================
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # mandatory, optional, none
+
 # ==================== Security Modules ===================
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'Strict'
