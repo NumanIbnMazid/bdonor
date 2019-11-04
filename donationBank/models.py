@@ -219,6 +219,52 @@ class DonationBankSetting(models.Model):
         return status
 
 
+
+
+class BankMemberQuerySet(models.query.QuerySet):
+    def latest(self):
+        return self.filter().order_by('-created_at')
+
+    def search(self, query):
+        lookups = (Q(bank__institute__icontains=query) |
+                   Q(bank__address__icontains=query) |
+                   Q(bank__city__icontains=query) |
+                   Q(bank__state__icontains=query) |
+                   Q(bank__country__icontains=query) |
+                   Q(bank__contact__icontains=query) |
+                   Q(bank__email__icontains=query) |
+                   Q(bank__description__icontains=query) |
+                   Q(user__username__icontains=query) |
+                   Q(user__first_name__icontains=query) |
+                   Q(user__last_name__icontains=query) |
+                   Q(user__email__icontains=query)
+                   )
+        return self.filter(lookups).distinct()
+
+
+class BankMemberManager(models.Manager):
+    def get_queryset(self):
+        return BankMemberQuerySet(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset()
+
+    def get_by_id(self, id):
+        try:
+            instance = self.get_queryset().get(id=id)
+        except BankMember.DoesNotExist:
+            raise Http404("Not Found !!!")
+        except BankMember.MultipleObjectsReturned:
+            qs = self.get_queryset().filter(id=id)
+            instance = qs.first()
+        except:
+            raise Http404("Something went wrong !!!")
+        return instance
+
+    def search(self, query):
+        return self.get_queryset().search(query)
+
+
 class BankMember(models.Model):
     CREATOR = 0
     MAINTAINER = 1
@@ -235,6 +281,8 @@ class BankMember(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='updated at')
+
+    objects = BankMemberManager()
 
     class Meta:
         verbose_name = ("BankMember")
@@ -492,13 +540,13 @@ class Campaign(models.Model):
 
 class DonationQuerySet(models.query.QuerySet):
     def blood_type(self):
-        return self.filter(type=0)
+        return self.filter(donation_type=0)
 
     def organ_type(self):
-        return self.filter(type=1)
+        return self.filter(donation_type=1)
 
     def tissue_type(self):
-        return self.filter(type=2)
+        return self.filter(donation_type=2)
 
     def is_not_expired(self):
         qs = self.filter(expiration_date__gte=datetime.date.today())
@@ -506,6 +554,13 @@ class DonationQuerySet(models.query.QuerySet):
 
     def is_expired(self):
         qs = self.filter(expiration_date__lt=datetime.date.today())
+        return qs
+
+    def is_expired_pending(self):
+        qs = self.filter(
+                expiration_date__lt=datetime.date.today(),
+                donation_progress__progress_status = 0
+            )
         return qs
 
     # Foreign
@@ -587,11 +642,7 @@ class DonationQuerySet(models.query.QuerySet):
                    Q(organ_name__icontains=query) |
                    Q(description__icontains=query) |
                    Q(collection_date__icontains=query) |
-                   Q(expiration_date__icontains=query) |
-                   Q(user__user__username__icontains=query) |
-                   Q(user__user__first_name__icontains=query) |
-                   Q(user__user__last_name__icontains=query) |
-                   Q(user__user__email__icontains=query)
+                   Q(expiration_date__icontains=query)
                    )
         return self.filter(lookups).distinct()
 
@@ -796,7 +847,7 @@ class Donation(models.Model):
         return status
 
     def get_expiration_days(self):
-        expired_in = 0
+        expired_in = None
         if not self.expiration_date == None and not self.donation_progress.progress_status == 1:
             expired_in = int(
                 (self.expiration_date - datetime.datetime.now().date()).days)
@@ -822,21 +873,21 @@ class Donation(models.Model):
 
 class DonationRequestQuerySet(models.query.QuerySet):
     def blood_type(self):
-        return self.filter(type=0)
+        return self.filter(donation_type=0)
 
     def organ_type(self):
-        return self.filter(type=1)
+        return self.filter(donation_type=1)
 
     def tissue_type(self):
-        return self.filter(type=2)
+        return self.filter(donation_type=2)
 
-    # # Foreign
-    # def is_done(self):
-    #     return self.filter(donation_progress__progress_status=1)
+    # Foreign
+    def is_done(self):
+        return self.filter(donation_request_progress__progress_status=1)
 
-    # def is_pending(self):
-    #     return self.filter(donation_progress__progress_status=0)
-    # # /Foreign
+    def is_pending(self):
+        return self.filter(donation_request_progress__progress_status=0)
+    # /Foreign
 
     def dynamic_order(self):
         request = RequestMiddleware(get_response=None)
@@ -1022,7 +1073,7 @@ class DonationRequest(models.Model):
     tissue_name = models.CharField(
         choices=TISSUE_CHOICES, blank=True, max_length=100, null=True, verbose_name='tissue name')
     quantity = models.CharField(
-        max_length=3, verbose_name='quantity', default=1)
+        max_length=3, verbose_name='quantity', default=1, blank=True, null=True)
     details = models.TextField(blank=True,
                                null=True, verbose_name='details')
     publication_status = models.PositiveSmallIntegerField(
@@ -1294,13 +1345,17 @@ pre_save.connect(donation_request_slug_pre_save_receiver, sender=DonationRequest
 @receiver(post_save, sender=Donation)
 def create_donation_progress(sender, instance, created, **kwargs):
     if created:
-        DonationProgress.objects.create(donation=instance)
+        qs = DonationProgress.objects.filter(donation=instance)
+        if not qs.exists():
+            DonationProgress.objects.create(donation=instance)
 
 
 @receiver(post_save, sender=DonationRequest)
 def create_donation_request_progress(sender, instance, created, **kwargs):
     if created:
-        DonationRequestProgress.objects.create(donation=instance)
+        qs = DonationRequestProgress.objects.filter(donation=instance)
+        if not qs.exists():
+            DonationRequestProgress.objects.create(donation=instance)
 
 
 def campaign_pre_save_receiver(sender, instance, *args, **kwargs):

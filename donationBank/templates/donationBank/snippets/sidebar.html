@@ -48,10 +48,19 @@
 
     {% endif %}
 
+    {% url 'donationBank:bank_report' as bank_report_url %}
+    {% url 'donationBank:bank_report_filtered' as bank_report_filtered_url %}
+    <a href="{{ bank_report_url }}"
+        class="nav-link
+        {% if request.path == bank_report_url or request.path == bank_report_filtered_url %}active{% endif %}">
+        Reports
+    </a>
+
     {% if not object == None %}
     {% url 'donationBank:bank_details' slug=object.slug as bank_details_url %}
     <a href="{{ bank_details_url }}" class="nav-link {% if request.path == bank_details_url %}active{% endif %}">
         Overview
     </a>
     {% endif %}
+
 </div>

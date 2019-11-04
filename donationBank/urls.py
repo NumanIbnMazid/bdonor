@@ -8,6 +8,7 @@ from .views import (
     CampaignUpdateView, campaign_delete, CampaignPublicListView, DonationRequestListView,
     DonationRequestDetailView, DonationRequestUpdateView, donation_request_delete,
     ManageRequestProgressStatus, DonationRequestPublicListView, DonationRequestPublicDetailView,
+    BankReportTemplateView, BankChartFilterTemplateView
 )
 
 urlpatterns = [
@@ -58,4 +59,7 @@ urlpatterns = [
     path('campaign/<slug>/update/', CampaignUpdateView.as_view(),
          name='bank_campaign_update'),
     path('campaign/delete/', campaign_delete, name='bank_campaign_delete'),
+    # Bank Reports
+    path('reports/', BankReportTemplateView.as_view(), name='bank_report'),
+    path('filtered/reports/', BankChartFilterTemplateView.as_view(), name='bank_report_filtered'),
 ]

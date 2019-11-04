@@ -1,4 +1,61 @@
 {
-    "python.pythonPath": "/home/numan/Dropbox/BDonor/venv/bin/python"
-    // "python.pythonPath": "D:\\Dropbox\\BDonor\\wenv\\Scripts\\python.exe"
+    "workbench.colorTheme": "Material Theme Ocean",
+    "workbench.startupEditor": "newUntitledFile",
+    "python.jediEnabled": false,
+    "python.analysis.disabled": [
+        "unresolved-import",
+        "use-before-def"
+    ],
+    "explorer.confirmDelete": false,
+    "editor.formatOnPaste": true,
+    "editor.multiCursorModifier": "ctrlCmd",
+    // "editor.snippetSuggestions": "top",
+    "html.suggest.html5": true,
+    "html.autoClosingTags": true,
+    "files.autoSave": "afterDelay",
+    "editor.minimap.enabled": true,
+    "editor.largeFileOptimizations": false,
+    "emmet.includeLanguages": {
+        "django-html": "html"
+    },
+    "[django-html]": {},
+    "files.associations": {
+        "*.html": "html"
+    },
+    "emmet.showSuggestionsAsSnippets": true,
+    "beautify.language": {
+        "js": {
+            "type": [
+                "javascript",
+                "json"
+            ],
+            "filename": [
+                ".jshintrc",
+                ".jsbeautifyrc"
+            ]
+            // "ext": ["js", "json"]
+            // ^^ to set extensions to be beautified using the javascript beautifier
+        },
+        "css": [
+            "css",
+            "scss"
+        ],
+        "html": [
+            "htm",
+            "html",
+            "django-html"
+        ]
+        // ^^ providing just an array sets the VS Code file type
+    },
+    "editor.autoIndent": true,
+    "html.format.indentHandlebars": true,
+    "html.format.indentInnerHtml": true,
+    "window.zoomLevel": 0,
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "atomKeymap.promptV3Features": true,
+    // "python.pythonPath": "${workspaceFolder}/venv/bin/python",
+    "python.pythonPath": "/home/numan/Dropbox/BDonor/venv/bin/python",
+    "python.venvPath": "~/venv, ~./venv, ~/wenv, ~./wenv,  ~/env, ~./env",
+    // "python.venvPath": "~./venv",
 }

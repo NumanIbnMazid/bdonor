@@ -547,9 +547,10 @@ class DonationRequestManageForm(forms.ModelForm):
         }
 
     def clean_quantity(self):
-        quantity = int(self.cleaned_data.get("quantity"))
+        quantity = self.cleaned_data.get("quantity")
         # print(type(quantity))
         if not quantity == None:
+            quantity = int(quantity)
             allowed_char = re.match(r'^[0-9]+$', str(quantity))
             if not allowed_char:
                 raise forms.ValidationError(

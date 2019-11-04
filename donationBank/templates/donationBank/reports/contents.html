@@ -1,0 +1,106 @@
+<div class="col-md-10">
+    <h2 class="text-primary">Total</h2>
+    <h4>Total Donation: {{ total_donation.count }}</h4>
+    <h4>Total Donation Request: {{ total_donation_request.count }}</h4>
+    <h4>Total Donation Successful: {{ total_donation_successful.count }}</h4>
+    <h4>Total Donation Request Successful: {{ total_donation_request_successful.count }}</h4>
+    <h4>Total Donation Expired: {{ total_donation_expired.count }}</h4>
+    <h4>Total Campaigns: {{ total_campaign.count }}</h4>
+    <h4>Total Members: {{ total_member.count }}</h4>
+
+    <h2 class="text-primary">Blood Group Wise</h2>
+
+    <h3 class="text-info">Donation</h3>
+    <h4>Total Donation "A+": {{ donation_a_pos.count }}</h4>
+    <h4>Total Donation "A-": {{ donation_a_neg.count }}</h4>
+    <h4>Total Donation "B+": {{ donation_b_pos.count }}</h4>
+    <h4>Total Donation "B-": {{ donation_b_neg.count }}</h4>
+    <h4>Total Donation "AB+": {{ donation_ab_pos.count }}</h4>
+    <h4>Total Donation "AB-": {{ donation_ab_neg.count }}</h4>
+    <h4>Total Donation "O+": {{ donation_o_pos.count }}</h4>
+    <h4>Total Donation "O-": {{ donation_o_neg.count }}</h4>
+
+    <h3 class="text-info">Donation Request</h3>
+    <h4>Total Donation Request "A+": {{ donation_request_a_pos.count }}</h4>
+    <h4>Total Donation Request "A-": {{ donation_request_a_neg.count }}</h4>
+    <h4>Total Donation Request "B+": {{ donation_request_b_pos.count }}</h4>
+    <h4>Total Donation Request "B-": {{ donation_request_b_neg.count }}</h4>
+    <h4>Total Donation Request "AB+": {{ donation_request_ab_pos.count }}</h4>
+    <h4>Total Donation Request "AB-": {{ donation_request_ab_neg.count }}</h4>
+    <h4>Total Donation Request "O+": {{ donation_request_o_pos.count }}</h4>
+    <h4>Total Donation Request "O-": {{ donation_request_o_neg.count }}</h4>
+
+    <h2 class="text-primary">Donation Category</h2>
+    <h3 class="text-info">Donation</h3>
+    <h4>Total Blood Donation: {{ donation_blood.count }}</h4>
+    <h4>Total Organ Donation: {{ donation_organ.count }}</h4>
+    <h4>Total Tissue Donation: {{ donation_tissue.count }}</h4>
+    <h3 class="text-info">Donation Request</h3>
+    <h4>Total Blood Donation Request: {{ donation_request_blood.count }}</h4>
+    <h4>Total Organ Donation Request: {{ donation_request_organ.count }}</h4>
+    <h4>Total Tissue Donation Request: {{ donation_request_tissue.count }}</h4>
+
+    <h2 class="text-primary">Blood Donation Category Wise</h2>
+    <h3 class="text-info">Donation</h3>
+    <h4>Total Blood Donation "A+": {{ blood_donation_a_pos.count }}</h4>
+    <h4>Total Blood Donation "A-": {{ blood_donation_a_neg.count }}</h4>
+    <h4>Total Blood Donation "B+": {{ blood_donation_b_pos.count }}</h4>
+    <h4>Total Blood Donation "B-": {{ blood_donation_b_neg.count }}</h4>
+    <h4>Total Blood Donation "AB+": {{ blood_donation_ab_pos.count }}</h4>
+    <h4>Total Blood Donation "AB-": {{ blood_donation_ab_neg.count }}</h4>
+    <h4>Total Blood Donation "O+": {{ blood_donation_o_pos.count }}</h4>
+    <h4>Total Blood Donation "O-": {{ blood_donation_o_neg.count }}</h4>
+
+    <h3 class="text-info">Donation Request</h3>
+    <h4>Total Blood Donation Request "A+": {{ blood_donation_request_a_pos.count }}</h4>
+    <h4>Total Blood Donation Request "A-": {{ blood_donation_request_a_neg.count }}</h4>
+    <h4>Total Blood Donation Request "B+": {{ blood_donation_request_b_pos.count }}</h4>
+    <h4>Total Blood Donation Request "B-": {{ blood_donation_request_b_neg.count }}</h4>
+    <h4>Total Blood Donation Request "AB+": {{ blood_donation_request_ab_pos.count }}</h4>
+    <h4>Total Blood Donation Request "AB-": {{ blood_donation_request_ab_neg.count }}</h4>
+    <h4>Total Blood Donation Request "O+": {{ blood_donation_request_o_pos.count }}</h4>
+    <h4>Total Blood Donation Request "O-": {{ blood_donation_request_o_neg.count }}</h4>
+
+    <h2 class="text-primary">Organ Donation Category Wise</h2>
+    <h3 class="text-info">Donation</h3>
+    <h4>Total Organ Donation "Heart": {{ organ_donation_heart.count }}</h4>
+    <h4>Total Organ Donation "Kidney": {{ organ_donation_kidney.count }}</h4>
+    <h4>Total Organ Donation "Pancreas": {{ organ_donation_pancreas.count }}</h4>
+    <h4>Total Organ Donation "Lungs": {{ organ_donation_lungs.count }}</h4>
+    <h4>Total Organ Donation "Liver": {{ organ_donation_liver.count }}</h4>
+    <h4>Total Organ Donation "Intestines": {{ organ_donation_intestines.count }}</h4>
+
+    <h3 class="text-info">Donation Request</h3>
+    <h4>Total Organ Donation Request "Heart": {{ organ_donation_request_heart.count }}</h4>
+    <h4>Total Organ Donation Request "Kidney": {{ organ_donation_request_kidney.count }}</h4>
+    <h4>Total Organ Donation Request "Pancreas": {{ organ_donation_request_pancreas.count }}</h4>
+    <h4>Total Organ Donation Request "Lungs": {{ organ_donation_request_lungs.count }}</h4>
+    <h4>Total Organ Donation Request "Liver": {{ organ_donation_request_liver.count }}</h4>
+    <h4>Total Organ Donation Request "Intestines": {{ organ_donation_request_intestines.count }}</h4>
+
+    <h2 class="text-primary">Tissue Donation Category Wise</h2>
+    <h3 class="text-info">Donation</h3>
+    <h4>Total Tissue Donation "Bones": {{ tissue_donation_bones.count }}</h4>
+    <h4>Total Tissue Donation "Ligaments": {{ tissue_donation_ligaments.count }}</h4>
+    <h4>Total Tissue Donation "Tendons": {{ tissue_donation_tendons.count }}</h4>
+    <h4>Total Tissue Donation "Fascia": {{ tissue_donation_fascia.count }}</h4>
+    <h4>Total Tissue Donation "Veins": {{ tissue_donation_veins.count }}</h4>
+    <h4>Total Tissue Donation "Nerves": {{ tissue_donation_nerves.count }}</h4>
+    <h4>Total Tissue Donation "Corneas": {{ tissue_donation_corneas.count }}</h4>
+    <h4>Total Tissue Donation "Sclera": {{ tissue_donation_sclera.count }}</h4>
+    <h4>Total Tissue Donation "Heart Valves": {{ tissue_donation_heart_valves.count }}</h4>
+    <h4>Total Tissue Donation "Skin": {{ tissue_donation_skin.count }}</h4>
+
+    <h3 class="text-info">Donation Request</h3>
+    <h4>Total Tissue Donation Request "Bones": {{ tissue_donation_request_bones.count }}</h4>
+    <h4>Total Tissue Donation Request "Ligaments": {{ tissue_donation_request_ligaments.count }}</h4>
+    <h4>Total Tissue Donation Request "Tendons": {{ tissue_donation_request_tendons.count }}</h4>
+    <h4>Total Tissue Donation Request "Fascia": {{ tissue_donation_request_fascia.count }}</h4>
+    <h4>Total Tissue Donation Request "Veins": {{ tissue_donation_request_veins.count }}</h4>
+    <h4>Total Tissue Donation Request "Nerves": {{ tissue_donation_request_nerves.count }}</h4>
+    <h4>Total Tissue Donation Request "Corneas": {{ tissue_donation_request_corneas.count }}</h4>
+    <h4>Total Tissue Donation Request "Sclera": {{ tissue_donation_request_sclera.count }}</h4>
+    <h4>Total Tissue Donation Request "Heart Valves": {{ tissue_donation_request_heart_valves.count }}</h4>
+    <h4>Total Tissue Donation Request "Skin": {{ tissue_donation_request_skin.count }}</h4>
+
+</div>

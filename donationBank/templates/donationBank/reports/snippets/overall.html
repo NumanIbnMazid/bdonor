@@ -1,0 +1,189 @@
+{% load static %}
+<div class="text-center">
+    <p class="font-17 font-bold">Overall Statistics</p>
+</div>
+<div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card card-stats card-primary card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="icon-small text-center">
+                            <img src="{% static 'images/raw/heart.png' %}" alt="donation offers"
+                                class="avatar-img rounded-circle">
+                        </div>
+                    </div>
+                    <div class="col-9 col-stats">
+                        <div class="numbers">
+                            <p class="card-category">Total Donations</p>
+                            <h4 class="card-title">
+                                {{ total_donation.count }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card card-stats card-info card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="icon-small text-center">
+                            <img src="{% static 'images/raw/help.png' %}" alt="donation requests"
+                                class="avatar-img rounded-circle">
+                        </div>
+                    </div>
+                    <div class="col-9 col-stats">
+                        <div class="numbers">
+                            <p class="card-category">Total Donation Requests</p>
+                            <h4 class="card-title">
+                                {{ total_donation_request.count }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+        <div class="card card-stats card-primary card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="icon-small text-center">
+                            <img src="{% static 'images/raw/expired.png' %}" alt="expired"
+                                class="avatar-img rounded-circle">
+                        </div>
+                    </div>
+                    <div class="col-9 col-stats">
+                        <div class="numbers">
+                            <p class="card-category">Donation Expired</p>
+                            <h4 class="card-title">
+                                {{ total_donation_expired.count }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+        <div class="card card-stats card-info card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="icon-small text-center">
+                            <img src="{% static 'images/raw/camp_icon.png' %}" alt="donation bank"
+                                class="avatar-img rounded-circle">
+                        </div>
+                    </div>
+                    <div class="col-9 col-stats">
+                        <div class="numbers">
+                            <p class="card-category">Campaigns</p>
+                            <h4 class="card-title">
+                                {{ total_campaign.count }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+        <div class="card card-stats card-info card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="icon-small text-center">
+                            <i class="flaticon-users font-25"></i>
+                        </div>
+                    </div>
+                    <div class="col-9 col-stats">
+                        <div class="numbers">
+                            <p class="card-category">Members</p>
+                            <h4 class="card-title">
+                                {{ total_member.count }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card card-stats card-round">
+            <div class="card-body">
+                <p class="text-center">
+                    <span class="text-muted font-bold">Donation</span>
+                    <span class="font-17">
+                        [
+                        <span style="color: #e37f54;">Pending</span>
+                        vs 
+                        <span style="color: #53c965;">Completed</span>
+                        ]
+                    </span>
+                </p>
+                {% if total_donation_pending.count > 0 or total_donation_successful.count > 0  %}
+                <div class="sparkline inline text-center" data-type="pie" data-height="165"
+                    data-slice-colors="['#e37f54','#53c965']">
+                    {{ total_donation_pending.count }},{{ total_donation_successful.count }}
+                </div>
+                <div class="text-center mt-2">
+                    <span class="stamp" style="background-color: #e37f54;">
+                        pending
+                    </span>
+                    <span class="stamp" style="background-color: #53c965;">
+                        completed
+                    </span>
+                </div>
+                {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    No data found !!!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card card-stats card-round">
+            <div class="card-body">
+                <p class="text-center">
+                    <span class="text-muted font-bold">Donation Request</span> 
+                    <span class="font-17">
+                        [
+                        <span style="color: #e37f54;">Pending</span>
+                        vs
+                        <span style="color: #53c965;">Completed</span>
+                        ]
+                    </span>
+                </p>
+                {% if total_donation_request_pending.count > 0 or total_donation_request_successful.count > 0  %}
+                <div class="sparkline inline text-center" data-type="pie" data-height="165"
+                    data-slice-colors="['#e37f54','#53c965']">
+                    {{ total_donation_request_pending.count }},{{ total_donation_request_successful.count }}
+                </div>
+                <div class="text-center mt-2">
+                    <span class="stamp" style="background-color: #e37f54;">
+                        pending
+                    </span>
+                    <span class="stamp" style="background-color: #53c965;">
+                        completed
+                    </span>
+                </div>
+                {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    No data found !!!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

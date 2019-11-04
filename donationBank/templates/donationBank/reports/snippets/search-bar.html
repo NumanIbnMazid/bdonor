@@ -1,0 +1,86 @@
+<!-- <div class="collapse" id="search-nav">
+    <form class="navbar-left navbar-form nav-search mr-md-3">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pr-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" placeholder="Search ..." class="form-control">
+        </div>
+    </form>
+</div> -->
+
+
+
+<!-- <div class="container m-2">
+    <form class="navbar-form nav-search mr-md-3">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pr-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" placeholder="Search ..." class="form-control">
+        </div>
+    </form>
+</div> -->
+<div class="text-center">
+    <button class="btn btn-secondary btn-sm m-2" type="button" data-toggle="collapse" data-target="#filterCollapse"
+        aria-expanded="false" aria-controls="filterCollapse">
+        <i class="flaticon-search-2 m-1"></i>
+        Filter
+    </button>
+    <div class="collapse {% if not query == None or not query_date_from == None or not query_date_to == None %}in show{% endif %}"
+        id="filterCollapse">
+        <div class="card card-body">
+            <div class="form-group" id="bank_filter_chart_div">
+                <form action="{% url 'donationBank:bank_report_filtered' %}" method="GET" id="bank_chart_filter_form"
+                    data-toggle="validator">
+                    <input type="text" name="q" class="form-control" placeholder="Search for..." value="{{ query }}">
+
+                    <div class="row" id="date_range">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="date-from-addon">From</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="date-from" id="date_from"
+                                        placeholder="date from..." aria-label="date_from" value="{{query_date_from}}"
+                                        aria-describedby="date-from-addon" onchange="dateFilterFunction()">
+                                </div>
+                                <div class="error text-center">
+                                    <p class="text-danger" id="from_error_msg"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="date-to-addon">To</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="date-to" id="date_to"
+                                        value="{{query_date_to}}" placeholder="date to..." aria-label="date_to"
+                                        aria-describedby="date-to-addon" onchange="dateFilterFunction()">
+                                </div>
+                                <div class="error text-center">
+                                    <p class="text-danger" id="to_error_msg"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="error text-center">
+                        <p class="text-danger font-bold" id="error_msg"></p>
+                    </div>
+                    <div class="input-icon-addon text-center m-2">
+                        <button class="btn btn-default btn-sm" type="submit" id="bank_chart_filter_btn">
+                            <i class="flaticon-chain"></i> Apply Filter
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

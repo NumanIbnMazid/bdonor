@@ -1,0 +1,62 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{page_title}}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<!-- chartJS css -->
+<link rel="stylesheet" href="{% static 'vendor/chart-JS/Chart.min.css' %}" type="text/css" />
+<!-- date-time picker CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        {% include 'donationBank/snippets/header.html' %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                {% include 'donationBank/snippets/sidebar.html' %}
+            </div>
+            <div class="col-md-10">
+                {% include 'donationBank/reports/snippets/search-bar.html' %}
+                {% include 'donationBank/reports/snippets/data-input.html' %}
+                {% include 'donationBank/reports/snippets/overall.html' %}
+                {% include 'donationBank/reports/snippets/blood-group-wise.html' %}
+                {% include 'donationBank/reports/snippets/category-wise.html' %}
+                {% include 'donationBank/reports/snippets/blood-donation.html' %}
+                {% include 'donationBank/reports/snippets/organ-donation.html' %}
+                {% include 'donationBank/reports/snippets/tissue-donation.html' %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- date-time picker JS -->
+<script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
+<!-- Chart JS -->
+<!-- <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script> -->
+<!-- chart JS -->
+<script type="text/javascript" src="{% static 'vendor/chart-JS/Chart.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/chart-JS/Chart.bundle.min.js' %}"></script>
+<!-- sparkline JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-charts/jquery.sparkline.min.js' %}"></script>
+<!-- easy pie chart -->
+<script type="text/javascript" src="{% static 'vendor/jquery-charts/jquery.easypiechart.min.js' %}"></script>
+<!-- chart configuration -->
+<script type="text/javascript" src="{% static 'vendor/jquery-charts/charts-conf.js' %}"></script>
+<!-- form JS -->
+<script type="text/javascript" src="{% static 'assets/js/form-validator/bank-chart-filter-form.js' %}"></script>
+{% endblock %}

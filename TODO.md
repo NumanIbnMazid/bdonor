@@ -240,3 +240,16 @@ Afroja Aunty Husband (Shahin Uncle)
 9. Heary vavlve after derh within 24 hours from heart
     4Ta thake valve
 10. Sclera same as Cornea
+
+
+
+# ===== Chart Requirements =====
+    Donation Bank
+        1. Number of donation stored (Day, Month, Year, Location, criteria(ex:blood group))
+        2. Number of donation requests (Day, Month, Year, Location, criteria(ex:blood group))
+        3. Number of donation successful (Day, Month, Year, Location, criteria(ex:blood group))
+        4. Number of donation unsuccessful (Day, Month, Year, Location, criteria(ex:blood group))
+        5. Number of donation expired (Day, Month, Year, Location, criteria(ex:blood group))
+        6. Number of donation managed on site (Day, Month, Year, Location, criteria(ex:blood group))
+        7. Number of donation managed outside (Day, Month, Year, Location, criteria(ex:blood group))
+        8. Number of Campaigns (Day, Month, Year, Location)
