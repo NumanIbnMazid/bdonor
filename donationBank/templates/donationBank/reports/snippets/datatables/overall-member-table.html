@@ -1,0 +1,100 @@
+<button type="button" class="btn btn-info btn-xs bg-c-blue-black" data-toggle="modal"
+    data-target="#modal-statistics-overall-member">
+    <i class="flaticon-medical"></i>
+    View Data
+</button>
+
+
+<!-- Overall Statistics Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-statistics-overall-member" tabindex="-1" role="dialog"
+    aria-labelledby="StatisticsOverallMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="modalStatisticsOverallMember">
+                    Overall Statistics
+                    <span class="text-info">(Total Members)</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% include 'donationBank/reports/snippets/datatables/includes/keys.html' %}
+                <div class="table-responsive">
+                    <table id="statisticsOverallMemberDataTable"
+                        class="cell-border hover table-bordered table-hover text-center text-dark" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                {% if request.user.is_superuser %}
+                                <th>Bank</th>
+                                {% endif %}
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Joined At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in total_member %}
+                            <tr class="text-dark">
+                                <th scope="row">{{ forloop.counter }}</th>
+                                {% if request.user.is_superuser %}
+                                <td>
+                                    <b>
+                                        {{ member.bank.institute }}
+                                    </b>
+                                </td>
+                                {% endif %}
+                                <td>
+                                    {% if not member.user.profile.get_dynamic_name == "" %}
+                                    {{ member.user.profile.get_dynamic_name }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not member.get_bank_member_role == "" %}
+                                    {{ member.get_bank_member_role }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not member.created_at == "" %}
+                                    {{ member.created_at }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No item found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-center">
+                                <th>#</th>
+                                {% if request.user.is_superuser %}
+                                <th>Bank</th>
+                                {% endif %}
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Joined At</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

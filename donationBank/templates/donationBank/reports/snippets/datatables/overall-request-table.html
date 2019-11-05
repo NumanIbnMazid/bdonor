@@ -1,0 +1,109 @@
+<button type="button" class="btn btn-info btn-xs bg-c-blue-black" data-toggle="modal"
+    data-target="#modal-statistics-overall-request">
+    <i class="flaticon-medical"></i>
+    View Data
+</button>
+
+
+<!-- Overall Statistics Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-statistics-overall-request" tabindex="-1" role="dialog"
+    aria-labelledby="StatisticsOverallRequestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="modalStatisticsOverallRequest">
+                    Overall Statistics
+                    <span class="text-info">(Total Donation Requests)</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% include 'donationBank/reports/snippets/datatables/includes/keys.html' %}
+                <div class="table-responsive">
+                    <table id="statisticsOverallRequestDataTable"
+                        class="cell-border hover table-bordered table-hover text-center text-dark" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                {% if request.user.is_superuser %}
+                                <th>Bank</th>
+                                {% endif %}
+                                <th>Donation Type</th>
+                                <th>Blood Group</th>
+                                <th>Details</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for donation in total_donation_request %}
+                            <tr class="text-dark">
+                                <th scope="row">{{ forloop.counter }}</th>
+                                {% if request.user.is_superuser %}
+                                <td>
+                                    <b>
+                                        {{ donation.bank.institute }}
+                                    </b>
+                                </td>
+                                {% endif %}
+                                <td>
+                                    {% if not donation.get_donation_type == "" %}
+                                    {{ donation.get_donation_type }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.blood_group == "" %}
+                                    {{ donation.blood_group }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.get_type_dynamic_short_detail == "" %}
+                                    {{ donation.get_type_dynamic_short_detail }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.created_at == "" %}
+                                    {{ donation.created_at }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No item found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-center">
+                                <th>#</th>
+                                {% if request.user.is_superuser %}
+                                <th>Bank</th>
+                                {% endif %}
+                                <th>Donation Type</th>
+                                <th>Blood Group</th>
+                                <th>Details</th>
+                                <th>Created At</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -37,7 +37,7 @@
             <div class="form-group" id="bank_filter_chart_div">
                 <form action="{% url 'donationBank:bank_report_filtered' %}" method="GET" id="bank_chart_filter_form"
                     data-toggle="validator">
-                    <input type="text" name="q" class="form-control" placeholder="Search for..." value="{{ query }}">
+                    <input type="text" name="q" id="query_q" class="form-control" placeholder="Search for..." value="{{ query }}">
 
                     <div class="row" id="date_range">
                         <div class="col-md-6">

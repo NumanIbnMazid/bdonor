@@ -1,0 +1,205 @@
+<button type="button" class="btn btn-info btn-xs bg-c-blue-black" data-toggle="modal"
+    data-target="#modal-statistics-overall">
+    <i class="flaticon-medical"></i>
+    View Data
+</button>
+
+
+<!-- Overall Statistics Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-statistics-overall" tabindex="-1" role="dialog"
+    aria-labelledby="StatisticsOverallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="modalStatisticsOverall">
+                    Overall Statistics 
+                    <span class="text-info">(Total Donations)</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% include 'donationBank/reports/snippets/datatables/includes/keys.html' %}
+                <div class="table-responsive">
+                    <table id="statisticsOverallDataTable"
+                        class="cell-border hover table-bordered table-hover text-center text-dark"
+                        style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Donor</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Email</th>
+                                <th>Contact</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Blood Group</th>
+                                <th>Donation Type</th>
+                                <th>Details</th>
+                                <th>Disease</th>
+                                <th>Status</th>
+                                <th>Collection Date</th>
+                                <th>Expiration Date</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for donation in total_donation %}
+                            <tr class="text-dark">
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>
+                                    <b>
+                                        {{ donation.get_donor_name }}
+                                    </b>
+                                </td>
+                                <td>
+                                    {% if not donation.dob == "" %}
+                                    {{ donation.dob }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.gender == "" %}
+                                    {{ donation.gender }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.email == "" %}
+                                    {{ donation.email }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.contact == "" %}
+                                    {{ donation.contact }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.address == "" %}
+                                    {{ donation.address }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.city == "" %}
+                                    {{ donation.city }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.state == "" %}
+                                    {{ donation.state }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.country.name == "" %}
+                                    {{ donation.country.name }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.blood_group == "" %}
+                                    {{ donation.blood_group }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.get_donation_type == "" %}
+                                    {{ donation.get_donation_type }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ donation.get_type_dynamic_short_detail }}
+                                </td>
+                                <td>
+                                    {% if not donation.diseases == "" %}
+                                    {{ donation.diseases }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td class="{% if donation.donation_progress.progress_status == 1 %}c-text-success{% else %}c-text-warning{% endif %}
+                                    font-bold">
+                                    {{ donation.donation_progress.get_progress_status }}
+                                </td>
+                                <td>
+                                    {% if not donation.collection_date == "" %}
+                                    {{ donation.collection_date }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.expiration_date == "" %}
+                                    {{ donation.expiration_date }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.created_at == "" %}
+                                    {{ donation.created_at }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="18" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No item found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>Donor</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Email</th>
+                                <th>Contact</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Blood Group</th>
+                                <th>Donation Type</th>
+                                <th>Details</th>
+                                <th>Disease</th>
+                                <th>Status</th>
+                                <th>Collection Date</th>
+                                <th>Expiration Date</th>
+                                <th>Created At</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

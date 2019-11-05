@@ -131,3 +131,108 @@ function dateFilterFunction() {
         $("#to_error_msg").html("");
     }
 }
+
+// Data Tables
+
+$(document).ready(function () {
+    var filter_html = $("#filter_stat_html").html();
+    var table = $('#statisticsOverallDataTable, #statisticsOverallRequestDataTable, #statisticsOverallExpiredDataTable, #statisticsOverallCampaignDataTable, #statisticsOverallMemberDataTable').DataTable({
+        destroy: true,
+        //"retrieve": true,
+        //"order": [[ 1, 'desc' ]],
+        "ordering": false,
+        "select": true,
+        "scrollCollapse": true,
+        "stateSave": true,
+        "pagingType": "full_numbers",
+        //"searching": false,
+        //"paging": false,
+        //"scrollY": 400,
+        //"scrollX": 400,
+        //"scrollY": '62vh',
+        //"scrollX": '50vh',
+        'dom': 'Bfrtip',
+        "lengthMenu": [
+            [10, 25, 50, -1],
+            ['10 rows', '25 rows', '50 rows', 'Show all']
+        ],
+        'buttons': [
+            // 'copy', 'csv', 'excel', 'pdf', 'print',
+            {
+                extend: 'colvis',
+                collectionLayout: 'fixed two-column',
+                postfixButtons: ['colvisRestore'],
+                className: 'text-primary font-bold font-italic'
+            },
+            {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'LEGAL',
+                title: "Exported Data |PDF| Donation Bank Statistics | BDonor",
+                footer: true,
+                className: 'text-secondary font-bold'
+            },
+            {
+                extend: 'excelHtml5',
+                autoFilter: true,
+                sheetName: "Exported Data |EXCEL| Donation Bank Statistics | BDonor",
+                title: "Exported Data |EXCEL| Donation Bank Statistics | BDonor",
+                footer: true,
+                className: 'text-secondary font-bold'
+            },
+            {
+                extend: 'csvHtml5',
+                title: "Exported Data |CSV| Donation Bank Statistics | BDonor",
+                footer: true,
+                className: 'text-secondary font-bold'
+            },
+            {
+                extend: 'copyHtml5',
+                footer: true,
+                className: 'text-secondary font-bold'
+            },
+            {
+                extend: 'print',
+                messageTop: "PRINT | " + filter_html + " | Donation Bank Statistics | BDonor",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                className: 'text-secondary font-bold'
+            },
+            // 'columnsToggle',
+            // 'colvis',
+            {
+                extend: 'pageLength',
+                className: 'text-success font-italic'
+            },
+            // 'pageLength'
+        ],
+        "columnDefs": [
+            {
+                targets: -1,
+                visible: false
+            }
+        ],
+        "language": {
+            // "lengthMenu": "Display _MENU_ records per page. <span class='ml-4 text-primary'>Total Records: <span class='font-13 font-bold'>" +
+            //     $("#total_records_count").val() + "</span></span>",
+            // "zeroRecords": "Nothing found - sorry",
+            // "info": "Showing page _PAGE_ of _PAGES_",
+            // "infoEmpty": "No records available",
+            // "infoFiltered": "(filtered from _MAX_ total records)",
+            buttons: {
+                copyTitle: 'Added to the clipboard',
+                copyKeys: 'Press <i> ctrl </ i> or <i> \ u2318 </ i> + <i> C </ i> to copy the data from the table to your clipboard. <br> <br> To cancel, click on this message or press Esc.',
+                copySuccess: {
+                    _: '%d lines copied',
+                    1: '1 line copied'
+                },
+                colvis: 'Column Visibility',
+            }
+        },
+    });
+    // jqueryUI Style
+    // table.buttons().container().insertBefore('#statisticsOverallDataTable_filter');
+    // bootstrap4 Style
+    // table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
+});

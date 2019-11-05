@@ -810,6 +810,12 @@ class Donation(models.Model):
         name = "Undefined"
         if not self.first_name == None and not self.last_name == None:
             name = self.first_name + " " + self.last_name
+        elif not self.first_name == None and self.last_name == None:
+            name = self.first_name
+        elif self.first_name == None and not self.last_name == None:
+            name = self.last_name
+        else:
+            name = "Undefined"
         return name
 
     def get_donor_age(self):

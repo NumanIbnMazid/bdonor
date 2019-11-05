@@ -1,0 +1,163 @@
+<button type="button" class="btn btn-info btn-xs bg-c-blue-black" data-toggle="modal"
+    data-target="#modal-statistics-campaign">
+    <i class="flaticon-medical"></i>
+    View Data
+</button>
+
+
+<!-- Overall Statistics Modal -->
+<div class="modal fade bg-opacity-mid" id="modal-statistics-campaign" tabindex="-1" role="dialog"
+    aria-labelledby="StatisticsOverallCampaignModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content bg-c-white-raw">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="modalStatisticsOverallCampaign">
+                    Overall Statistics
+                    <span class="text-info">(Total Campaigns)</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% include 'donationBank/reports/snippets/datatables/includes/keys.html' %}
+                <div class="table-responsive">
+                    <table id="statisticsOverallCampaignDataTable"
+                        class="cell-border hover table-bordered table-hover text-center text-dark" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                {% if request.user.is_superuser %}
+                                <th>Bank</th>
+                                {% endif %}
+                                <th>Title</th>
+                                <th>Held Date</th>
+                                <th>End Date</th>
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for campaign in total_campaign %}
+                            <tr class="text-dark">
+                                <th scope="row">{{ forloop.counter }}</th>
+                                {% if request.user.is_superuser %}
+                                <td>
+                                    <b>
+                                        {{ campaign.bank.institute }}
+                                    </b>
+                                </td>
+                                {% endif %}
+                                <td>
+                                    {% if not campaign.title == "" %}
+                                    {{ campaign.title }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.held_date == "" %}
+                                    {{ campaign.held_date }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.end_date == "" %}
+                                    {{ campaign.end_date }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.contact == "" %}
+                                    {{ campaign.contact }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.email == "" %}
+                                    {{ campaign.email }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.address == "" %}
+                                    {{ campaign.address }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.city == "" %}
+                                    {{ campaign.city }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.state == "" %}
+                                    {{ campaign.state }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.country.name == "" %}
+                                    {{ campaign.country.name }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not campaign.created_at == "" %}
+                                    {{ campaign.created_at }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="11" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No item found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-center">
+                                <th>#</th>
+                                {% if request.user.is_superuser %}
+                                <th>Bank</th>
+                                {% endif %}
+                                <th>Title</th>
+                                <th>Held Date</th>
+                                <th>End Date</th>
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Created At</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,6 +11,14 @@
 <link rel="stylesheet" href="{% static 'vendor/chart-JS/Chart.min.css' %}" type="text/css" />
 <!-- date-time picker CSS -->
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}" />
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/buttons.dataTables.min.css' %}" type="text/css" />
+<!-- datatable styles -->
+<!-- <link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.bootstrap4.min.css' %}" type="text/css" /> -->
+<!-- <link rel="stylesheet" href="{% static 'vendor/jquery-datatable/buttons.bootstrap4.min.css' %}" type="text/css" /> -->
+<!-- <link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.jqueryui.min.css' %}" type="text/css" /> -->
+<!-- <link rel="stylesheet" href="{% static 'vendor/jquery-datatable/buttons.jqueryui.min.css' %}" type="text/css" /> -->
 {% endblock %}
 
 {% block content %}
@@ -44,6 +52,22 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.buttons.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.flash.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/jszip.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/pdfmake.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/vfs_fonts.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.html5.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.print.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.colVis.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.select.min.js' %}"></script>
+<!-- datatable styles -->
+<!-- <script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.bootstrap4.min.js' %}"></script> -->
+<!-- <script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.bootstrap4.min.js' %}"></script> -->
+<!-- <script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.jqueryui.min.js' %}"></script> -->
+<!-- <script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.jqueryui.min.js' %}"></script> -->
 <!-- date-time picker JS -->
 <script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
 <!-- Chart JS -->
