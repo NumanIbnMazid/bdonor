@@ -18,7 +18,7 @@ class Checkout(models.Model):
     class Meta:
         verbose_name = ("Checkout")
         verbose_name_plural = ("Checkouts")
-        ordering = ["-user__date_joined"]
+        ordering = ["-created_at"]
 
     def __str__(self):
         return self.user.username
