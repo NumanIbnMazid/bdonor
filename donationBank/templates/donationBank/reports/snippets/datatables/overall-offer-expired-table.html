@@ -27,6 +27,9 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                {% if request.user.is_superuser %}
+                                <th>Bank</th>
+                                {% endif %}
                                 <th>Donor</th>
                                 <th>DOB</th>
                                 <th>Gender</th>
@@ -50,6 +53,13 @@
                             {% for donation in total_donation_expired %}
                             <tr class="text-dark">
                                 <th scope="row">{{ forloop.counter }}</th>
+                                {% if request.user.is_superuser %}
+                                <td>
+                                    <b>
+                                        {{ donation.bank.institute }}
+                                    </b>
+                                </td>
+                                {% endif %}
                                 <td>
                                     <b>
                                         {{ donation.get_donor_name }}
@@ -174,6 +184,9 @@
                         <tfoot>
                             <tr class="text-center">
                                 <th>#</th>
+                                {% if request.user.is_superuser %}
+                                <th>Bank</th>
+                                {% endif %}
                                 <th>Donor</th>
                                 <th>DOB</th>
                                 <th>Gender</th>

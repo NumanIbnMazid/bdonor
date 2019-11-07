@@ -28,25 +28,27 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                {% if request.user.is_superuser %}
-                                <th>Bank</th>
-                                {% endif %}
-                                <th>Donor</th>
-                                <th>DOB</th>
-                                <th>Gender</th>
-                                <th>Email</th>
-                                <th>Contact</th>
-                                <th>Address</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Type</th>
+                                <th>Verification Status</th>
+                                <th>Blood Group</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                                <th>Viewers</th>
+                                <th>Hospital</th>
+                                <th>Preferred Date</th>
+                                <th>Preferred Date From</th>
+                                <th>Preferred Date To</th>
+                                <th>Priority</th>
+                                <th>Location</th>
                                 <th>City</th>
                                 <th>State</th>
                                 <th>Country</th>
-                                <th>Blood Group</th>
-                                <th>Donation Type</th>
-                                <th>Details</th>
-                                <th>Disease</th>
-                                <th>Status</th>
-                                <th>Collection Date</th>
-                                <th>Expiration Date</th>
+                                <th>Contact</th>
+                                <th>Contact 2</th>
+                                <th>Contact 3</th>
+                                <th>Contact Privacy</th>
                                 <th>Created At</th>
                             </tr>
                         </thead>
@@ -54,118 +56,151 @@
                             {% for donation in total_donation %}
                             <tr class="text-dark">
                                 <th scope="row">{{ forloop.counter }}</th>
-                                {% if request.user.is_superuser %}
                                 <td>
                                     <b>
-                                        {{ donation.bank.institute }}
-                                    </b>
-                                </td>
-                                {% endif %}
-                                <td>
-                                    <b>
-                                        {{ donation.get_donor_name }}
+                                        {{ donation.user.get_username }}
                                     </b>
                                 </td>
                                 <td>
-                                    {% if not donation.dob == "" %}
-                                    {{ donation.dob }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
+                                    <b>
+                                        {{ donation.user.user.username }}
+                                    </b>
                                 </td>
                                 <td>
-                                    {% if not donation.gender == "" %}
-                                    {{ donation.gender }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if not donation.email == "" %}
-                                    {{ donation.email }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if not donation.contact == "" %}
-                                    {{ donation.contact }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if not donation.address == "" %}
-                                    {{ donation.address }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if not donation.city == "" %}
-                                    {{ donation.city }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if not donation.state == "" %}
-                                    {{ donation.state }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if not donation.country.name == "" %}
-                                    {{ donation.country.name }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if not donation.blood_group == "" %}
-                                    {{ donation.blood_group }}
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if not donation.get_donation_type == "" %}
+                                    {% if not donation.get_donation_type  == None %}
                                     {{ donation.get_donation_type }}
                                     {% else %}
                                     -
                                     {% endif %}
                                 </td>
                                 <td>
+                                    {% if not donation.get_verification_status  == None %}
+                                    {{ donation.get_verification_status }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.blood_group  == None %}
+                                    {{ donation.blood_group }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.get_type_dynamic_short_detail  == None %}
                                     {{ donation.get_type_dynamic_short_detail }}
-                                </td>
-                                <td>
-                                    {% if not donation.diseases == "" %}
-                                    {{ donation.diseases }}
                                     {% else %}
                                     -
                                     {% endif %}
                                 </td>
-                                <td class="{% if donation.donation_progress.progress_status == 1 %}c-text-success{% else %}c-text-warning{% endif %}
-                                    font-bold">
+                                <td>
+                                    {% if not donation.donation_progress.get_progress_status  == None %}
                                     {{ donation.donation_progress.get_progress_status }}
-                                </td>
-                                <td>
-                                    {% if not donation.collection_date == "" %}
-                                    {{ donation.collection_date }}
                                     {% else %}
                                     -
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if not donation.expiration_date == "" %}
-                                    {{ donation.expiration_date }}
+                                    {% if not donation.get_viewers.count  == None %}
+                                    {{ donation.get_viewers.count }}
                                     {% else %}
                                     -
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if not donation.created_at == "" %}
+                                    {% if not donation.hospital  == None %}
+                                    {{ donation.hospital }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.preferred_date  == None %}
+                                    {{ donation.preferred_date }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.preferred_date_from  == None %}
+                                    {{ donation.preferred_date_from }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.preferred_date_to  == None %}
+                                    {{ donation.preferred_date_to }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.get_priority  == None %}
+                                    {{ donation.get_priority }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.location  == None %}
+                                    {{ donation.location }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.city  == None %}
+                                    {{ donation.city }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.state  == None %}
+                                    {{ donation.state }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.country.name  == "" %}
+                                    {{ donation.country.name }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.contact  == None %}
+                                    {{ donation.contact }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.contact2  == None %}
+                                    {{ donation.contact2 }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.contact3  == None %}
+                                    {{ donation.contact3 }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.get_contact_privacy  == None %}
+                                    {{ donation.get_contact_privacy }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not donation.created_at  == None %}
                                     {{ donation.created_at }}
                                     {% else %}
                                     -
@@ -174,7 +209,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="19" class="text-center">
+                                <td colspan="23" class="text-center">
                                     <div class="alert alert-warning">
                                         No item found!
                                     </div>
@@ -185,25 +220,27 @@
                         <tfoot>
                             <tr class="text-center">
                                 <th>#</th>
-                                {% if request.user.is_superuser %}
-                                <th>Bank</th>
-                                {% endif %}
-                                <th>Donor</th>
-                                <th>DOB</th>
-                                <th>Gender</th>
-                                <th>Email</th>
-                                <th>Contact</th>
-                                <th>Address</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Type</th>
+                                <th>Verification Status</th>
+                                <th>Blood Group</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                                <th>Viewers</th>
+                                <th>Hospital</th>
+                                <th>Preferred Date</th>
+                                <th>Preferred Date From</th>
+                                <th>Preferred Date To</th>
+                                <th>Priority</th>
+                                <th>Location</th>
                                 <th>City</th>
                                 <th>State</th>
                                 <th>Country</th>
-                                <th>Blood Group</th>
-                                <th>Donation Type</th>
-                                <th>Details</th>
-                                <th>Disease</th>
-                                <th>Status</th>
-                                <th>Collection Date</th>
-                                <th>Expiration Date</th>
+                                <th>Contact</th>
+                                <th>Contact 2</th>
+                                <th>Contact 3</th>
+                                <th>Contact Privacy</th>
                                 <th>Created At</th>
                             </tr>
                         </tfoot>

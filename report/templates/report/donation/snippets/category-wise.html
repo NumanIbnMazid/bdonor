@@ -1,0 +1,85 @@
+<div class="text-center">
+    <p class="font-17 font-bold">
+        Category wise Statistics
+    </p>
+</div>
+<div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card card-stats card-round">
+            <div class="card-body">
+                <p class="text-center">
+                    <span class="text-muted font-bold">Donation</span>
+                    <span class="font-17">
+                        [
+                        <span style="color: #F25C64;">Blood</span>
+                        vs
+                        <span style="color: #508f86;">Organ</span>
+                        vs
+                        <span style="color: #705ca0;">Tissue</span>
+                        ]
+                    </span>
+                </p>
+                {% if donation_blood.count > 0 or donation_organ.count > 0 or donation_tissue.count > 0 %}
+                <div class="sparkline inline text-center" data-type="pie" data-height="165"
+                    data-slice-colors="['#F25C64','#508f86', '#705ca0']">
+                    {{ donation_blood.count }},{{ donation_organ.count }},{{ donation_tissue.count }}
+                </div>
+                <div class="text-center mt-2">
+                    <span class="stamp" style="background-color: #F25C64;">
+                        blood
+                    </span>
+                    <span class="stamp" style="background-color: #508f86;">
+                        organ
+                    </span>
+                    <span class="stamp" style="background-color: #705ca0;">
+                        tissue
+                    </span>
+                </div>
+                {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    No data found !!!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card card-stats card-round">
+            <div class="card-body">
+                <p class="text-center">
+                    <span class="text-muted font-bold">Donation Request</span>
+                    <span class="font-17">
+                        [
+                        <span style="color: #F25C64;">Blood</span>
+                        vs
+                        <span style="color: #508f86;">Organ</span>
+                        vs
+                        <span style="color: #705ca0;">Tissue</span>
+                        ]
+                    </span>
+                </p>
+                {% if donation_request_blood.count > 0 or donation_request_organ.count > 0 or donation_request_tissue.count > 0 %}
+                <div class="sparkline inline text-center" data-type="pie" data-height="165"
+                    data-slice-colors="['#F25C64','#508f86', '#705ca0']">
+                    {{ donation_request_blood.count }},{{ donation_request_organ.count }}, {{ donation_request_tissue.count }}
+                </div>
+                <div class="text-center mt-2">
+                    <span class="stamp" style="background-color: #F25C64;">
+                        blood
+                    </span>
+                    <span class="stamp" style="background-color: #508f86;">
+                        organ
+                    </span>
+                    <span class="stamp" style="background-color: #705ca0;">
+                        tissue
+                    </span>
+                </div>
+                {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    No data found !!!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

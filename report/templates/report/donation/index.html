@@ -1,0 +1,68 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+{{page_title}}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<!-- chartJS css -->
+<link rel="stylesheet" href="{% static 'vendor/chart-JS/Chart.min.css' %}" type="text/css" />
+<!-- date-time picker CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.min.css' %}" />
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/buttons.dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header text-center font-bold">
+        {{page_title}}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                {% include 'report/donation/snippets/search-bar.html' %}
+                {% include 'report/donation/snippets/data-input.html' %}
+                {% include 'report/donation/snippets/overall.html' %}
+                {% include 'report/donation/snippets/blood-group-wise.html' %}
+                {% include 'report/donation/snippets/category-wise.html' %}
+                {% include 'report/donation/snippets/blood-donation.html' %}
+                {% include 'report/donation/snippets/organ-donation.html' %}
+                {% include 'report/donation/snippets/tissue-donation.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.buttons.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.flash.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/jszip.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/pdfmake.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/vfs_fonts.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.html5.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.print.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/buttons.colVis.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.select.min.js' %}"></script>
+<!-- date-time picker JS -->
+<script src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
+<!-- chart JS -->
+<script type="text/javascript" src="{% static 'vendor/chart-JS/Chart.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/chart-JS/Chart.bundle.min.js' %}"></script>
+<!-- sparkline JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-charts/jquery.sparkline.min.js' %}"></script>
+<!-- easy pie chart -->
+<script type="text/javascript" src="{% static 'vendor/jquery-charts/jquery.easypiechart.min.js' %}"></script>
+<!-- chart configuration -->
+<script type="text/javascript" src="{% static 'vendor/jquery-charts/charts-conf.js' %}"></script>
+<!-- form JS -->
+<script type="text/javascript" src="{% static 'assets/js/form-validator/bank-chart-filter-form.js' %}"></script>
+{% endblock %}

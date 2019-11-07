@@ -25,6 +25,7 @@ urlpatterns = [
     path('donation-bank/', include(('donationBank.urls',
                                     'donationBank'), namespace='donation_bank')),
     path('blog/', include(('blog.urls', 'blog'), namespace='blog')),
+    path('report/', include(('report.urls', 'report'), namespace='report')),
 ]
 
 

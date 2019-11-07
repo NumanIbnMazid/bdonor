@@ -136,6 +136,7 @@ function dateFilterFunction() {
 
 $(document).ready(function () {
     var filter_html = $("#filter_stat_html").html();
+    var page_name = $(".page-title").html();
     var table = $('#statisticsOverallDataTable, #statisticsOverallRequestDataTable, #statisticsOverallExpiredDataTable, #statisticsOverallCampaignDataTable, #statisticsOverallMemberDataTable').DataTable({
         destroy: true,
         //"retrieve": true,
@@ -168,21 +169,21 @@ $(document).ready(function () {
                 extend: 'pdfHtml5',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
-                title: "Exported Data |PDF| Donation Bank Statistics | BDonor",
+                title: "Exported Data |PDF| "+ page_name +" Statistics | BDonor",
                 footer: true,
                 className: 'text-secondary font-bold'
             },
             {
                 extend: 'excelHtml5',
                 autoFilter: true,
-                sheetName: "Exported Data |EXCEL| Donation Bank Statistics | BDonor",
-                title: "Exported Data |EXCEL| Donation Bank Statistics | BDonor",
+                sheetName: "Exported Data |EXCEL| "+ page_name +" Statistics | BDonor",
+                title: "Exported Data |EXCEL| "+ page_name +" Statistics | BDonor",
                 footer: true,
                 className: 'text-secondary font-bold'
             },
             {
                 extend: 'csvHtml5',
-                title: "Exported Data |CSV| Donation Bank Statistics | BDonor",
+                title: "Exported Data |CSV| "+ page_name +" Statistics | BDonor",
                 footer: true,
                 className: 'text-secondary font-bold'
             },
@@ -193,7 +194,7 @@ $(document).ready(function () {
             },
             {
                 extend: 'print',
-                messageTop: "PRINT | " + filter_html + " | Donation Bank Statistics | BDonor",
+                messageTop: "PRINT | " + filter_html + " | "+ page_name +" Statistics | BDonor",
                 exportOptions: {
                     columns: ':visible'
                 },

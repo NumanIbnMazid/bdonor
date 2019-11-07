@@ -1961,10 +1961,16 @@ class BankReportTemplateView(TemplateView):
         context['base_template'] = base_template
         # Ends Base Template Context
         # Starts Bank Object
-        qs = DonationBank.objects.filter(bank_member__user=self.request.user)
         bank_object = None
-        if qs.exists():
-            bank_object = qs.first()
+        slug = self.kwargs.get('slug')
+        if self.request.user.is_superuser:
+            qs = DonationBank.objects.filter(slug=slug)
+            if qs.exists():
+                bank_object = qs.first()
+        else:
+            qs = DonationBank.objects.filter(bank_member__user=self.request.user)
+            if qs.exists():
+                bank_object = qs.first()
         context['object'] = bank_object
         # Ends Bank Object
         # Report Data Starts
@@ -2134,10 +2140,13 @@ class BankReportTemplateView(TemplateView):
         return context
 
     def user_passes_test(self, request):
-        qs = DonationBank.objects.filter(
-            bank_member__user=request.user, slug=self.request.user.user_bank_member.bank.slug)
-        if qs.exists() and self.request.user.profile.account_type == 1:
+        if self.request.user.is_superuser:
             return True
+        else:
+            qs = DonationBank.objects.filter(
+                bank_member__user=request.user, slug=self.request.user.user_bank_member.bank.slug)
+            if qs.exists() and self.request.user.profile.account_type == 1:
+                return True
         return False
 
     def dispatch(self, request, *args, **kwargs):
@@ -2164,10 +2173,17 @@ class BankChartFilterTemplateView(TemplateView):
         context['base_template'] = base_template
         # Ends Base Template Context
         # Starts Bank Object
-        qs = DonationBank.objects.filter(bank_member__user=self.request.user)
         bank_object = None
-        if qs.exists():
-            bank_object = qs.first()
+        slug = self.kwargs.get('slug')
+        if self.request.user.is_superuser:
+            qs = DonationBank.objects.filter(slug=slug)
+            if qs.exists():
+                bank_object = qs.first()
+        else:
+            qs = DonationBank.objects.filter(
+                bank_member__user=self.request.user)
+            if qs.exists():
+                bank_object = qs.first()
         context['object'] = bank_object
         # Ends Bank Object
         # Report Data Starts
@@ -3100,10 +3116,13 @@ class BankChartFilterTemplateView(TemplateView):
         return context
 
     def user_passes_test(self, request):
-        qs = DonationBank.objects.filter(
-            bank_member__user=request.user, slug=self.request.user.user_bank_member.bank.slug)
-        if qs.exists() and self.request.user.profile.account_type == 1:
+        if self.request.user.is_superuser:
             return True
+        else:
+            qs = DonationBank.objects.filter(
+                bank_member__user=request.user, slug=self.request.user.user_bank_member.bank.slug)
+            if qs.exists() and self.request.user.profile.account_type == 1:
+                return True
         return False
 
     def dispatch(self, request, *args, **kwargs):
@@ -3111,3 +3130,757 @@ class BankChartFilterTemplateView(TemplateView):
             block_suspicious_user(request)
             return HttpResponseRedirect(reverse('home'))
         return super(BankChartFilterTemplateView, self).dispatch(request, *args, **kwargs)
+
+
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
+class AdminBankReportTemplateView(TemplateView):
+    template_name = "pages/reports/admin/bank/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminBankReportTemplateView,
+                        self).get_context_data(**kwargs)
+        context['page_title'] = "Bank Reports"
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        # Starts Bank Object
+        # bank_object = None
+        # slug = self.kwargs.get('slug')
+        # if self.request.user.is_superuser:
+        #     qs = DonationBank.objects.filter(slug=slug)
+        #     if qs.exists():
+        #         bank_object = qs.first()
+        # else:
+        #     qs = DonationBank.objects.filter(
+        #         bank_member__user=self.request.user)
+        #     if qs.exists():
+        #         bank_object = qs.first()
+        # context['object'] = bank_object
+        # Ends Bank Object
+        # Report Data Starts
+        context['total_donation'] = Donation.objects.filter()
+        context['total_donation_request'] = DonationRequest.objects.filter()
+        context['total_donation_pending'] = Donation.objects.filter().is_pending()
+        context['total_donation_request_pending'] = DonationRequest.objects.filter().is_pending()
+        context['total_donation_successful'] = Donation.objects.filter().is_done()
+        context['total_donation_request_successful'] = DonationRequest.objects.filter().is_done()
+        context['total_donation_expired'] = Donation.objects.filter().is_expired_pending()
+        context['total_campaign'] = Campaign.objects.filter()
+        context['total_member'] = BankMember.objects.filter()
+        context['donation_a_pos'] = Donation.objects.filter(blood_group__iexact="A+")
+        context['donation_a_neg'] = Donation.objects.filter(blood_group__iexact="A-")
+        context['donation_b_pos'] = Donation.objects.filter(blood_group__iexact="B+")
+        context['donation_b_neg'] = Donation.objects.filter(blood_group__iexact="B-")
+        context['donation_ab_pos'] = Donation.objects.filter(blood_group__iexact="AB+")
+        context['donation_ab_neg'] = Donation.objects.filter(blood_group__iexact="AB-")
+        context['donation_o_pos'] = Donation.objects.filter(blood_group__iexact="O+")
+        context['donation_o_neg'] = Donation.objects.filter(blood_group__iexact="O-")
+        context['donation_request_a_pos'] = DonationRequest.objects.filter(blood_group__iexact="A+")
+        context['donation_request_a_neg'] = DonationRequest.objects.filter(blood_group__iexact="A-")
+        context['donation_request_b_pos'] = DonationRequest.objects.filter(blood_group__iexact="B+")
+        context['donation_request_b_neg'] = DonationRequest.objects.filter(blood_group__iexact="B-")
+        context['donation_request_ab_pos'] = DonationRequest.objects.filter(blood_group__iexact="AB+")
+        context['donation_request_ab_neg'] = DonationRequest.objects.filter(blood_group__iexact="AB-")
+        context['donation_request_o_pos'] = DonationRequest.objects.filter(blood_group__iexact="O+")
+        context['donation_request_o_neg'] = DonationRequest.objects.filter(blood_group__iexact="O-")
+        context['donation_blood'] = Donation.objects.filter().blood_type()
+        context['donation_organ'] = Donation.objects.filter().organ_type()
+        context['donation_tissue'] = Donation.objects.filter().tissue_type()
+        context['donation_request_blood'] = DonationRequest.objects.filter().blood_type()
+        context['donation_request_organ'] = DonationRequest.objects.filter().organ_type()
+        context['donation_request_tissue'] = DonationRequest.objects.filter().tissue_type()
+        context['blood_donation_a_pos'] = Donation.objects.filter(blood_group__iexact="A+").blood_type()
+        context['blood_donation_a_neg'] = Donation.objects.filter(blood_group__iexact="A-").blood_type()
+        context['blood_donation_b_pos'] = Donation.objects.filter(blood_group__iexact="B+").blood_type()
+        context['blood_donation_b_neg'] = Donation.objects.filter(blood_group__iexact="B-").blood_type()
+        context['blood_donation_ab_pos'] = Donation.objects.filter(blood_group__iexact="AB+").blood_type()
+        context['blood_donation_ab_neg'] = Donation.objects.filter(blood_group__iexact="AB-").blood_type()
+        context['blood_donation_o_pos'] = Donation.objects.filter(blood_group__iexact="O+").blood_type()
+        context['blood_donation_o_neg'] = Donation.objects.filter(blood_group__iexact="O-").blood_type()
+        context['blood_donation_request_a_pos'] = DonationRequest.objects.filter(blood_group__iexact="A+").blood_type()
+        context['blood_donation_request_a_neg'] = DonationRequest.objects.filter(blood_group__iexact="A-").blood_type()
+        context['blood_donation_request_b_pos'] = DonationRequest.objects.filter(blood_group__iexact="B+").blood_type()
+        context['blood_donation_request_b_neg'] = DonationRequest.objects.filter(blood_group__iexact="B-").blood_type()
+        context['blood_donation_request_ab_pos'] = DonationRequest.objects.filter(blood_group__iexact="AB+").blood_type()
+        context['blood_donation_request_ab_neg'] = DonationRequest.objects.filter(blood_group__iexact="AB-").blood_type()
+        context['blood_donation_request_o_pos'] = DonationRequest.objects.filter(blood_group__iexact="O+").blood_type()
+        context['blood_donation_request_o_neg'] = DonationRequest.objects.filter(blood_group__iexact="O-").blood_type()
+        # Organ Donation Categorywise
+        context['organ_donation_heart'] = Donation.objects.filter(organ_name__iexact="Heart").organ_type()
+        context['organ_donation_kidney'] = Donation.objects.filter(organ_name__iexact="Kidney").organ_type()
+        context['organ_donation_pancreas'] = Donation.objects.filter(organ_name__iexact="Pancreas").organ_type()
+        context['organ_donation_lungs'] = Donation.objects.filter(organ_name__iexact="Lungs").organ_type()
+        context['organ_donation_liver'] = Donation.objects.filter(organ_name__iexact="Liver").organ_type()
+        context['organ_donation_intestines'] = Donation.objects.filter(organ_name__iexact="Intestines").organ_type()
+        # Organ Donation Request Categorywise
+        context['organ_donation_request_heart'] = DonationRequest.objects.filter(organ_name__iexact="Heart").organ_type()
+        context['organ_donation_request_kidney'] = DonationRequest.objects.filter(organ_name__iexact="Kidney").organ_type()
+        context['organ_donation_request_pancreas'] = DonationRequest.objects.filter(organ_name__iexact="Pancreas").organ_type()
+        context['organ_donation_request_lungs'] = DonationRequest.objects.filter(organ_name__iexact="Lungs").organ_type()
+        context['organ_donation_request_liver'] = DonationRequest.objects.filter(organ_name__iexact="Liver").organ_type()
+        context['organ_donation_request_intestines'] = DonationRequest.objects.filter(organ_name__iexact="Intestines").organ_type()
+        # Tissue Donation Categorywise
+        context['tissue_donation_bones'] = Donation.objects.filter(tissue_name__iexact="Bones'").tissue_type()
+        context['tissue_donation_ligaments'] = Donation.objects.filter(tissue_name__iexact="Ligaments").tissue_type()
+        context['tissue_donation_tendons'] = Donation.objects.filter(tissue_name__iexact="Tendons").tissue_type()
+        context['tissue_donation_fascia'] = Donation.objects.filter(tissue_name__iexact="Fascia").tissue_type()
+        context['tissue_donation_veins'] = Donation.objects.filter(tissue_name__iexact="Veins").tissue_type()
+        context['tissue_donation_nerves'] = Donation.objects.filter(tissue_name__iexact="Nerves").tissue_type()
+        context['tissue_donation_corneas'] = Donation.objects.filter(tissue_name__iexact="Corneas").tissue_type()
+        context['tissue_donation_sclera'] = Donation.objects.filter(tissue_name__iexact="Sclera").tissue_type()
+        context['tissue_donation_heart_valves'] = Donation.objects.filter(tissue_name__iexact="Heart Valves").tissue_type()
+        context['tissue_donation_skin'] = Donation.objects.filter(tissue_name__iexact="Skin").tissue_type()
+        # Tissue Donation Request Categorywise
+        context['tissue_donation_request_bones'] = DonationRequest.objects.filter(tissue_name__iexact="Bones'").tissue_type()
+        context['tissue_donation_request_ligaments'] = DonationRequest.objects.filter(tissue_name__iexact="Ligaments").tissue_type()
+        context['tissue_donation_request_tendons'] = DonationRequest.objects.filter(tissue_name__iexact="Tendons").tissue_type()
+        context['tissue_donation_request_fascia'] = DonationRequest.objects.filter(tissue_name__iexact="Fascia").tissue_type()
+        context['tissue_donation_request_veins'] = DonationRequest.objects.filter(tissue_name__iexact="Veins").tissue_type()
+        context['tissue_donation_request_nerves'] = DonationRequest.objects.filter(tissue_name__iexact="Nerves").tissue_type()
+        context['tissue_donation_request_corneas'] = DonationRequest.objects.filter(tissue_name__iexact="Corneas").tissue_type()
+        context['tissue_donation_request_sclera'] = DonationRequest.objects.filter(tissue_name__iexact="Sclera").tissue_type()
+        context['tissue_donation_request_heart_valves'] = DonationRequest.objects.filter(tissue_name__iexact="Heart Valves").tissue_type()
+        context['tissue_donation_request_skin'] = DonationRequest.objects.filter(tissue_name__iexact="Skin").tissue_type()
+        # Report Data Ends
+        return context
+
+    def user_passes_test(self, request):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(AdminBankReportTemplateView, self).dispatch(request, *args, **kwargs)
+
+
+@method_decorator(decorators, name='dispatch')
+@method_decorator(can_manage_bank_required, name='dispatch')
+class AdminBankChartFilterTemplateView(TemplateView):
+    template_name = "pages/reports/admin/bank/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminBankChartFilterTemplateView,
+                        self).get_context_data(**kwargs)
+        context['page_title'] = "Bank Reports"
+        # Starts Base Template Context
+        if self.request.user.is_superuser:
+            base_template = 'admin-site/base.html'
+        else:
+            base_template = 'base.html'
+        context['base_template'] = base_template
+        # Ends Base Template Context
+        # Report Data Starts
+        query_context = self.request.GET.get('q')
+        query_context_date_from = self.request.GET.get('date-from')
+        query_context_date_to = self.request.GET.get('date-to')
+        context['query'] = query_context
+        context['query_date_from'] = query_context_date_from
+        context['query_date_to'] = query_context_date_to
+        # Query Start
+        request = self.request
+        method_dict = request.GET
+        query = method_dict.get('q', None)
+        date_from_filtered = method_dict.get('date-from', None)
+        date_to_filtered = method_dict.get('date-to', None)
+        if not date_from_filtered == "" and date_to_filtered == "":
+            date_to_filtered = datetime.datetime.now()
+        if date_from_filtered == "" and not date_to_filtered == "":
+            date_from_filtered = datetime.datetime.now()
+        if query is not None and not date_from_filtered == "" and not date_to_filtered == "":
+            # print("QUERY With DATE!!!")
+            context['total_donation'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter()
+            context['total_donation_request'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter()
+            context['total_donation_pending'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().is_pending()
+            context['total_donation_request_pending'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().is_pending()
+            context['total_donation_successful'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().is_done()
+            context['total_donation_request_successful'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().is_done()
+            context['total_donation_expired'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().is_expired_pending()
+            context['total_campaign'] = Campaign.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter()
+            context['total_member'] = BankMember.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter()
+            context['donation_a_pos'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A+")
+            context['donation_a_neg'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A-")
+            context['donation_b_pos'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B+")
+            context['donation_b_neg'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B-")
+            context['donation_ab_pos'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB+")
+            context['donation_ab_neg'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB-")
+            context['donation_o_pos'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O+")
+            context['donation_o_neg'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O-")
+            context['donation_request_a_pos'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A+")
+            context['donation_request_a_neg'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A-")
+            context['donation_request_b_pos'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B+")
+            context['donation_request_b_neg'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B-")
+            context['donation_request_ab_pos'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB+")
+            context['donation_request_ab_neg'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB-")
+            context['donation_request_o_pos'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O+")
+            context['donation_request_o_neg'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O-")
+            context['donation_blood'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().blood_type()
+            context['donation_organ'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().organ_type()
+            context['donation_tissue'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().tissue_type()
+            context['donation_request_blood'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().blood_type()
+            context['donation_request_organ'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().organ_type()
+            context['donation_request_tissue'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter().tissue_type()
+            context['blood_donation_a_pos'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A+").blood_type()
+            context['blood_donation_a_neg'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A-").blood_type()
+            context['blood_donation_b_pos'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B+").blood_type()
+            context['blood_donation_b_neg'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B-").blood_type()
+            context['blood_donation_ab_pos'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB+").blood_type()
+            context['blood_donation_ab_neg'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB-").blood_type()
+            context['blood_donation_o_pos'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O+").blood_type()
+            context['blood_donation_o_neg'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O-").blood_type()
+            context['blood_donation_request_a_pos'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A+").blood_type()
+            context['blood_donation_request_a_neg'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A-").blood_type()
+            context['blood_donation_request_b_pos'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B+").blood_type()
+            context['blood_donation_request_b_neg'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B-").blood_type()
+            context['blood_donation_request_ab_pos'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB+").blood_type()
+            context['blood_donation_request_ab_neg'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB-").blood_type()
+            context['blood_donation_request_o_pos'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O+").blood_type()
+            context['blood_donation_request_o_neg'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O-").blood_type()
+            # Organ Donation Categorywise
+            context['organ_donation_heart'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Heart").organ_type()
+            context['organ_donation_kidney'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Kidney").organ_type()
+            context['organ_donation_pancreas'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Pancreas").organ_type()
+            context['organ_donation_lungs'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Lungs").organ_type()
+            context['organ_donation_liver'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Liver").organ_type()
+            context['organ_donation_intestines'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Intestines").organ_type()
+            # Organ Donation Request Categorywise
+            context['organ_donation_request_heart'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Heart").organ_type()
+            context['organ_donation_request_kidney'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Kidney").organ_type()
+            context['organ_donation_request_pancreas'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Pancreas").organ_type()
+            context['organ_donation_request_lungs'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Lungs").organ_type()
+            context['organ_donation_request_liver'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Liver").organ_type()
+            context['organ_donation_request_intestines'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Intestines").organ_type()
+            # Tissue Donation Categorywise
+            context['tissue_donation_bones'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Bones'").tissue_type()
+            context['tissue_donation_ligaments'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Ligaments").tissue_type()
+            context['tissue_donation_tendons'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Tendons").tissue_type()
+            context['tissue_donation_fascia'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Fascia").tissue_type()
+            context['tissue_donation_veins'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Veins").tissue_type()
+            context['tissue_donation_nerves'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Nerves").tissue_type()
+            context['tissue_donation_corneas'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Corneas").tissue_type()
+            context['tissue_donation_sclera'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Sclera").tissue_type()
+            context['tissue_donation_heart_valves'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Heart Valves").tissue_type()
+            context['tissue_donation_skin'] = Donation.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Skin").tissue_type()
+            # Tissue Donation Request Categorywise
+            context['tissue_donation_request_bones'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Bones'").tissue_type()
+            context['tissue_donation_request_ligaments'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Ligaments").tissue_type()
+            context['tissue_donation_request_tendons'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Tendons").tissue_type()
+            context['tissue_donation_request_fascia'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Fascia").tissue_type()
+            context['tissue_donation_request_veins'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Veins").tissue_type()
+            context['tissue_donation_request_nerves'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Nerves").tissue_type()
+            context['tissue_donation_request_corneas'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Corneas").tissue_type()
+            context['tissue_donation_request_sclera'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Sclera").tissue_type()
+            context['tissue_donation_request_heart_valves'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Heart Valves").tissue_type()
+            context['tissue_donation_request_skin'] = DonationRequest.objects.search(
+                query).filter(created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Skin").tissue_type()
+        elif query is None and not date_from_filtered == "" and not date_to_filtered == "":
+            # print("DATE!!!")
+            context['total_donation'] = Donation.objects.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter()
+            context['total_donation_request'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter()
+            context['total_donation_pending'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().is_pending()
+            context['total_donation_request_pending'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().is_pending()
+            context['total_donation_successful'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().is_done()
+            context['total_donation_request_successful'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().is_done()
+            context['total_donation_expired'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().is_expired_pending()
+            context['total_campaign'] = Campaign.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter()
+            context['total_member'] = BankMember.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter()
+            context['donation_a_pos'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A+")
+            context['donation_a_neg'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A-")
+            context['donation_b_pos'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B+")
+            context['donation_b_neg'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B-")
+            context['donation_ab_pos'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB+")
+            context['donation_ab_neg'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB-")
+            context['donation_o_pos'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O+")
+            context['donation_o_neg'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O-")
+            context['donation_request_a_pos'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A+")
+            context['donation_request_a_neg'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A-")
+            context['donation_request_b_pos'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B+")
+            context['donation_request_b_neg'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B-")
+            context['donation_request_ab_pos'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB+")
+            context['donation_request_ab_neg'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB-")
+            context['donation_request_o_pos'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O+")
+            context['donation_request_o_neg'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O-")
+            context['donation_blood'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().blood_type()
+            context['donation_organ'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().organ_type()
+            context['donation_tissue'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().tissue_type()
+            context['donation_request_blood'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().blood_type()
+            context['donation_request_organ'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().organ_type()
+            context['donation_request_tissue'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter().tissue_type()
+            context['blood_donation_a_pos'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A+").blood_type()
+            context['blood_donation_a_neg'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A-").blood_type()
+            context['blood_donation_b_pos'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B+").blood_type()
+            context['blood_donation_b_neg'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B-").blood_type()
+            context['blood_donation_ab_pos'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB+").blood_type()
+            context['blood_donation_ab_neg'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB-").blood_type()
+            context['blood_donation_o_pos'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O+").blood_type()
+            context['blood_donation_o_neg'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O-").blood_type()
+            context['blood_donation_request_a_pos'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A+").blood_type()
+            context['blood_donation_request_a_neg'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="A-").blood_type()
+            context['blood_donation_request_b_pos'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B+").blood_type()
+            context['blood_donation_request_b_neg'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="B-").blood_type()
+            context['blood_donation_request_ab_pos'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB+").blood_type()
+            context['blood_donation_request_ab_neg'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="AB-").blood_type()
+            context['blood_donation_request_o_pos'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O+").blood_type()
+            context['blood_donation_request_o_neg'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(blood_group__iexact="O-").blood_type()
+            # Organ Donation Categorywise
+            context['organ_donation_heart'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Heart").organ_type()
+            context['organ_donation_kidney'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Kidney").organ_type()
+            context['organ_donation_pancreas'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Pancreas").organ_type()
+            context['organ_donation_lungs'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Lungs").organ_type()
+            context['organ_donation_liver'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Liver").organ_type()
+            context['organ_donation_intestines'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Intestines").organ_type()
+            # Organ Donation Request Categorywise
+            context['organ_donation_request_heart'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Heart").organ_type()
+            context['organ_donation_request_kidney'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Kidney").organ_type()
+            context['organ_donation_request_pancreas'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Pancreas").organ_type()
+            context['organ_donation_request_lungs'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Lungs").organ_type()
+            context['organ_donation_request_liver'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Liver").organ_type()
+            context['organ_donation_request_intestines'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(organ_name__iexact="Intestines").organ_type()
+            # Tissue Donation Categorywise
+            context['tissue_donation_bones'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Bones'").tissue_type()
+            context['tissue_donation_ligaments'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Ligaments").tissue_type()
+            context['tissue_donation_tendons'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Tendons").tissue_type()
+            context['tissue_donation_fascia'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Fascia").tissue_type()
+            context['tissue_donation_veins'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Veins").tissue_type()
+            context['tissue_donation_nerves'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Nerves").tissue_type()
+            context['tissue_donation_corneas'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Corneas").tissue_type()
+            context['tissue_donation_sclera'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Sclera").tissue_type()
+            context['tissue_donation_heart_valves'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Heart Valves").tissue_type()
+            context['tissue_donation_skin'] = Donation.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Skin").tissue_type()
+            # Tissue Donation Request Categorywise
+            context['tissue_donation_request_bones'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Bones'").tissue_type()
+            context['tissue_donation_request_ligaments'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Ligaments").tissue_type()
+            context['tissue_donation_request_tendons'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Tendons").tissue_type()
+            context['tissue_donation_request_fascia'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Fascia").tissue_type()
+            context['tissue_donation_request_veins'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Veins").tissue_type()
+            context['tissue_donation_request_nerves'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Nerves").tissue_type()
+            context['tissue_donation_request_corneas'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Corneas").tissue_type()
+            context['tissue_donation_request_sclera'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Sclera").tissue_type()
+            context['tissue_donation_request_heart_valves'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Heart Valves").tissue_type()
+            context['tissue_donation_request_skin'] = DonationRequest.filter(
+                created_at__range=(date_from_filtered, date_to_filtered)).filter(tissue_name__iexact="Skin").tissue_type()
+        elif not query == None and date_from_filtered == "" or date_to_filtered == "":
+            # print("QUERY!!!")
+            context['total_donation'] = Donation.objects.search(
+                query).filter()
+            context['total_donation_request'] = DonationRequest.objects.search(
+                query).filter()
+            context['total_donation_pending'] = Donation.objects.search(
+                query).filter().is_pending()
+            context['total_donation_request_pending'] = DonationRequest.objects.search(
+                query).filter().is_pending()
+            context['total_donation_successful'] = Donation.objects.search(
+                query).filter().is_done()
+            context['total_donation_request_successful'] = DonationRequest.objects.search(
+                query).filter().is_done()
+            context['total_donation_expired'] = Donation.objects.search(
+                query).filter().is_expired_pending()
+            context['total_campaign'] = Campaign.objects.search(
+                query).filter()
+            context['total_member'] = BankMember.objects.search(
+                query).filter()
+            context['donation_a_pos'] = Donation.objects.search(
+                query).filter(blood_group__iexact="A+")
+            context['donation_a_neg'] = Donation.objects.search(
+                query).filter(blood_group__iexact="A-")
+            context['donation_b_pos'] = Donation.objects.search(
+                query).filter(blood_group__iexact="B+")
+            context['donation_b_neg'] = Donation.objects.search(
+                query).filter(blood_group__iexact="B-")
+            context['donation_ab_pos'] = Donation.objects.search(
+                query).filter(blood_group__iexact="AB+")
+            context['donation_ab_neg'] = Donation.objects.search(
+                query).filter(blood_group__iexact="AB-")
+            context['donation_o_pos'] = Donation.objects.search(
+                query).filter(blood_group__iexact="O+")
+            context['donation_o_neg'] = Donation.objects.search(
+                query).filter(blood_group__iexact="O-")
+            context['donation_request_a_pos'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="A+")
+            context['donation_request_a_neg'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="A-")
+            context['donation_request_b_pos'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="B+")
+            context['donation_request_b_neg'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="B-")
+            context['donation_request_ab_pos'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="AB+")
+            context['donation_request_ab_neg'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="AB-")
+            context['donation_request_o_pos'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="O+")
+            context['donation_request_o_neg'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="O-")
+            context['donation_blood'] = Donation.objects.search(
+                query).filter().blood_type()
+            context['donation_organ'] = Donation.objects.search(
+                query).filter().organ_type()
+            context['donation_tissue'] = Donation.objects.search(
+                query).filter().tissue_type()
+            context['donation_request_blood'] = DonationRequest.objects.search(
+                query).filter().blood_type()
+            context['donation_request_organ'] = DonationRequest.objects.search(
+                query).filter().organ_type()
+            context['donation_request_tissue'] = DonationRequest.objects.search(
+                query).filter().tissue_type()
+            context['blood_donation_a_pos'] = Donation.objects.search(
+                query).filter(blood_group__iexact="A+").blood_type()
+            context['blood_donation_a_neg'] = Donation.objects.search(
+                query).filter(blood_group__iexact="A-").blood_type()
+            context['blood_donation_b_pos'] = Donation.objects.search(
+                query).filter(blood_group__iexact="B+").blood_type()
+            context['blood_donation_b_neg'] = Donation.objects.search(
+                query).filter(blood_group__iexact="B-").blood_type()
+            context['blood_donation_ab_pos'] = Donation.objects.search(
+                query).filter(blood_group__iexact="AB+").blood_type()
+            context['blood_donation_ab_neg'] = Donation.objects.search(
+                query).filter(blood_group__iexact="AB-").blood_type()
+            context['blood_donation_o_pos'] = Donation.objects.search(
+                query).filter(blood_group__iexact="O+").blood_type()
+            context['blood_donation_o_neg'] = Donation.objects.search(
+                query).filter(blood_group__iexact="O-").blood_type()
+            context['blood_donation_request_a_pos'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="A+").blood_type()
+            context['blood_donation_request_a_neg'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="A-").blood_type()
+            context['blood_donation_request_b_pos'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="B+").blood_type()
+            context['blood_donation_request_b_neg'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="B-").blood_type()
+            context['blood_donation_request_ab_pos'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="AB+").blood_type()
+            context['blood_donation_request_ab_neg'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="AB-").blood_type()
+            context['blood_donation_request_o_pos'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="O+").blood_type()
+            context['blood_donation_request_o_neg'] = DonationRequest.objects.search(
+                query).filter(blood_group__iexact="O-").blood_type()
+            # Organ Donation Categorywise
+            context['organ_donation_heart'] = Donation.objects.search(
+                query).filter(organ_name__iexact="Heart").organ_type()
+            context['organ_donation_kidney'] = Donation.objects.search(
+                query).filter(organ_name__iexact="Kidney").organ_type()
+            context['organ_donation_pancreas'] = Donation.objects.search(
+                query).filter(organ_name__iexact="Pancreas").organ_type()
+            context['organ_donation_lungs'] = Donation.objects.search(
+                query).filter(organ_name__iexact="Lungs").organ_type()
+            context['organ_donation_liver'] = Donation.objects.search(
+                query).filter(organ_name__iexact="Liver").organ_type()
+            context['organ_donation_intestines'] = Donation.objects.search(
+                query).filter(organ_name__iexact="Intestines").organ_type()
+            # Organ Donation Request Categorywise
+            context['organ_donation_request_heart'] = DonationRequest.objects.search(
+                query).filter(organ_name__iexact="Heart").organ_type()
+            context['organ_donation_request_kidney'] = DonationRequest.objects.search(
+                query).filter(organ_name__iexact="Kidney").organ_type()
+            context['organ_donation_request_pancreas'] = DonationRequest.objects.search(
+                query).filter(organ_name__iexact="Pancreas").organ_type()
+            context['organ_donation_request_lungs'] = DonationRequest.objects.search(
+                query).filter(organ_name__iexact="Lungs").organ_type()
+            context['organ_donation_request_liver'] = DonationRequest.objects.search(
+                query).filter(organ_name__iexact="Liver").organ_type()
+            context['organ_donation_request_intestines'] = DonationRequest.objects.search(
+                query).filter(organ_name__iexact="Intestines").organ_type()
+            # Tissue Donation Categorywise
+            context['tissue_donation_bones'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Bones'").tissue_type()
+            context['tissue_donation_ligaments'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Ligaments").tissue_type()
+            context['tissue_donation_tendons'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Tendons").tissue_type()
+            context['tissue_donation_fascia'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Fascia").tissue_type()
+            context['tissue_donation_veins'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Veins").tissue_type()
+            context['tissue_donation_nerves'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Nerves").tissue_type()
+            context['tissue_donation_corneas'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Corneas").tissue_type()
+            context['tissue_donation_sclera'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Sclera").tissue_type()
+            context['tissue_donation_heart_valves'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Heart Valves").tissue_type()
+            context['tissue_donation_skin'] = Donation.objects.search(
+                query).filter(tissue_name__iexact="Skin").tissue_type()
+            # Tissue Donation Request Categorywise
+            context['tissue_donation_request_bones'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Bones'").tissue_type()
+            context['tissue_donation_request_ligaments'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Ligaments").tissue_type()
+            context['tissue_donation_request_tendons'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Tendons").tissue_type()
+            context['tissue_donation_request_fascia'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Fascia").tissue_type()
+            context['tissue_donation_request_veins'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Veins").tissue_type()
+            context['tissue_donation_request_nerves'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Nerves").tissue_type()
+            context['tissue_donation_request_corneas'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Corneas").tissue_type()
+            context['tissue_donation_request_sclera'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Sclera").tissue_type()
+            context['tissue_donation_request_heart_valves'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Heart Valves").tissue_type()
+            context['tissue_donation_request_skin'] = DonationRequest.objects.search(
+                query).filter(tissue_name__iexact="Skin").tissue_type()
+        else:
+            # print("NONE!!!")
+            context['total_donation'] = Donation.objects.filter()
+            context['total_donation_request'] = DonationRequest.objects.filter()
+            context['total_donation_pending'] = Donation.objects.filter().is_pending()
+            context['total_donation_request_pending'] = DonationRequest.objects.filter().is_pending()
+            context['total_donation_successful'] = Donation.objects.filter().is_done()
+            context['total_donation_request_successful'] = DonationRequest.objects.filter().is_done()
+            context['total_donation_expired'] = Donation.objects.filter().is_expired_pending()
+            context['total_campaign'] = Campaign.objects.filter()
+            context['total_member'] = BankMember.objects.filter()
+            context['donation_a_pos'] = Donation.objects.filter(blood_group__iexact="A+")
+            context['donation_a_neg'] = Donation.objects.filter(blood_group__iexact="A-")
+            context['donation_b_pos'] = Donation.objects.filter(blood_group__iexact="B+")
+            context['donation_b_neg'] = Donation.objects.filter(blood_group__iexact="B-")
+            context['donation_ab_pos'] = Donation.objects.filter(blood_group__iexact="AB+")
+            context['donation_ab_neg'] = Donation.objects.filter(blood_group__iexact="AB-")
+            context['donation_o_pos'] = Donation.objects.filter(blood_group__iexact="O+")
+            context['donation_o_neg'] = Donation.objects.filter(blood_group__iexact="O-")
+            context['donation_request_a_pos'] = DonationRequest.objects.filter(blood_group__iexact="A+")
+            context['donation_request_a_neg'] = DonationRequest.objects.filter(blood_group__iexact="A-")
+            context['donation_request_b_pos'] = DonationRequest.objects.filter(blood_group__iexact="B+")
+            context['donation_request_b_neg'] = DonationRequest.objects.filter(blood_group__iexact="B-")
+            context['donation_request_ab_pos'] = DonationRequest.objects.filter(blood_group__iexact="AB+")
+            context['donation_request_ab_neg'] = DonationRequest.objects.filter(blood_group__iexact="AB-")
+            context['donation_request_o_pos'] = DonationRequest.objects.filter(blood_group__iexact="O+")
+            context['donation_request_o_neg'] = DonationRequest.objects.filter(blood_group__iexact="O-")
+            context['donation_blood'] = Donation.objects.filter().blood_type()
+            context['donation_organ'] = Donation.objects.filter().organ_type()
+            context['donation_tissue'] = Donation.objects.filter().tissue_type()
+            context['donation_request_blood'] = DonationRequest.objects.filter().blood_type()
+            context['donation_request_organ'] = DonationRequest.objects.filter().organ_type()
+            context['donation_request_tissue'] = DonationRequest.objects.filter().tissue_type()
+            context['blood_donation_a_pos'] = Donation.objects.filter(blood_group__iexact="A+").blood_type()
+            context['blood_donation_a_neg'] = Donation.objects.filter(blood_group__iexact="A-").blood_type()
+            context['blood_donation_b_pos'] = Donation.objects.filter(blood_group__iexact="B+").blood_type()
+            context['blood_donation_b_neg'] = Donation.objects.filter(blood_group__iexact="B-").blood_type()
+            context['blood_donation_ab_pos'] = Donation.objects.filter(blood_group__iexact="AB+").blood_type()
+            context['blood_donation_ab_neg'] = Donation.objects.filter(blood_group__iexact="AB-").blood_type()
+            context['blood_donation_o_pos'] = Donation.objects.filter(blood_group__iexact="O+").blood_type()
+            context['blood_donation_o_neg'] = Donation.objects.filter(blood_group__iexact="O-").blood_type()
+            context['blood_donation_request_a_pos'] = DonationRequest.objects.filter(blood_group__iexact="A+").blood_type()
+            context['blood_donation_request_a_neg'] = DonationRequest.objects.filter(blood_group__iexact="A-").blood_type()
+            context['blood_donation_request_b_pos'] = DonationRequest.objects.filter(blood_group__iexact="B+").blood_type()
+            context['blood_donation_request_b_neg'] = DonationRequest.objects.filter(blood_group__iexact="B-").blood_type()
+            context['blood_donation_request_ab_pos'] = DonationRequest.objects.filter(blood_group__iexact="AB+").blood_type()
+            context['blood_donation_request_ab_neg'] = DonationRequest.objects.filter(blood_group__iexact="AB-").blood_type()
+            context['blood_donation_request_o_pos'] = DonationRequest.objects.filter(blood_group__iexact="O+").blood_type()
+            context['blood_donation_request_o_neg'] = DonationRequest.objects.filter(blood_group__iexact="O-").blood_type()
+            # Organ Donation Categorywise
+            context['organ_donation_heart'] = Donation.objects.filter(organ_name__iexact="Heart").organ_type()
+            context['organ_donation_kidney'] = Donation.objects.filter(organ_name__iexact="Kidney").organ_type()
+            context['organ_donation_pancreas'] = Donation.objects.filter(organ_name__iexact="Pancreas").organ_type()
+            context['organ_donation_lungs'] = Donation.objects.filter(organ_name__iexact="Lungs").organ_type()
+            context['organ_donation_liver'] = Donation.objects.filter(organ_name__iexact="Liver").organ_type()
+            context['organ_donation_intestines'] = Donation.objects.filter(organ_name__iexact="Intestines").organ_type()
+            # Organ Donation Request Categorywise
+            context['organ_donation_request_heart'] = DonationRequest.objects.filter(organ_name__iexact="Heart").organ_type()
+            context['organ_donation_request_kidney'] = DonationRequest.objects.filter(organ_name__iexact="Kidney").organ_type()
+            context['organ_donation_request_pancreas'] = DonationRequest.objects.filter(organ_name__iexact="Pancreas").organ_type()
+            context['organ_donation_request_lungs'] = DonationRequest.objects.filter(organ_name__iexact="Lungs").organ_type()
+            context['organ_donation_request_liver'] = DonationRequest.objects.filter(organ_name__iexact="Liver").organ_type()
+            context['organ_donation_request_intestines'] = DonationRequest.objects.filter(organ_name__iexact="Intestines").organ_type()
+            # Tissue Donation Categorywise
+            context['tissue_donation_bones'] = Donation.objects.filter(tissue_name__iexact="Bones'").tissue_type()
+            context['tissue_donation_ligaments'] = Donation.objects.filter(tissue_name__iexact="Ligaments").tissue_type()
+            context['tissue_donation_tendons'] = Donation.objects.filter(tissue_name__iexact="Tendons").tissue_type()
+            context['tissue_donation_fascia'] = Donation.objects.filter(tissue_name__iexact="Fascia").tissue_type()
+            context['tissue_donation_veins'] = Donation.objects.filter(tissue_name__iexact="Veins").tissue_type()
+            context['tissue_donation_nerves'] = Donation.objects.filter(tissue_name__iexact="Nerves").tissue_type()
+            context['tissue_donation_corneas'] = Donation.objects.filter(tissue_name__iexact="Corneas").tissue_type()
+            context['tissue_donation_sclera'] = Donation.objects.filter(tissue_name__iexact="Sclera").tissue_type()
+            context['tissue_donation_heart_valves'] = Donation.objects.filter(tissue_name__iexact="Heart Valves").tissue_type()
+            context['tissue_donation_skin'] = Donation.objects.filter(tissue_name__iexact="Skin").tissue_type()
+            # Tissue Donation Request Categorywise
+            context['tissue_donation_request_bones'] = DonationRequest.objects.filter(tissue_name__iexact="Bones'").tissue_type()
+            context['tissue_donation_request_ligaments'] = DonationRequest.objects.filter(tissue_name__iexact="Ligaments").tissue_type()
+            context['tissue_donation_request_tendons'] = DonationRequest.objects.filter(tissue_name__iexact="Tendons").tissue_type()
+            context['tissue_donation_request_fascia'] = DonationRequest.objects.filter(tissue_name__iexact="Fascia").tissue_type()
+            context['tissue_donation_request_veins'] = DonationRequest.objects.filter(tissue_name__iexact="Veins").tissue_type()
+            context['tissue_donation_request_nerves'] = DonationRequest.objects.filter(tissue_name__iexact="Nerves").tissue_type()
+            context['tissue_donation_request_corneas'] = DonationRequest.objects.filter(tissue_name__iexact="Corneas").tissue_type()
+            context['tissue_donation_request_sclera'] = DonationRequest.objects.filter(tissue_name__iexact="Sclera").tissue_type()
+            context['tissue_donation_request_heart_valves'] = DonationRequest.objects.filter(tissue_name__iexact="Heart Valves").tissue_type()
+            context['tissue_donation_request_skin'] = DonationRequest.objects.filter(tissue_name__iexact="Skin").tissue_type()
+        # Report Data Ends
+        return context
+
+    def user_passes_test(self, request):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_passes_test(request):
+            block_suspicious_user(request)
+            return HttpResponseRedirect(reverse('home'))
+        return super(AdminBankChartFilterTemplateView, self).dispatch(request, *args, **kwargs)

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'checkout',
     'donationBank',
     'blog',
+    'report',
 ]
 
 SITE_ID = 1

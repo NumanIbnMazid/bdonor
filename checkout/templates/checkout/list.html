@@ -1,0 +1,158 @@
+{% extends base_template %}
+
+{% block head_title %}{% block page_title %}{% block breadcrumb %}
+Checkouts
+{% endblock %}{% endblock %}{% endblock %}
+
+
+{% load static %}
+
+{% block extra_css %}
+<!-- Datatable css -->
+<link rel="stylesheet" href="{% static 'vendor/jquery-datatable/dataTables.min.css' %}" type="text/css" />
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header text-center font-bold">
+        Checkouts
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table id="checkoutDataTable" class="cell-border hover table-bordered table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Member</th>
+                                <th>Plan</th>
+                                <th>Amount</th>
+                                <th>Currency</th>
+                                <th>Expiration Cycle</th>
+                                <th>Expiration Date</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for object in object_list %}
+                            <tr class="text-dark">
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>
+                                    <a class="text-deco-none" href="{{ object.user.profile.get_absolute_url }}">
+                                        <div class="avatar avatar-sm">
+                                            {% include 'snippets/chunks/user-image.html' with instance=object.user class="avatar-img rounded-circle" %}
+                                        </div>
+                                        <small>{{ object.user.profile.get_dynamic_name|truncatechars_html:13 }}</small>
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if not object.plan.title == "" %}
+                                    {{ object.plan.title }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not object.plan.amount == "" %}
+                                    {{ object.plan.amount }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not object.plan.currency == "" %}
+                                    {{ object.plan.currency }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not object.plan.expiration_cycle == "" %}
+                                    {{ object.plan.expiration_cycle }} Month
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not object.get_expiration_date == "" %}
+                                    {{ object.get_expiration_date }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if datetime|date:"d-M-Y" == object.created_at|date:"d-M-Y" %}
+                                    {{ object.created_at|timesince }} ago
+                                    {% else %}
+                                    {{ object.created_at }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No Data found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>Member</th>
+                                <th>Plan</th>
+                                <th>Amount</th>
+                                <th>Currency</th>
+                                <th>Expiration Cycle</th>
+                                <th>Expiration Date</th>
+                                <th>Created At</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'donationBank/snippets/footer.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<input type="hidden" id="total_records_count" value="{{object_list.count}}">
+<!-- Datatable JS -->
+<script type="text/javascript" src="{% static 'vendor/jquery-datatable/dataTables.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#checkoutDataTable').DataTable({
+            destroy: true,
+            //"retrieve": true,
+            //"order": [[ 1, 'desc' ]],
+            "ordering": false,
+            //"searching": false,
+            //"paging": false,
+            //"scrollY": 400,
+            //"scrollX": 400,
+            //"scrollY": '62vh',
+            //"scrollX": '50vh',
+            "scrollCollapse": true,
+            "stateSave": true,
+            "pagingType": "full_numbers",
+            "language": {
+                "lengthMenu": "Display _MENU_ records per page. <span class='ml-4 text-primary'>Total Records: <span class='font-13 font-bold'>" +
+                    $("#total_records_count").val() + "</span></span>",
+                "zeroRecords": "Nothing found - sorry",
+                "info": "Showing page _PAGE_ of _PAGES_",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+        });
+    });
+</script>
+{% endblock %}

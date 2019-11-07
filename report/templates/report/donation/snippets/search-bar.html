@@ -8,10 +8,10 @@
         id="filterCollapse">
         <div class="card card-body">
             <div class="form-group" id="bank_filter_chart_div">
-                <form action="{% url 'donationBank:bank_report_filtered_admin' %}" method="GET"
+                <form action="{% url 'report:report_donation' %}" method="GET"
                     id="bank_chart_filter_form"
                     data-toggle="validator">
-                    <input type="text" name="q" id="query_q" class="form-control" placeholder="Search for..." value="{{ query }}">
+                    <input type="text" name="q" id="query_q" class="form-control" placeholder="Search for..." value="{% if not query == None %}{{ query }}{% endif %}">
 
                     <div class="row" id="date_range">
                         <div class="col-md-6">
@@ -21,7 +21,8 @@
                                         <span class="input-group-text" id="date-from-addon">From</span>
                                     </div>
                                     <input type="text" class="form-control" name="date-from" id="date_from"
-                                        placeholder="date from..." aria-label="date_from" value="{{query_date_from}}"
+                                        placeholder="date from..." aria-label="date_from"
+                                        value="{% if not query_date_from == None %}{{query_date_from}}{% endif %}"
                                         aria-describedby="date-from-addon" onchange="dateFilterFunction()">
                                 </div>
                                 <div class="error text-center">
@@ -36,7 +37,8 @@
                                         <span class="input-group-text" id="date-to-addon">To</span>
                                     </div>
                                     <input type="text" class="form-control" name="date-to" id="date_to"
-                                        value="{{query_date_to}}" placeholder="date to..." aria-label="date_to"
+                                        value="{% if not query_date_to == None %}{{query_date_to}}{% endif %}"
+                                        placeholder="date to..." aria-label="date_to"
                                         aria-describedby="date-to-addon" onchange="dateFilterFunction()">
                                 </div>
                                 <div class="error text-center">

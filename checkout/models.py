@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from priceplan.models import Plan
+import datetime
+from dateutil.relativedelta import relativedelta
 
 # Create your models here.
 
@@ -20,3 +22,12 @@ class Checkout(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def get_expiration_date(self):
+        expiration_date = "Undefined"
+        try:
+            expiration_date = (
+                self.created_at + relativedelta(months=self.plan.expiration_cycle))
+        except:
+            expiration_date = None
+        return expiration_date

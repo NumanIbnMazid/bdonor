@@ -424,6 +424,14 @@ class Donation(models.Model):
             priority = "Important"
         return priority
 
+    def get_contact_privacy(self):
+        contact_privacy = "Undefined"
+        if self.contact_privacy == 0:
+            contact_privacy = "Public"
+        if self.contact_privacy == 1:
+            contact_privacy = "Private"
+        return contact_privacy
+
     def get_viewers(self):
         qs = DonationUtil.objects.filter(donation=self)
         return qs

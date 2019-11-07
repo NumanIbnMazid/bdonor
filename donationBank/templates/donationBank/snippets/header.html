@@ -53,7 +53,7 @@
         {% endif %}
 
         {% if request.user.is_superuser %}
-        <a href="{% url 'donation_bank:bank_update' slug=object.slug %}" class="btn btn-dark btn-sm text-deco-none">
+        <a href="{{ bank_update_url }}" class="btn btn-dark btn-sm text-deco-none">
             <span class="text-white">
                 Change Verification Status
             </span>

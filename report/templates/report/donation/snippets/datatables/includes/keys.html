@@ -1,0 +1,35 @@
+<div id="keys">
+    {% if not query == None or not query_date_from == None or not query_date_to == None %}
+    <!-- <input type="hidden" value="1" id="filter_status"> -->
+    <div class="text-center" id="filter_stat_html">
+        <p class="text-muted">
+            <span class="font-bold text-dark">Filter Keys: </span>
+            [
+            {% if not query == "" %}
+                Search for:
+                "<span class="font-italic c-text-primary">{{query}}</span>"
+                {% if not query_date_from == "" or not query_date_to == "" %}
+                    <span class="font-bold c-text-dark m-2">||</span>
+                {% endif %}
+            {% endif %}
+
+            {% if not query_date_from == "" %}
+                Date From:
+                "<span class="font-italic c-text-primary">{{query_date_from}}</span>"
+                {% if not query_date_to == "" %}
+                    <span class="font-bold c-text-dark m-2">||</span>
+                {% endif %}
+            {% endif %}
+
+            {% if not query_date_to == "" %}
+                Date To:
+                "<span class="font-italic c-text-primary">{{query_date_to}}</span>"
+            {% endif %}
+            ]
+        </p>
+    </div>
+    {% else %}
+    <div id="filter_stat_html"></div>
+    <!-- <input type="hidden" value="0" id="filter_status"> -->
+    {% endif %}
+</div>

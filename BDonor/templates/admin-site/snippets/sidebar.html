@@ -17,6 +17,10 @@
 {% url 'user_report_list' as user_report_list_url %}
 {% url 'suspicious:suspicious_list' as suspicious_list_url %}
 {% url 'user_permission_list' as user_permission_list_url %}
+{% url 'checkout:checkout_list' as checkout_list_url %}
+{% url 'donationBank:bank_report_admin' as bank_report_admin_url %}
+{% url 'donationBank:bank_report_filtered_admin' as bank_report_filtered_admin_url %}
+{% url 'report:report_donation' as report_donation_url %}
 {% endif %}
 
 <div class="sidebar sidebar-style-2"
@@ -123,6 +127,12 @@
                         <p>Donation Banks</p>
                     </a>
                 </li>
+                <li class="nav-item {% if request.path == checkout_list_url %}active{% endif %}">
+                    <a href="{{ checkout_list_url }}">
+                        <i class="flaticon-credit-card-1 font-bold"></i>
+                        <p>Checkouts</p>
+                    </a>
+                </li>
                 <li class="nav-item {% if request.path == user_report_list_url %}active{% endif %}">
                     <a href="{{ user_report_list_url }}">
                         <i class="flaticon-exclamation font-bold"></i>
@@ -141,8 +151,47 @@
                         <p>User Permissions</p>
                     </a>
                 </li>
+                <li class="nav-item" id="adminReportsCollapse_dynamic">
+                    <a data-toggle="collapse" href="#adminReportsLi" class="collapsed">
+                        <i class="fas fa-user"></i>
+                        <p>Reports</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="adminReportsLi">
+                        <ul class="nav nav-collapse">
+                            <li class="nav-item 
+                            {% if request.path == bank_report_admin_url or request.path == bank_report_filtered_admin_url %}active{% endif %}">
+                                <a href="{{ bank_report_admin_url }}">
+                                    <i class="flaticon-analytics"></i>
+                                    <p>Bank Reports</p>
+                                </a>
+                            </li>
+                            <li
+                                class="nav-item
+                                {% if request.path == report_donation_url %}active{% endif %}">
+                                <a href="{{ report_donation_url }}">
+                                    <i class="flaticon-analytics"></i>
+                                    <p>Donation Reports</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 {% endif %}
             </ul>
         </div>
     </div>
 </div>
+
+
+{% block extra_js %}
+<script>
+    var loc = window.location;
+    var pathname = loc.pathname;
+    if ((pathname.match("^/report/")) || (pathname.match("^/donation-bank/admin/reports/")) ||
+    (pathname.match("^/donation-bank/admin/filtered/reports/"))) {
+        $("#adminReportsCollapse_dynamic").addClass("active submenu");
+        $("#adminReportsLi").addClass("show");
+    }
+</script>
+{% endblock %}

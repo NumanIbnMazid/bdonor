@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            {% include 'donationBank/reports/snippets/datatables/overall-offer-table.html' %}
+            {% include 'report/donation/snippets/datatables/overall-offer-table.html' %}
         </div>
     </div>
     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -47,78 +47,7 @@
                     </div>
                 </div>
             </div>
-            {% include 'donationBank/reports/snippets/datatables/overall-request-table.html' %}
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-        <div class="card card-stats card-primary card-round">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="icon-small text-center">
-                            <img src="{% static 'images/raw/expired.png' %}" alt="expired"
-                                class="avatar-img rounded-circle">
-                        </div>
-                    </div>
-                    <div class="col-9 col-stats">
-                        <div class="numbers">
-                            <p class="card-category">Donation Expired</p>
-                            <h4 class="card-title">
-                                {{ total_donation_expired.count }}
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% include 'donationBank/reports/snippets/datatables/overall-offer-expired-table.html' %}
-        </div>
-    </div>
-    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-        <div class="card card-stats card-info card-round">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="icon-small text-center">
-                            <img src="{% static 'images/raw/camp_icon.png' %}" alt="donation bank"
-                                class="avatar-img rounded-circle">
-                        </div>
-                    </div>
-                    <div class="col-9 col-stats">
-                        <div class="numbers">
-                            <p class="card-category">Campaigns</p>
-                            <h4 class="card-title">
-                                {{ total_campaign.count }}
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% include 'donationBank/reports/snippets/datatables/overall-campaign-table.html' %}
-        </div>
-    </div>
-    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-        <div class="card card-stats card-info card-round">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="icon-small text-center">
-                            <i class="flaticon-users font-25"></i>
-                        </div>
-                    </div>
-                    <div class="col-9 col-stats">
-                        <div class="numbers">
-                            <p class="card-category">Members</p>
-                            <h4 class="card-title">
-                                {{ total_member.count }}
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% include 'donationBank/reports/snippets/datatables/overall-member-table.html' %}
+            {% include 'report/donation/snippets/datatables/overall-request-table.html' %}
         </div>
     </div>
 </div>
@@ -131,9 +60,9 @@
                     <span class="text-muted font-bold">Donation</span>
                     <span class="font-17">
                         [
-                        <span style="color: #e37f54;">Reserved</span>
-                        vs 
-                        <span style="color: #53c965;">Dispatched</span>
+                        <span style="color: #e37f54;">Pending</span>
+                        vs
+                        <span style="color: #53c965;">Completed</span>
                         ]
                     </span>
                 </p>
@@ -144,10 +73,10 @@
                 </div>
                 <div class="text-center mt-2">
                     <span class="stamp" style="background-color: #e37f54;">
-                        reserved
+                        pending
                     </span>
                     <span class="stamp" style="background-color: #53c965;">
-                        dispatched
+                        completed
                     </span>
                 </div>
                 {% else %}
@@ -162,7 +91,7 @@
         <div class="card card-stats card-round">
             <div class="card-body">
                 <p class="text-center">
-                    <span class="text-muted font-bold">Donation Request</span> 
+                    <span class="text-muted font-bold">Donation Request</span>
                     <span class="font-17">
                         [
                         <span style="color: #e37f54;">Pending</span>

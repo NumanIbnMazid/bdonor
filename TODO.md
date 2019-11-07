@@ -160,6 +160,8 @@ Open street map
 
 # Suggestions from Experts:
 
+pending VS completed (Reserved vs Dispatched)
+
     1. Donar Spelling 'Donor'
     2. I need a donor change from I need donor
 3. Important posts goes first
