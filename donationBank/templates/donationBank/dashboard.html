@@ -17,26 +17,31 @@ Bank Dashboard
       <div class="col-md-2">
         {% include 'donationBank/snippets/sidebar.html' %}
       </div>
+
       <div class="col-md-10">
         <div class="row">
-          <div class="col-md-8 mx-auto">
-            <p>
-              Far far away, behind the word mountains, far from the countries
-              Vokalia and Consonantia, there live the blind texts. Separated
-              they live in Bookmarksgrove right at the coast of the Semantics, a
-              large language ocean.
-            </p>
-          </div>
+
           {% if request.user.user_bank_member.bank.institute == object.institute and request.user.user_bank_member.role == 0 %}
-          <div class="col-md-4 text-center">
+          <div class="col-md-12 text-center">
             {% include 'donationBank/snippets/member-requests.html' %}
           </div>
           {% endif %}
+
+          <div class="col-md-12 mx-auto">
+            <div id="large-header" class="large-header">
+              <canvas id="demo-canvas"></canvas>
+              <h1 class="main-title">{{ object.institute }} <span class="thin"></span></h1>
+            </div>
+          </div>
+          
         </div>
       </div>
+
     </div>
   </div>
 </div>
+
+<script src="{% static 'assets/js/TweenMax.min.js' %}"></script>
 
 {% include 'donationBank/snippets/footer.html' %}
 
