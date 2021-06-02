@@ -65,7 +65,7 @@ stripe==2.32.1
 toml==0.10.0
 Twisted==19.2.0
 txaio==18.8.1
-urllib3==1.24.3
+urllib3==1.26.5
 Werkzeug==0.15.2
 whitenoise==4.1.2
 zeep==3.4.0
