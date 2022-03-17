@@ -61,7 +61,7 @@ six==1.12.0
 sqlparse==0.3.0
 stripe==2.32.1
 toml==0.10.0
-Twisted==19.2.0
+Twisted==22.2.0
 txaio==18.8.1
 urllib3==1.24.3
 Werkzeug==0.15.2
