@@ -17,7 +17,7 @@ chardet==3.0.4
 Click==7.0
 constantly==15.1.0
 cryptography==2.6.1
-daphne==2.3.0
+daphne==4.2.2
 defusedxml==0.6.0
 dj-database-url==0.5.0
 Django==2.2.1
